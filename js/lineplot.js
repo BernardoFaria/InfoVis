@@ -6,8 +6,8 @@ var height = 300;
 var padding = 60;
 
 // get decade dataset
-d3.csv("decade.csv").then(function(data1) {
-    d3.csv("artistV5.csv").then(function(data2) {
+d3.csv("dataset/decade.csv").then(function(data1) {
+    d3.csv("dataset/artistV5.csv").then(function(data2) {
         decades = data1;
         artists = data2;
 
@@ -16,20 +16,20 @@ d3.csv("decade.csv").then(function(data1) {
 });
 
 /**************************
- * gen_line_chart() 
- *  -creates a line chart 
+ * gen_line_chart()
+ *  -creates a line chart
  *************************/
 
  function gen_line_chart() {
 
     // create svg
-    var svg = d3.select("#line_chart")  // call id in div
+    var svg = d3.select("#line-plot")  // call id in div
                 .append("svg")          // append svg to the "id" div
                 .attr("width", width)
                 .attr("height", height)
                 // .append("g")
                 .attr("transform", "translate(" + width + ",0)");   // move svg to the right
-    
+
     // genre scale
     var genreScale = artists.map((a) => a.genre);
     var rockScale = [];
@@ -66,7 +66,7 @@ d3.csv("decade.csv").then(function(data1) {
     var yScale = d3.scaleLinear()
                    .domain([0, d3.max(artists, function(d) { return +d.popularitySpotify; })])  // the + sign adds 100 to the axis
                    .range([height - padding, padding]);
-    
+
     // create Y axis
     svg.append("g")
        .attr("transform", "translate(" + padding + ",0)")
