@@ -10,6 +10,10 @@ var outerRadius = Math.min(width, height) / 2;  // goes from  the center to the 
 
 var decades;
 var artists;
+var svg;
+var dispatch;
+var selectedBar;
+var context = 0; // 0 - Reset; 1 - New; 2 - Old.
 
 
 // get decade dataset
@@ -19,6 +23,7 @@ d3.csv("dataset/decade.csv").then(function(data1) {
         artists = data2;
 
         gen_bar_chart();
+        prepare_event();
     })
 });
 
@@ -29,7 +34,7 @@ d3.csv("dataset/decade.csv").then(function(data1) {
  *************************/
 
 function gen_bar_chart() {
-
+    console.log("aqui")
     // filtering data
     var filteredData = [];
     var i,j;
@@ -62,12 +67,20 @@ function gen_bar_chart() {
 
 
     // create svg
-    var svg = d3.select("#barchart")  // call id in div
+    svg = d3.select("#barchart")  // call id in div
                 .append("svg")          // append svg to the "id" div
                 .attr("width", width)
                 .attr("height", height)
-                .attr("transform", "translate(" + width + ",0)");
+                .attr("transform", "translate(" + width + ",0)");   // move svg to the right
 
+    svg.append("text")
+       .attr("x", (width / 2))             
+       .attr("y", height / 7 )
+       .attr("class", "title")  // para posterior CSS (se houver tempo eheh)
+       .attr("text-anchor", "middle")  
+       .style("font-size", "20px") 
+       .style("text-decoration", "underline")  
+       .text("Most Popular Bands");
 
     // create bars
     svg.selectAll("rect")
@@ -75,7 +88,7 @@ function gen_bar_chart() {
        .join("rect")
        .attr("width", xScale.bandwidth())
        .attr("height", d => (height - padding - yScale(d.popularitySpotify)))
-       .attr("fill", "red")
+       .attr("fill", "steelblue")
        .attr("x", function(d,i) { return xScale(d.artist); })
        .attr("y", function(d,i) { return yScale(d.popularitySpotify); })
        .append("text")
@@ -108,25 +121,33 @@ function gen_bar_chart() {
        .attr("transform", "rotate(-90)")
        .attr("y", 0)
        .attr("x", 0 - height / 1.5)
+       .attr("font-size", "16px")
        .attr("dy", "1em")
        .text("Popularity");
+}
+
+function prepare_event() {
+    dispatch = d3.dispatch("highlight");
+      
+    svg.selectAll("rect").on("mouseover", function (event, d) {
+        dispatch.call("highlight", this, d);
+    });
+
+    dispatch.on("highlight", function(band){
+
+        if(selectedBar != null) {
+            selectedBar.attr("fill", function(d) {
+                return context == 0 ? "steelblue" : context == 1 ? "purple" : "red";
+            });
+        }
+
+        selectedBar = d3.selectAll("rect").filter(function(d){
+            return d.artist == band.artist;
+        })
+
+        selectedBar.attr("fill", "green");
+    });
 
 
 
-    // Add bars
-    // svg.append("g")
-    //    .selectAll("path")
-    //    .data(filteredData)
-    //    .enter()
-    //    .append("path")
-    //    .attr("fill", "#69b3a2")
-    //    .attr("d", d3.arc()     // imagine your doing a part of a donut plot
-    //                 .innerRadius(innerRadius)
-    //                 // .outerRadius(function(d) { return y(d.popularitySpotify); })
-    //                 .outerRadius(function(d) { return y(d.artist); })
-    //                 .startAngle(function(d) { return xScale(d.artist); })
-    //                 .endAngle(function(d) { return xScale(d.artist) + xScale.bandwidth(); })
-    //                 .padAngle(0.01)
-    //                 .padRadius(innerRadius));
-    // console.log("cona");
 }
