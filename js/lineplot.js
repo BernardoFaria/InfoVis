@@ -7,6 +7,12 @@ var padding = 60;
 var decades;
 var artists;
 var popularity;
+var popArray = [];
+var xScale;
+var yScale
+var line;
+
+
 
 // get decade dataset
 d3.csv("dataset/decade.csv").then(function(data1) {
@@ -17,6 +23,9 @@ d3.csv("dataset/decade.csv").then(function(data1) {
             popularity = data3;
             buildOptions();
             gen_line_chart();
+           
+            
+            
             
         })
     })
@@ -33,7 +42,7 @@ function buildOptions(){
 
     //Create and append the options
     for (var i = 0; i < array.length; i++) {
-        console.log(array[i]);
+        
         var option = document.createElement("option");
         option.setAttribute("value", array[i]);
         option.text = array[i];
@@ -59,6 +68,11 @@ function getGenresFiltered(){
  *************************/
 
 function gen_line_chart() {
+    var dropdown = d3.select("#mySelect");
+    dropdown.on("change", function(){
+        var selected = this.value;
+        updateLinePlot(selected);
+     });
 
   // create svg
   var svg = d3.select("#lineplot")  // call id in div
@@ -101,7 +115,7 @@ function gen_line_chart() {
   //   }
   // }
 
-  var popArray = [];
+  
   for(var i = 0; i < Object.keys(popularity).length-1; i++) {
     if(popularity[i].genre == "Rock") {
       popArray.push(popularity[i]);
@@ -129,7 +143,7 @@ function gen_line_chart() {
 
 
   // create X scale
-  var xScale = d3.scaleBand()
+  xScale = d3.scaleBand()
                   .domain(xScaleDataFiltered)
                   .range([padding, width - padding]);
   xScale.paddingInner(0.5);   // separate elements
@@ -145,8 +159,8 @@ function gen_line_chart() {
 
 
   // create Y scale
-  var yScale = d3.scaleLinear()
-                 .domain([0, 50])
+  yScale = d3.scaleLinear()
+                 .domain([0, 40])
                   // .domain([0, d3.max(artists, function(d) { return +d.popularitySpotify; })])  // the + sign adds 100 to the axis
                   .range([height - padding, padding]);
 
@@ -163,42 +177,57 @@ function gen_line_chart() {
       .text("Popularity");
 
   // Add one line
-  svg.append("path")
+  line = svg.append("path")
      .datum(popArray)   // the population is on this dataset
      .attr("fill", "none")
      .attr("stroke", "steelblue")
      .attr("stroke-width", 1.5)
      .attr("d", d3.line()
-     .x(function(d) { return xScale(d.decade); })
-     .y(function(d) { return yScale(d.popularity*100); }));
+     .x(function(d) { 
+        return xScale(d.decade); })
+     .y(function(d) { 
+         return yScale(d.popularity*100); }));
+    
+     
      
 }
 
-
 function updateLinePlot(selectedGenre){
-    console.log("aqui2")
     // Create new data with selection
-    var dataFilter = data.map(function(d){return {time: xScaleData, value: d[selectedGenre] }})
+    var pop = []
+    for(var i = 0; i < Object.keys(popularity).length-1; i++) {
+            
+        if(popularity[i].genre === selectedGenre) {
+            pop.push(popularity[i]);
+        }
+    }
+    var dataFilter = pop.map(function(d){
+        console.log(pop)
+        return {time: d.decade, value: d.popularity*100 };
+    });
+    var myColor = d3.scaleOrdinal()
+   .domain(popularity)
+   .range(d3.schemeSet2);
     // Give these new data to update line 
     line
           .datum(dataFilter)
           .transition()
           .duration(1000)
           .attr("d", d3.line()
-            .x(function(d) { return x(+d.time) })
-            .y(function(d) { return y(+d.value) })
+            .x(function(d) { return xScale(+d.time) })
+            .y(function(d) { 
+                
+                return yScale(+d.value) })
           )
-          .attr("stroke", function(d){ return myColor(selectedGroup) })
+          .attr("stroke", function(d){ return myColor(selectedGenre) })
     }
 
-// When the button is changed, run the updateChart function
-d3.select("#selectButton").on("change", function(d) {
-    // recover the option that has been chosen
-    var selectedOption = d3.select(this).property("value")
-    console.log("aqui")
-    // run the updateChart function with this selected option
-    updateLinePlot(selectedOption)
-})   
+
+
+   
+    
+    
+
     
     
 
