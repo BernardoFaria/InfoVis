@@ -15,7 +15,13 @@ d3.csv("dataset/decade.csv").then(function(data1) {
             decades = data1;
             artists = data2;
             popularity = data3;
-
+            // Add values to button
+            d3.select("#selectButton").selectAll('myOptions')
+            .data(popularity[1])
+            .enter()
+            .append('option')
+            .text(function (d) { return d; }) // text showed in the menu
+            .attr("value", function (d) { return d; }) // corresponding value returned by the button
             gen_line_chart();
         })
     })
@@ -141,3 +147,31 @@ function gen_line_chart() {
      .y(function(d) { return yScale(d.popularity*100); }));
 
 }
+
+
+function updateLinePlot(selectedGenre){
+    // Create new data with selection
+    var dataFilter = data.map(function(d){return {time: xScaleData, value: d[selectedGenre] }})
+    // Give these new data to update line 
+    line
+          .datum(dataFilter)
+          .transition()
+          .duration(1000)
+          .attr("d", d3.line()
+            .x(function(d) { return x(+d.time) })
+            .y(function(d) { return y(+d.value) })
+          )
+          .attr("stroke", function(d){ return myColor(selectedGroup) })
+    }
+    
+// When the button is changed, run the updateChart function
+d3.select("#selectButton").on("change", function(d) {
+    // recover the option that has been chosen
+    var selectedOption = d3.select(this).property("value")
+    
+    // run the updateChart function with this selected option
+    update(selectedOption)
+})   
+    
+    
+
