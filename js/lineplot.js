@@ -15,17 +15,43 @@ d3.csv("dataset/decade.csv").then(function(data1) {
             decades = data1;
             artists = data2;
             popularity = data3;
-            // Add values to button
-            d3.select("#selectButton").selectAll('myOptions')
-            .data(popularity[1])
-            .enter()
-            .append('option')
-            .text(function (d) { return d; }) // text showed in the menu
-            .attr("value", function (d) { return d; }) // corresponding value returned by the button
+            buildOptions();
             gen_line_chart();
+            
         })
     })
 });
+
+function buildOptions(){
+    var myDiv = document.getElementById("selectbutton");
+    //Create array of options to be added
+    var array = getGenresFiltered();
+    //Create and append select list
+    var selectList = document.createElement("select");
+    selectList.setAttribute("id", "mySelect");
+    myDiv.appendChild(selectList);
+
+    //Create and append the options
+    for (var i = 0; i < array.length; i++) {
+        console.log(array[i]);
+        var option = document.createElement("option");
+        option.setAttribute("value", array[i]);
+        option.text = array[i];
+        selectList.appendChild(option);
+    }
+}
+
+function getGenresFiltered(){
+    var genres = popularity.map((a) => a.genre)
+    var genresFiltered = [];
+    genres.forEach((c) => {     // forEach to remove duplicates, couldn't find another way
+        if (!genresFiltered.includes(c)) {
+            genresFiltered.push(c);
+        }
+    });
+    genresFiltered.sort();
+    return genresFiltered
+}
 
 /**************************
  * gen_line_chart()
@@ -145,11 +171,12 @@ function gen_line_chart() {
      .attr("d", d3.line()
      .x(function(d) { return xScale(d.decade); })
      .y(function(d) { return yScale(d.popularity*100); }));
-
+     
 }
 
 
 function updateLinePlot(selectedGenre){
+    console.log("aqui2")
     // Create new data with selection
     var dataFilter = data.map(function(d){return {time: xScaleData, value: d[selectedGenre] }})
     // Give these new data to update line 
@@ -163,14 +190,14 @@ function updateLinePlot(selectedGenre){
           )
           .attr("stroke", function(d){ return myColor(selectedGroup) })
     }
-    
+
 // When the button is changed, run the updateChart function
 d3.select("#selectButton").on("change", function(d) {
     // recover the option that has been chosen
     var selectedOption = d3.select(this).property("value")
-    
+    console.log("aqui")
     // run the updateChart function with this selected option
-    update(selectedOption)
+    updateLinePlot(selectedOption)
 })   
     
     
