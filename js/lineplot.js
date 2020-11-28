@@ -4,14 +4,20 @@
 var width = 500;
 var height = 300;
 var padding = 60;
+var decades;
+var artists;
+var popularity;
 
 // get decade dataset
 d3.csv("dataset/decade.csv").then(function(data1) {
     d3.csv("dataset/artistV5.csv").then(function(data2) {
-        decades = data1;
-        artists = data2;
+        d3.csv("dataset/genPopDec.csv").then(function(data3) {
+            decades = data1;
+            artists = data2;
+            popularity = data3;
 
-        gen_line_chart();
+            gen_line_chart();
+        })
     })
 });
 
@@ -23,22 +29,22 @@ d3.csv("dataset/decade.csv").then(function(data1) {
  function gen_line_chart() {
 
     // create svg
-    var svg = d3.select("#line-plot")  // call id in div
+    var svg = d3.select("#lineplot")  // call id in div
                 .append("svg")          // append svg to the "id" div
                 .attr("width", width)
                 .attr("height", height)
                 // .append("g")
                 .attr("transform", "translate(" + width + ",0)");   // move svg to the right
 
-    // genre scale
-    var genreScale = artists.map((a) => a.genre);
-    var rockScale = [];
-    genreScale.forEach((c) => {
-        if(!rockScale.includes(c)) {
-            rockScale.push(c);
-        }
-    });
-    console.log(rockScale);
+    // // genre scale
+    // var genreScale = artists.map((a) => a.genre);
+    // var rockScale = [];
+    // genreScale.forEach((c) => {
+    //     if(!rockScale.includes(c)) {
+    //         rockScale.push(c);
+    //     }
+    // });
+    // console.log(rockScale);
 
     // create X scale data
     var xScaleData = decades.map((a) => a.decade);  // get all decades
@@ -75,12 +81,12 @@ d3.csv("dataset/decade.csv").then(function(data1) {
 
     // Add one line
     svg.append("path")
-      .datum(artists, decades)   // the population is on this dataset
+      .datum(popularity)   // the population is on this dataset
       .attr("fill", "none")
       .attr("stroke", "steelblue")
       .attr("stroke-width", 1.5)
       .attr("d", d3.line()
         .x(function(d) { return xScale(d.decade) })
-        .y(function(d) { return yScale(d.popularitySpotify) })
+        .y(function(d) { return yScale(d.popularity) })
         );
 }
