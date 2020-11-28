@@ -7,6 +7,12 @@ var padding = 60;
 var decades;
 var artists;
 var popularity;
+var popArray = [];
+var xScale;
+var yScale
+var line;
+
+
 
 // get decade dataset
 d3.csv("dataset/decade.csv").then(function(data1) {
@@ -15,11 +21,46 @@ d3.csv("dataset/decade.csv").then(function(data1) {
             decades = data1;
             artists = data2;
             popularity = data3;
-
+            buildOptions();
             gen_line_chart();
+           
+            
+            
+            
         })
     })
 });
+
+function buildOptions(){
+    var myDiv = document.getElementById("selectbutton");
+    //Create array of options to be added
+    var array = getGenresFiltered();
+    //Create and append select list
+    var selectList = document.createElement("select");
+    selectList.setAttribute("id", "mySelect");
+    myDiv.appendChild(selectList);
+
+    //Create and append the options
+    for (var i = 0; i < array.length; i++) {
+        
+        var option = document.createElement("option");
+        option.setAttribute("value", array[i]);
+        option.text = array[i];
+        selectList.appendChild(option);
+    }
+}
+
+function getGenresFiltered(){
+    var genres = popularity.map((a) => a.genre)
+    var genresFiltered = [];
+    genres.forEach((c) => {     // forEach to remove duplicates, couldn't find another way
+        if (!genresFiltered.includes(c)) {
+            genresFiltered.push(c);
+        }
+    });
+    genresFiltered.sort();
+    return genresFiltered
+}
 
 /**************************
  * gen_line_chart()
@@ -27,6 +68,11 @@ d3.csv("dataset/decade.csv").then(function(data1) {
  *************************/
 
 function gen_line_chart() {
+    var dropdown = d3.select("#mySelect");
+    dropdown.on("change", function(){
+        var selected = this.value;
+        updateLinePlot(selected);
+     });
 
   // create svg
   var svg = d3.select("#lineplot")  // call id in div
@@ -107,7 +153,7 @@ function gen_line_chart() {
 
 
   // create X scale
-  var xScale = d3.scaleBand()
+  xScale = d3.scaleBand()
                   .domain(xScaleDataFiltered)
                   .range([padding, width - padding]);
   xScale.paddingInner(0.5);   // separate elements
@@ -123,8 +169,8 @@ function gen_line_chart() {
 
 
   // create Y scale
-  var yScale = d3.scaleLinear()
-                 .domain([0, 50])
+  yScale = d3.scaleLinear()
+                 .domain([0, 40])
                   // .domain([0, d3.max(artists, function(d) { return +d.popularitySpotify; })])  // the + sign adds 100 to the axis
                   .range([height - padding, padding]);
 
@@ -141,13 +187,57 @@ function gen_line_chart() {
       .text("Popularity");
 
   // Add one line
-  svg.append("path")
+  line = svg.append("path")
      .datum(popArray)   // the population is on this dataset
      .attr("fill", "none")
      .attr("stroke", "steelblue")
      .attr("stroke-width", 1.5)
      .attr("d", d3.line()
-     .x(function(d) { return xScale(d.decade); })
-     .y(function(d) { return yScale(d.popularity*100); }));
-
+     .x(function(d) { 
+        return xScale(d.decade); })
+     .y(function(d) { 
+         return yScale(d.popularity*100); }));
+    
+     
+     
 }
+
+function updateLinePlot(selectedGenre){
+    // Create new data with selection
+    var pop = []
+    for(var i = 0; i < Object.keys(popularity).length-1; i++) {
+            
+        if(popularity[i].genre === selectedGenre) {
+            pop.push(popularity[i]);
+        }
+    }
+    var dataFilter = pop.map(function(d){
+        console.log(pop)
+        return {time: d.decade, value: d.popularity*100 };
+    });
+    var myColor = d3.scaleOrdinal()
+   .domain(popularity)
+   .range(d3.schemeSet2);
+    // Give these new data to update line 
+    line
+          .datum(dataFilter)
+          .transition()
+          .duration(1000)
+          .attr("d", d3.line()
+            .x(function(d) { return xScale(+d.time) })
+            .y(function(d) { 
+                
+                return yScale(+d.value) })
+          )
+          .attr("stroke", function(d){ return myColor(selectedGenre) })
+    }
+
+
+
+   
+    
+    
+
+    
+    
+

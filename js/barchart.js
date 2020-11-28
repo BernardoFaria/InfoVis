@@ -147,7 +147,4 @@ function prepare_event() {
 
         selectedBar.attr("fill", "green");
     });
-
-
-
 }
