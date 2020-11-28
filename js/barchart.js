@@ -11,6 +11,7 @@ var outerRadius = Math.min(width, height) / 2;  // goes from  the center to the 
 var decades;
 var artists;
 
+
 // get decade dataset
 d3.csv("dataset/decade.csv").then(function(data1) {
     d3.csv("dataset/artistV5.csv").then(function(data2) {
@@ -37,7 +38,7 @@ function gen_bar_chart() {
         var string = artists[i].genre;  // get genre string
         var res = string.split(",");    // split it by commas
         for(j = 0; j < res.length; j ++) {  // loop the splitted string
-            if(res[j] == "Rock") { 
+            if(res[j] == "Pop") { 
                 filteredData.push(artists[i]); }  // add to array 
             }
     }   
@@ -55,7 +56,7 @@ function gen_bar_chart() {
 
     // create Y scale   => popularity
     var yScale = d3.scaleLinear()
-              .domain([0, d3.max(filteredData, function(d) { return d.popularitySpotify; })]) 
+              .domain([0, d3.max(filteredData, function(d) { return +d.popularitySpotify; })]) 
               .range([height - padding, padding]); 
 
 
@@ -96,8 +97,8 @@ function gen_bar_chart() {
     
     // y Axis
     var yAxis = d3.axisLeft()
-                  .scale(yScale)
-                  .ticks(5);
+                  .scale(yScale);
+                //   .ticks(5);
 
     svg.append("g")
        .attr("transform", "translate(" + padding + ",0)")
@@ -109,6 +110,7 @@ function gen_bar_chart() {
        .attr("x", 0 - height / 1.5)
        .attr("dy", "1em")
        .text("Popularity");
+
 
 
     // Add bars
