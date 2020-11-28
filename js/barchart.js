@@ -128,5 +128,5 @@ function gen_bar_chart() {
     //                 .endAngle(function(d) { return xScale(d.artist) + xScale.bandwidth(); })
     //                 .padAngle(0.01)
     //                 .padRadius(innerRadius));
-    // console.log("cona");
+    
 }
