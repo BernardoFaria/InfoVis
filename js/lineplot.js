@@ -35,6 +35,14 @@ function gen_line_chart() {
               .attr("height", height)
               .attr("transform", "translate(" + width + ",0)");   // move svg to the right
 
+  svg.append("text")
+     .attr("x", (width / 2))             
+     .attr("y", height / 5 )
+     .attr("class", "title")  // para posterior CSS (se houver tempo eheh)
+     .attr("text-anchor", "middle")  
+     .style("font-size", "20px") 
+     .style("text-decoration", "underline")  
+     .text("Genre Evolution");
 
   // // filtering data
   // var filteredData = [];
@@ -70,11 +78,13 @@ function gen_line_chart() {
   // }
 
   var popArray = [];
+  console.log(popularity);
   for(var i = 0; i < Object.keys(popularity).length-1; i++) {
-    if(popularity[i].genre == "Rock") {
+    if(popularity[i].genre == "Country") {
       popArray.push(popularity[i]);
     }
   }
+  // console.log(popArray);
   // var finalArray = popularity.map(function(d){
   //   return { 'decade' : d.decade, 'popularity' : d.popularity*100 };
   // });
