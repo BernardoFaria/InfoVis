@@ -16,7 +16,6 @@ d3.csv("dataset/decade.csv").then(function(data1) {
     d3.csv("dataset/artistV5.csv").then(function(data2) {
         decades = data1;
         artists = data2;
-        // console.log(artists[1].genre);
 
         gen_bar_chart();
     })
@@ -30,55 +29,102 @@ d3.csv("dataset/decade.csv").then(function(data1) {
 
 function gen_bar_chart() {
 
+    // filtering data
+    var filteredData = [];
+    var i,j;
+    // loop on artist dataset
+    for(i = 0; i < Object.keys(artists).length-1; i++) {    
+        var string = artists[i].genre;  // get genre string
+        var res = string.split(",");    // split it by commas
+        for(j = 0; j < res.length; j ++) {  // loop the splitted string
+            if(res[j] == "Rock") { 
+                filteredData.push(artists[i]); }  // add to array 
+            }
+    }   
+    // sort data by popularity => bigger to smaller
+    filteredData.sort(function(a, b) { return b.popularitySpotify - a.popularitySpotify; });
+    // first 5 elements
+    filteredData.splice(5, filteredData.length);
+
+    // create X scale   => artists
+    var xScale = d3.scaleBand()
+                   .domain(filteredData.map(d => d.artist))
+                   .range([padding, width - padding]);
+    xScale.paddingInner(0.5);
+
+
+    // create Y scale   => popularity
+    var yScale = d3.scaleLinear()
+              .domain([0, d3.max(filteredData, function(d) { return d.popularitySpotify; })]) 
+              .range([height - padding, padding]); 
+
+
+
     // create svg
     var svg = d3.select("#barchart")  // call id in div
                 .append("svg")          // append svg to the "id" div
                 .attr("width", width)
                 .attr("height", height)
-                // .append("g")
-                .attr("transform", "translate(" + width + ",0)");   // move svg
+                .attr("transform", "translate(" + width + ",0)");
 
 
-    // create X scale data => bands
+    // create bars
+    svg.selectAll("rect")
+       .data(filteredData)
+       .join("rect")
+       .attr("width", xScale.bandwidth())
+       .attr("height", d => (height - padding - yScale(d.popularitySpotify)))
+       .attr("fill", "red")
+       .attr("x", function(d,i) { return xScale(d.artist); })
+       .attr("y", function(d,i) { return yScale(d.popularitySpotify); })
+       .append("text")
+       .text(d => d.artist);
+    
+    
+    // x Axis
+    var xAxis = d3.axisBottom()
+                  .scale(xScale);
 
-    var xScaleDataFiltered = [];
-    var i,j;
-    for(i = 0; i < Object.keys(artists).length-1; i++) {    // loop on artist dataset
-        var string = artists[i].genre;  // get genre string
-        var res = string.split(",");    // split it by commas
-        for(j = 0; j < res.length; j ++) {  // loop the splitted string
-            if(res[j] == "Rock") { 
-                xScaleDataFiltered.push(artists[i]); }  // add to array 
-            }
-    }   
-    // console.log(xScaleDataFiltered);
+    svg.append("g")
+       .attr("transform", "translate(0," + (height - padding) + ")")
+       .call(xAxis);
+    
+    svg.append("text")
+       .attr("transform", "translate(" + width/2.6 + "," + (height -padding / 3) + ")")
+       .text("Top 5 Artists");
 
+    
+    // y Axis
+    var yAxis = d3.axisLeft()
+                  .scale(yScale)
+                  .ticks(5);
 
-    // create X scale   => artists
-    var xScale = d3.scaleBand()
-                   .domain(xScaleDataFiltered)
-                   .range([0, 2*Math.PI]);
+    svg.append("g")
+       .attr("transform", "translate(" + padding + ",0)")
+       .call(yAxis);
 
-
-    // create Y scale => popularity
-    var y = d3.scaleRadial()
-              .range([innerRadius, outerRadius])   // Domain will be define later.
-              .domain([0, d3.max(xScaleDataFiltered, function(d) { return +d.popularitySpotify; })]); // Domain of Y is from 0 to the max seen in the data
+    svg.append("text")
+       .attr("transform", "rotate(-90)")
+       .attr("y", 0)
+       .attr("x", 0 - height / 1.5)
+       .attr("dy", "1em")
+       .text("Popularity");
 
 
     // Add bars
-    svg.append("g")
-       .selectAll("path")
-       .data(xScaleDataFiltered)
-       .enter()
-       .append("path")
-       .attr("fill", "#69b3a2")
-       .attr("d", d3.arc()     // imagine your doing a part of a donut plot
-        .innerRadius(innerRadius)
-        .outerRadius(function(d) { return y(d['popularitySpotify']); })
-        .startAngle(function(d) { return xScale(d.artists); })
-        .endAngle(function(d) { return xScale(d.artists) + xScale.bandwidth(); })
-        .padAngle(0.01)
-        .padRadius(innerRadius));
-    
+    // svg.append("g")
+    //    .selectAll("path")
+    //    .data(filteredData)
+    //    .enter()
+    //    .append("path")
+    //    .attr("fill", "#69b3a2")
+    //    .attr("d", d3.arc()     // imagine your doing a part of a donut plot
+    //                 .innerRadius(innerRadius)
+    //                 // .outerRadius(function(d) { return y(d.popularitySpotify); })
+    //                 .outerRadius(function(d) { return y(d.artist); })
+    //                 .startAngle(function(d) { return xScale(d.artist); })
+    //                 .endAngle(function(d) { return xScale(d.artist) + xScale.bandwidth(); })
+    //                 .padAngle(0.01)
+    //                 .padRadius(innerRadius));
+    // console.log("cona");
 }
