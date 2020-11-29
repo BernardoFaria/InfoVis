@@ -34,7 +34,6 @@ d3.csv("dataset/decade.csv").then(function(data1) {
  *************************/
 
 function gen_bar_chart() {
-    console.log("aqui")
     // filtering data
     var filteredData = [];
     var i,j;
