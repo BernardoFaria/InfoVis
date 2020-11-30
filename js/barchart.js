@@ -14,6 +14,7 @@ var svg;
 var dispatch;
 var selectedBar;
 var context = 0; // 0 - Reset; 1 - New; 2 - Old.
+var dropdown;
 
 
 // get decade dataset
@@ -34,7 +35,13 @@ d3.csv("dataset/decade.csv").then(function(data1) {
  *************************/
 
 function gen_bar_chart() {
-    console.log("aqui")
+
+    dropdown = d3.select("#selectbutton").select("#mySelect");
+    dropdown.on("change", function(){
+        var selected = this.value;
+        updateBarPlot(selected);
+    });
+
     // filtering data
     var filteredData = [];
     var i,j;
