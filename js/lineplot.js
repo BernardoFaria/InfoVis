@@ -124,7 +124,6 @@ function gen_line_chart() {
   // }
 
   var popArray = [];
-  // console.log(popularity);
   for(var i = 0; i < Object.keys(popularity).length-1; i++) {
     if(popularity[i].genre == "Country") {
       popArray.push(popularity[i]);
@@ -212,7 +211,7 @@ function updateLinePlot(selectedGenre){
         }
     }
     var dataFilter = pop.map(function(d){
-        // console.log(pop)
+      
         return {time: d.decade, value: d.popularity*100 };
     });
     var myColor = d3.scaleOrdinal()
