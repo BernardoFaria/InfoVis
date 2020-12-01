@@ -1,8 +1,8 @@
 // Theme: Music Evolution Through Decades
 
 // global variables
-var width = 500;
-var height = 300;
+var width = 600;
+var height = 400;
 var padding = 60;
 
 var innerRadius = 10;
@@ -78,7 +78,7 @@ function gen_bar_chart() {
                 .append("svg")          // append svg to the "id" div
                 .attr("width", width)
                 .attr("height", height)
-                .attr("transform", "translate(" + width + ",0)");   // move svg to the right
+                .attr("transform", "translate(" + width + "," + (-height) +")");   // move svg to the right
 
     svg.append("text")
        .attr("x", (width / 2))             

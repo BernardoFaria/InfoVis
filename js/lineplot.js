@@ -1,8 +1,8 @@
 // Theme: Music Evolution Through Decades
 
 // global variables
-var width = 500;
-var height = 300;
+var width = 600;
+var height = 400;
 var padding = 60;
 var decades;
 var artists;

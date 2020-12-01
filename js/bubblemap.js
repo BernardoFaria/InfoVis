@@ -8,7 +8,6 @@ var padding = 60;
 var innerRadius = 10;
 var outerRadius = Math.min(width, height) / 2;  // goes from  the center to the border
 
-var artists;
 var mapData; 
 var dispatch; 
 var selectedCountry;  
@@ -16,14 +15,11 @@ var context = 0;
 var svg;
 
 // get datasets
-d3.csv("dataset/artistV5.csv").then(function(data1) {
-    d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson").then(function(data2) {
-        artists = data1;
-        mapData = data2;
+d3.json("https://raw.githubusercontent.com/andybarefoot/andybarefoot-www/master/maps/mapdata/custom50.json").then(function(data) {
+    mapData = data;
 
-        gen_bubble_map();
-        prepare_event();
-    })
+    gen_bubble_map();
+    prepare_event();
 });
 
 
@@ -34,29 +30,55 @@ d3.csv("dataset/artistV5.csv").then(function(data1) {
 
 function gen_bubble_map() {
 
-    // create svg
-    svg = d3.select("#bubblemap")  // call id in div
-                .append("svg")          // append svg to the "id" div
-                .attr("width", width)
-                .attr("height", height)
-                .attr("transform", "translate(" + width / 2 + ",0)");
-
     // Map and projection
-    var projection = d3.geoNaturalEarth()
+    var projection = d3.geoEquirectangular()
                        .scale(width / 1.3 / Math.PI)
                        .translate([width / 2, height / 2]);
 
+    // Define map path
+    var path = d3.geoPath()
+                 .projection(projection);
 
-    // Draw the map
-    svg.append("g")
-        .selectAll("path")
-        .data(mapData.features)
-        .enter()
-        .append("path")
-        .attr("fill", "steelblue")
-        .attr("d", d3.geoPath()
-                     .projection(projection))
-                     .style("stroke", "#000000");
+    // create svg
+    svg = d3.select("#bubblemap")  // call id in div
+            .append("svg")          // append svg to the "id" div
+            .attr("width", width)
+            .attr("height", height)
+            .attr("transform", "translate(" + width * 2 + "," + (-height) +")");
+
+    //Bind data and create one path per GeoJSON feature ; draw a path for each feature/country
+    var countriesGroup = svg.append("g")
+                            .attr("id", "map")
+                            .selectAll("path")
+                            .data(mapData.features)
+                            .enter()
+                            .append("path")
+                            .attr("fill", "steelblue")
+                            .style("stroke", "#000000")
+                            .attr("d", path)
+                            .attr("id", function(d, i) {
+                                console.log(d.properties.iso_a3)
+                                return "country" + d.properties.iso_a3;
+                            })
+                            // add a mouseover action to show name label for feature/country
+                            .on("mouseover", function(d, i) {
+                                d3.select(d.properties.iso_a3).style("display", "block");
+                            })
+                            .on("mouseout", function(d, i) {
+                                d3.select(d.properties.iso_a3).style("display", "none");
+                            });
+
+
+    // // Draw the map
+    // svg.append("g")
+    //     .selectAll("path")
+    //     .data(mapData.features)
+    //     .enter()
+    //     .append("path")
+    //     .attr("fill", "steelblue")
+    //     .attr("d", d3.geoPath()
+    //                  .projection(projection))
+    //                  .style("stroke", "#000000");
 }
 
 function prepare_event() {
