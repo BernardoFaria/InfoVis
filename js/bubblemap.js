@@ -15,11 +15,13 @@ var context = 0;
 var svg;
 
 // get datasets
-d3.json("https://raw.githubusercontent.com/andybarefoot/andybarefoot-www/master/maps/mapdata/custom50.json").then(function(data) {
+// d3.json("https://raw.githubusercontent.com/andybarefoot/andybarefoot-www/master/maps/mapdata/custom50.json").then(function(data) {
+d3.json("dataset/countries-110m.json").then(function(data) {
     mapData = data;
 
     gen_bubble_map();
-    prepare_event();
+    addZoom();
+    // prepare_event();
 });
 
 
@@ -44,62 +46,79 @@ function gen_bubble_map() {
             .append("svg")          // append svg to the "id" div
             .attr("width", width)
             .attr("height", height)
-            .attr("transform", "translate(" + width * 2 + "," + (-height) +")");
+            .attr("transform", "translate(" + (width*2) + "," + (-60 -  height) +")");
 
-    //Bind data and create one path per GeoJSON feature ; draw a path for each feature/country
-    var countriesGroup = svg.append("g")
-                            .attr("id", "map")
-                            .selectAll("path")
-                            .data(mapData.features)
-                            .enter()
-                            .append("path")
-                            .attr("fill", "steelblue")
-                            .style("stroke", "#000000")
-                            .attr("d", path)
-                            .attr("id", function(d, i) {
-                                console.log(d.properties.iso_a3)
-                                return "country" + d.properties.iso_a3;
-                            })
-                            // add a mouseover action to show name label for feature/country
-                            .on("mouseover", function(d, i) {
-                                d3.select(d.properties.iso_a3).style("display", "block");
-                            })
-                            .on("mouseout", function(d, i) {
-                                d3.select(d.properties.iso_a3).style("display", "none");
-                            });
+    svg.selectAll("path")
+       .data(topojson.feature(mapData, mapData.objects.countries).features)
+       .enter()
+       .append("path")
+       .attr("fill", "steelblue")
+       .attr("d", path)
+       .attr("id", function(d, i) { return d.properties.name; });
+    
+    svg.select("path#Portugal").style("fill", "red");
+
+    // //Bind data and create one path per GeoJSON feature ; draw a path for each feature/country
+    // var countriesGroup = svg.append("g")
+    //                         .attr("id", "map")
+    //                         .selectAll("path")
+    //                         .data(mapData.features)
+    //                         .enter()
+    //                         .append("path")
+    //                         .attr("fill", "steelblue")
+    //                         .style("stroke", "#000000")
+    //                         .attr("d", path)
+    //                         .attr("id", function(d, i) {
+    //                             console.log(d.properties.iso_a3)
+    //                             return "country" + d.properties.iso_a3;
+    //                         })
+    //                         // add a mouseover action to show name label for feature/country
+    //                         .on("mouseover", function(d, i) {
+    //                             d3.select(d.properties.iso_a3).style("display", "block");
+    //                         })
+    //                         .on("mouseout", function(d, i) {
+    //                             d3.select(d.properties.iso_a3).style("display", "none");
+    //                         });
 
 
-    // // Draw the map
-    // svg.append("g")
-    //     .selectAll("path")
-    //     .data(mapData.features)
-    //     .enter()
-    //     .append("path")
-    //     .attr("fill", "steelblue")
-    //     .attr("d", d3.geoPath()
-    //                  .projection(projection))
-    //                  .style("stroke", "#000000");
+
 }
 
-function prepare_event() {
-    dispatch = d3.dispatch("highlight");
+function addZoom() {
+    svg.call(d3.zoom()
+               .extent([
+                   [0,0], 
+                   [1000,1000],
+                ])
+                .scaleExtent([1,8])
+                .on("zoom", zoomed)
+            );
+}
+
+function zoomed({ transform }) {
+    svg.selectAll("path")
+       .attr("transform", transform);
+}
+
+// function prepare_event() {
+//     dispatch = d3.dispatch("highlight");
       
-    svg.selectAll("path").on("mouseover", function (event, d) {
-        dispatch.call("highlight", this, d);
-    });
+//     svg.selectAll("path").on("mouseover", function (event, d) {
+//         dispatch.call("highlight", this, d);
+//     });
   
-    dispatch.on("highlight", function(country){
+//     dispatch.on("highlight", function(country){
   
-        if(selectedCountry != null) {
-            selectedCountry.attr("fill", function(d) {
-                return context == 0 ? "steelblue" : context == 1 ? "purple" : "red";
-            });
-        }
+//         if(selectedCountry != null) {
+//             selectedCountry.attr("fill", function(d) {
+//                 return context == 0 ? "steelblue" : context == 1 ? "purple" : "red";
+//             });
+//         }
   
-        selectedCountry = d3.selectAll("path").filter(function(d){
-            return d.properties.id == country.properties.id;
-        })
+//         selectedCountry = d3.selectAll("path").filter(function(d){
+//             return d.properties.id == country.properties.id;
+//         })
   
-        selectedCountry.attr("fill", "green");
-    });
-}
+//         selectedCountry.attr("fill", "green");
+//     });
+// }
