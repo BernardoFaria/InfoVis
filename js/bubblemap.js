@@ -14,8 +14,7 @@ var selectedCountry;
 var context = 0;
 var svg;
 
-// get datasets
-// d3.json("https://raw.githubusercontent.com/andybarefoot/andybarefoot-www/master/maps/mapdata/custom50.json").then(function(data) {
+// get map dataset
 d3.json("dataset/countries-110m.json").then(function(data) {
     mapData = data;
 
