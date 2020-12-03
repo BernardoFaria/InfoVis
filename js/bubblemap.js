@@ -21,7 +21,7 @@ d3.json("dataset/countries-110m.json").then(function(data) {
 
     gen_bubble_map();
     addZoom();
-    // prepare_event();
+    prepare_event();
 });
 
 
@@ -56,7 +56,7 @@ function gen_bubble_map() {
        .attr("d", path)
        .attr("id", function(d, i) { return d.properties.name; });
     
-    svg.select("path#Portugal").style("fill", "red");
+    // svg.select("path#Portugal").style("fill", "red");
 
     // //Bind data and create one path per GeoJSON feature ; draw a path for each feature/country
     // var countriesGroup = svg.append("g")
@@ -84,6 +84,7 @@ function gen_bubble_map() {
 
 }
 
+// Adding zoom to the map
 function addZoom() {
     svg.call(d3.zoom()
                .extent([
@@ -95,30 +96,39 @@ function addZoom() {
             );
 }
 
+// Applying the zoom
 function zoomed({ transform }) {
     svg.selectAll("path")
        .attr("transform", transform);
 }
 
-// function prepare_event() {
-//     dispatch = d3.dispatch("highlight");
+
+
+function prepare_event() {
+
+    dispatch = d3.dispatch("highlight");
       
-//     svg.selectAll("path").on("mouseover", function (event, d) {
-//         dispatch.call("highlight", this, d);
-//     });
+    svg.selectAll("path")
+       .on("mouseover", function (event, d, i) {
+           console.log(d);
+            dispatch.call("highlight", this, d);
+    });
+
+    dispatch.on("highlight", function(country){
+
   
-//     dispatch.on("highlight", function(country){
+        if(selectedCountry != null) {
+            selectedCountry.attr("fill", "steelblue");
+            // selectedCountry.attr("fill", function(d) {
+                // return "steelblue";
+                // return context == 0 ? "steelblue" : context == 1 ? "purple" : "red";
+            // });
+        }
+
+        selectedCountry = svg.selectAll("path").filter(function(d, i){
+            return d.properties.name == country.properties.name;
+        })
   
-//         if(selectedCountry != null) {
-//             selectedCountry.attr("fill", function(d) {
-//                 return context == 0 ? "steelblue" : context == 1 ? "purple" : "red";
-//             });
-//         }
-  
-//         selectedCountry = d3.selectAll("path").filter(function(d){
-//             return d.properties.id == country.properties.id;
-//         })
-  
-//         selectedCountry.attr("fill", "green");
-//     });
-// }
+        selectedCountry.attr("fill", "green");
+    });
+}
