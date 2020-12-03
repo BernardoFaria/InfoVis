@@ -125,7 +125,7 @@ function gen_line_chart() {
 
   var popArray = [];
   for(var i = 0; i < Object.keys(popularity).length-1; i++) {
-    if(popularity[i].genre == "Country") {
+    if(popularity[i].genre == "Avant-garde") {
       popArray.push(popularity[i]);
     }
   }
