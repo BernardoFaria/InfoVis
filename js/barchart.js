@@ -78,7 +78,8 @@ function gen_bar_chart() {
                 .append("svg")          // append svg to the "id" div
                 .attr("width", width)
                 .attr("height", height)
-                .attr("transform", "translate(" + width + "," + (-height) +")");   // move svg to the right
+                // .attr("transform", "translate(" + width + "," + (-height) +")");   // move svg to the right
+                .attr("transform", "translate(" + width + ",0)");
 
     svg.append("text")
        .attr("x", (width / 2))             
