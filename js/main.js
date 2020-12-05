@@ -1,5 +1,11 @@
 // bar chart + bubble map with interactions
 
+// events
+export var dispatchClickBar = d3.dispatch("clickBar");
+export var dispatchClickMap = d3.dispatch("clickMap");
+
+
+
 // global variables
 var width = 600;
 var height = 400;
@@ -16,7 +22,7 @@ var dropdown;
 var mapData;
 var selectedCountry;  
 
-dispatch = d3.dispatch("click_bar", "click_map");
+// dispatch = d3.dispatch("click_bar", "click_map");
 
 // get decade dataset
 d3.csv("dataset/decade.csv").then(function(data1) {
@@ -35,22 +41,22 @@ d3.csv("dataset/decade.csv").then(function(data1) {
 });
 
 // Adding zoom to the map
-function addZoom() {
-    svg_map.call(d3.zoom()
-               .extent([
-                   [0,0], 
-                   [1000,1000],
-                ])
-                .scaleExtent([1,8])
-                .on("zoom", zoomed)
-            );
-}
+// function addZoom() {
+//     svg_map.call(d3.zoom()
+//                .extent([
+//                    [0,0], 
+//                    [1000,1000],
+//                 ])
+//                 .scaleExtent([1,8])
+//                 .on("zoom", zoomed)
+//             );
+// }
 
-// Applying the zoom
-function zoomed({ transform }) {
-    svg_map.selectAll("path")
-       .attr("transform", transform);
-}
+// // Applying the zoom
+// function zoomed({ transform }) {
+//     svg_map.selectAll("path")
+//        .attr("transform", transform);
+// }
 
 
 

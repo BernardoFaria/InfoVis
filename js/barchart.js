@@ -1,5 +1,7 @@
 // Theme: Music Evolution Through Decades
 
+import { dispatchClickBar } from "./main.js";
+
 // global variables
 var width = 600;
 var height = 400;
@@ -19,7 +21,7 @@ var dropdown;
 
 // get decade dataset
 d3.csv("dataset/decade.csv").then(function(data1) {
-    d3.csv("dataset/artistV5.csv").then(function(data2) {
+    d3.csv("dataset/artistV6.csv").then(function(data2) {
         decades = data1;
         artists = data2;
 
@@ -132,8 +134,22 @@ function gen_bar_chart() {
             // ...except the one selected
             d3.select(this).attr("fill", "green");
         })
-        .on("mouseout", function(event) {
-            d3.selectAll("rect").attr("fill", "steelblue");
+        // .on("mouseout", function(event) {
+        //     d3.selectAll("rect").attr("fill", "steelblue");
+        // })
+        .on("click", function(event, d) {
+            //put bar red
+            if(d3.select(this) != null) {
+                d3.select(this).attr("fill", "steelblue");
+            }
+            // selectedBar = svg.selectAll("rect").filter(function(d) {
+            //     return d.displayName == event.displayName;
+            // })
+            d3.select(this).attr("fill", "red");
+            
+            // console.log(selectedBar);
+
+            dispatchClickBar.call("clickBar", this, d);
         });
 }
 
