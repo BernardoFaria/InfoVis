@@ -1,9 +1,6 @@
-// bar chart + bubble map with interactions
-
-// events
+// predicates of the events
 export var dispatchClickBar = d3.dispatch("clickBar");
 export var dispatchClickMap = d3.dispatch("clickMap");
-
 
 
 // global variables

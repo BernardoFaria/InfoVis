@@ -1,6 +1,8 @@
 // Theme: Music Evolution Through Decades
 
+// events
 import { dispatchClickBar } from "./main.js";
+import { dispatchClickMap } from "./main.js";
 
 // global variables
 var width = 600;
@@ -22,26 +24,8 @@ d3.json("dataset/countries-110m.json").then(function(data) {
 });
 
 
-// Adding zoom to the map
-function addZoom() {
-    svg.call(d3.zoom()
-               .extent([
-                   [0,0], 
-                   [1000,1000],
-                ])
-                .scaleExtent([1,8])
-                .on("zoom", zoomed)
-            );
-}
-
-// Applying the zoom
-function zoomed({ transform }) {
-    svg.selectAll("path")
-       .attr("transform", transform);
-}
-
 //FIXME: mudar o nome do event
-dispatchClickBar.on("clickBar", function(event) {
+dispatchClickBar.on("clickBar", function(artistSelected) {
     
     var id;
     var jData = topojson.feature(mapData, mapData.objects.countries).features;
@@ -51,7 +35,7 @@ dispatchClickBar.on("clickBar", function(event) {
 
     // loop to get the correspondent id 
     for(var i = 0; i < jData.length; i++) {
-        if(jData[i].properties.name == event.country) {
+        if(jData[i].properties.name == artistSelected.country) {
             id = jData[i].id;
             break;
         }
@@ -102,5 +86,32 @@ function gen_bubble_map() {
         .on("mouseout", function(event) {
             //TODO: escolher se metemos ou não
             // d3.select(this).attr("fill", "steelblue");
+        })
+        .on("click", function(event, d) {
+            // clean entire map => all blue
+            svg.selectAll(".paths-map").style("fill", "steelblue");
+            // color selected country
+            d3.select(this).style("fill", "red");
+            
+            dispatchClickMap.call("clickMap", this, d);
         });
+}
+
+
+// Adding zoom to the map
+function addZoom() {
+    svg.call(d3.zoom()
+               .extent([
+                   [0,0], 
+                   [1000,1000],
+                ])
+                .scaleExtent([1,8])
+                .on("zoom", zoomed)
+            );
+}
+
+// Applying the zoom
+function zoomed({ transform }) {
+    svg.selectAll("path")
+       .attr("transform", transform);
 }
