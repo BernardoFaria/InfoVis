@@ -135,7 +135,6 @@ function gen_bar_chart() {
     svg.append("text")
            .attr("x", (width / 2))             
            .attr("y", height / 7 )
-           .attr("class", "title")  // para posterior CSS (se houver tempo eheh)
            .attr("text-anchor", "middle")  
            .style("font-size", "20px") 
            .style("text-decoration", "underline")  
@@ -143,6 +142,7 @@ function gen_bar_chart() {
 
     // x Axis
     xAxis = svg.append("g")
+               .attr("class", "axisSubtitle")
                .attr("transform", "translate(0," + (height - padding) + ")")
                .call(d3.axisBottom(xScale));
 
@@ -156,6 +156,7 @@ function gen_bar_chart() {
                     .scale(yScale);
 
     svg.append("g")
+           .attr("class", "axisSubtitle")
            .attr("transform", "translate(" + padding + ",0)")
            .call(yAxis);
 

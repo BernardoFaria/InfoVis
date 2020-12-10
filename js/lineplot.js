@@ -1,66 +1,76 @@
 // Theme: Music Evolution Through Decades
 
+// import colors from main
+import { genreColor } from "./main.js";
+
+// all genres; they never change
+const genres= ["Avant-garde", "Blues", "Caribbean and Caribbean-influenced", "Comedy",
+"Country", "Easy listening", "Electronic", "Folk", "Heavy metal", "Hip hop", "House",
+"Jazz", "Latin", "Pop", "Punk rock", "R&B and soul", "Rock"];
+
 // global variables
 var width = 600;
 var height = 400;
 var padding = 60;
-var decades;
-var artists;
-var popularity;
-var popArray = [];
-var xScale;
-var yScale
-var line;
+var decades;    // dataset 1
+var artists;    // dataset 2
+var popularity; // dataset 3
+var xScale;     // x scale
+var yScale      // y scale
+var lines;      // lines of line chart
 
+var opacityOn = 0.3;    // when mouseover, other bars's opacity lows down
+var opacityOff = 2;     // when mouseover, THIS bar's opacity gets higher
+var opacityNormal = 1;  // when mouseout, all bars return to normal
 
+// all the lines
+var lineAvant, lineBlues, lineCarib, lineComedy, lineCountry, lineEasy, lineElec, lineFolk, 
+lineHeavy, lineHip, lineHouse, lineJazz, lineLatin, linePop, linePunk, lineRB, lineRock;
 
 // get decade dataset
 d3.csv("dataset/decade.csv").then(function(data1) {
-    d3.csv("dataset/artistV5.csv").then(function(data2) {
+    d3.csv("dataset/artistV6.csv").then(function(data2) {
         d3.csv("dataset/genDecPop.csv").then(function(data3) {
             decades = data1;
             artists = data2;
             popularity = data3;
-            buildOptions();
+            // buildOptions();
             gen_line_chart();
-           
-            
-            
-            
         })
     })
 });
 
-function buildOptions(){
-    var myDiv = document.getElementById("selectbutton");
-    //Create array of options to be added
-    var array = getGenresFiltered();
-    //Create and append select list
-    var selectList = document.createElement("select");
-    selectList.setAttribute("id", "mySelect");
-    myDiv.appendChild(selectList);
+// function buildOptions(){
+//     var myDiv = document.getElementById("selectbutton");
+//     //Create array of options to be added
+//     var array = getGenresFiltered();
+//     //Create and append select list
+//     var selectList = document.createElement("select");
+//     selectList.setAttribute("id", "mySelect");
+//     myDiv.appendChild(selectList);
 
-    //Create and append the options
-    for (var i = 0; i < array.length; i++) {
+//     //Create and append the options
+//     for (var i = 0; i < array.length; i++) {
         
-        var option = document.createElement("option");
-        option.setAttribute("value", array[i]);
-        option.text = array[i];
-        selectList.appendChild(option);
-    }
-}
+//         var option = document.createElement("option");
+//         option.setAttribute("value", array[i]);
+//         option.text = array[i];
+//         selectList.appendChild(option);
+//     }
+// }
 
-function getGenresFiltered(){
-    var genres = popularity.map((a) => a.genre)
-    var genresFiltered = [];
-    genres.forEach((c) => {     // forEach to remove duplicates, couldn't find another way
-        if (!genresFiltered.includes(c)) {
-            genresFiltered.push(c);
-        }
-    });
-    genresFiltered.sort();
-    return genresFiltered
-}
+// function getGenresFiltered(){
+//     var genres = popularity.map((a) => a.genre)
+//     var genresFiltered = [];
+//     genres.forEach((c) => {     // forEach to remove duplicates, couldn't find another way
+//         if (!genresFiltered.includes(c)) {
+//             genresFiltered.push(c);
+//         }
+//     });
+//     genresFiltered.sort();
+//     return genresFiltered
+// }
+
 
 /**************************
  * gen_line_chart()
@@ -68,168 +78,168 @@ function getGenresFiltered(){
  *************************/
 
 function gen_line_chart() {
-    var dropdown = d3.select("#mySelect");
-    dropdown.on("change", function(){
-        var selected = this.value;
-        updateLinePlot(selected);
-     });
+    // var dropdown = d3.select("#mySelect");
+    // dropdown.on("change", function(){
+    //     var selected = this.value;
+    //     updateLinePlot(selected);
+    //  });
 
-  // create svg
-  var svg = d3.select("#lineplot")  // call id in div
-              .append("svg")          // append svg to the "id" div
-              .attr("width", width)
-              .attr("height", height)
-              .attr("transform", "translate(" + width + ",0)");   // move svg to the right
+    // create svg
+    var svg = d3.select("#lineplot")  // call id in div
+                .append("svg")        // append svg to the "id" div
+                .attr("width", width)
+                .attr("height", height)
+                .attr("transform", "translate(" + width + ",0)");   // move svg to the right
 
-  svg.append("text")
-     .attr("x", (width / 2))             
-     .attr("y", height / 5 )
-     .attr("class", "title")  // para posterior CSS (se houver tempo eheh)
-     .attr("text-anchor", "middle")  
-     .style("font-size", "20px") 
-     .style("text-decoration", "underline")  
-     .text("Genre Evolution");
-
-  // // filtering data
-  // var filteredData = [];
-  // var i,j;
-  // // loop on artist dataset
-  // for(i = 0; i < Object.keys(artists).length-1; i++) {    
-  //     var string = artists[i].genre;  // get genre string
-  //     var res = string.split(",");    // split it by commas
-  //     for(j = 0; j < res.length; j ++) {  // loop the splitted string
-  //         if(res[j] == "Pop") { 
-  //             filteredData.push(artists[i]); }  // add to array 
-  //         }
-  // }  
-
-  // var popArtists = [];  // tem os artistas pop com décadas
-  // var artistsName = filteredData.map((a) => a.artist);
-  // for(i = 0; i < Object.keys(decades).length-1; i++) {
-  //   for(j = 0; j < artistsName.length; j++) {
-  //     if(decades[i].artist == artistsName[j]) {
-  //       popArtists.push(decades[i]);
-  //     }
-  //   }
-  // }
-  // console.log(popArtists);
-
-  // var popPopularity = [];
-  // for(i = 0; i < popArtists.length; i++) {
-  //   var name = popArtists[i].artist;
-  //   for(j = 0; j < Object.keys(artists).length-1; j++) {
-  //     if(artists[j].artist == name)
-  //       popPopularity[i] = artists[j].popularitySpotify;
-  //   }
-  // }
-
-  var popArray = [];
-  for(var i = 0; i < Object.keys(popularity).length-1; i++) {
-    if(popularity[i].genre == "Avant-garde") {
-      popArray.push(popularity[i]);
-    }
-  }
-  // console.log(popArray);
-  // var finalArray = popularity.map(function(d){
-  //   return { 'decade' : d.decade, 'popularity' : d.popularity*100 };
-  // });
-
-  // console.log(finalArray);
+    // append title
+    svg.append("text")
+       .attr("x", (width / 2))             
+       .attr("y", height / 9 )
+       .attr("text-anchor", "middle")  
+       .style("font-size", "20px") 
+       .style("text-decoration", "underline")  
+       .text("Genre Evolution");
   
 
+    // create X scale data
+    var xScaleData = decades.map((a) => a.decade);  // get all decades
+    var xScaleDataFiltered = [];    // aux
+    xScaleData.forEach((c) => {     // forEach to remove duplicates, couldn't find another way
+        if (!xScaleDataFiltered.includes(c)) {
+            xScaleDataFiltered.push(c);
+        }
+    });
+    xScaleDataFiltered.sort();  // sort from old to new
 
-  // create X scale data
-  var xScaleData = decades.map((a) => a.decade);  // get all decades
-  var xScaleDataFiltered = [];    // aux
-  xScaleData.forEach((c) => {     // forEach to remove duplicates, couldn't find another way
-      if (!xScaleDataFiltered.includes(c)) {
-          xScaleDataFiltered.push(c);
-      }
-  });
-  xScaleDataFiltered.sort();  // sort from old to new
-
-
-
-
-  // create X scale
-  xScale = d3.scaleBand()
-                  .domain(xScaleDataFiltered)
-                  .range([padding, width - padding]);
-  xScale.paddingInner(0.5);   // separate elements
-
-  // create X axis
-  svg.append("g")
-      .attr("transform", "translate(0," + (height - padding) + ")")
-      .call(d3.axisBottom(xScale));
-  
-  svg.append("text")
-      .attr("transform", "translate(" + width/2.2 + "," + (height -padding / 3) + ")")
-      .text("Decades");
+    // create X scale
+    xScale = d3.scaleBand()
+                    .domain(xScaleDataFiltered)
+                    .range([padding, width - padding]);
+    xScale.paddingInner(0.5);   // separate elements
 
 
-  // create Y scale
-  yScale = d3.scaleLinear()
-                 .domain([0, 40])
-                  // .domain([0, d3.max(artists, function(d) { return +d.popularitySpotify; })])  // the + sign adds 100 to the axis
-                  .range([height - padding, padding]);
-
-  // create Y axis
-  svg.append("g")
-      .attr("transform", "translate(" + padding + ",0)")
-      .call(d3.axisLeft(yScale));
-
-  svg.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 0)
-      .attr("x", 0 - height / 1.5)
-      .attr("dy", "1em")
-      .text("Popularity");
-
-  // Add one line
-  line = svg.append("path")
-     .datum(popArray)   // the population is on this dataset
-     .attr("fill", "none")
-     .attr("stroke", "steelblue")
-     .attr("stroke-width", 1.5)
-     .attr("d", d3.line()
-     .x(function(d) { 
-        return xScale(d.decade); })
-     .y(function(d) { 
-         return yScale(d.popularity*100); }));
+    // create X axis
+    svg.append("g")
+        .attr("class", "axisSubtitle")
+        .attr("transform", "translate(0," + (height - padding) + ")")
+        .call(d3.axisBottom(xScale));
     
-     
-     
+    svg.append("text")
+        .attr("transform", "translate(" + width/2.2 + "," + (height -padding / 3) + ")")
+        .text("Decades");
+
+    // create Y scale
+    yScale = d3.scaleLinear()
+                    .domain([0, 40])
+                    // .domain([0, d3.max(artists, function(d) { return +d.popularitySpotify; })])  // the + sign adds 100 to the axis
+                    .range([height - padding, padding]);
+
+    // create Y axis
+    svg.append("g")
+        .attr("class", "axisSubtitle")
+        .attr("transform", "translate(" + padding + ",0)")
+        .call(d3.axisLeft(yScale));
+
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0)
+        .attr("x", 0 - height / 1.5)
+        .attr("dy", "1em")
+        .text("Popularity");
+
+    // creating lines
+    lineAvant = lineBlues = lineCarib = lineComedy = lineCountry = 
+    lineEasy = lineElec = lineFolk = lineHeavy = lineHip = lineHouse =
+    lineJazz = lineLatin = linePop = linePunk = lineRB = lineRock = 
+        d3.line()
+          .x(d => xScale(d.decade))
+          .y(d => yScale(d.popularity*100));    // * 100 because we only have percentage 
+
+    lines = svg.append("g");
+
+    // adding lines
+    genres.forEach(function (genre){
+        var genreArray = [];
+        genreArray = getEvolution(genre);
+        lines.append("path")
+                .data(genreArray)
+                .attr("class", "line-lineplot")
+                .attr("d", function(d) {
+                    if(genre === "Avant-garde") { return lineAvant(genreArray); }
+                    if(genre === "Blues") { return lineBlues(genreArray); }
+                    if(genre === "Caribbean and Caribbean-influenced") { return lineCarib(genreArray); }
+                    if(genre === "Comedy") { return lineComedy(genreArray); }
+                    if(genre === "Country") { return lineCountry(genreArray); }
+                    if(genre === "Easy listening") { return lineEasy(genreArray); }
+                    if(genre === "Electronic") { return lineElec(genreArray); }
+                    if(genre === "Folk") { return lineFolk(genreArray); }
+                    if(genre === "Heavy metal") { return lineHeavy(genreArray); }
+                    if(genre === "Hip hop") { return lineHip(genreArray); }
+                    if(genre === "House") { return lineHouse(genreArray); }
+                    if(genre === "Jazz") { return lineJazz(genreArray); }
+                    if(genre === "Latin") { return lineLatin(genreArray); }
+                    if(genre === "Pop") { return linePop(genreArray); }
+                    if(genre === "Punk rock") { return linePunk(genreArray); }
+                    if(genre === "R&B and soul") { return lineRB(genreArray); }
+                    if(genre === "Rock") { return lineRock(genreArray); }
+                })
+                .style("stroke", genreColor[genre])
+                .on("mouseover", function(d) { 
+                    // fade all lines...
+                    d3.selectAll(".line-lineplot")
+                      .style("opacity", opacityOn);
+                    // ...except the current one
+                    d3.select(this)
+                      .style("opacity", opacityOff);
+                })
+                .on("mouseout", function(d) {
+                    //return all bars' opacity to normal
+                    d3.selectAll(".line-lineplot")
+                      .style("opacity", opacityNormal);
+                });
+    });
 }
 
-function updateLinePlot(selectedGenre){
-    // Create new data with selection
-    var pop = []
+// returns the popularity of a specific genre though decades
+function getEvolution(genreName) {
+    var popArray = [];
     for(var i = 0; i < Object.keys(popularity).length-1; i++) {
-            
-        if(popularity[i].genre === selectedGenre) {
-            pop.push(popularity[i]);
+        if(popularity[i].genre == genreName) {
+        popArray.push(popularity[i]);
         }
     }
-    var dataFilter = pop.map(function(d){
+    return popArray;
+}
+
+// function updateLinePlot(selectedGenre){
+//     // Create new data with selection
+//     var pop = []
+//     for(var i = 0; i < Object.keys(popularity).length-1; i++) {
+            
+//         if(popularity[i].genre === selectedGenre) {
+//             pop.push(popularity[i]);
+//         }
+//     }
+//     var dataFilter = pop.map(function(d){
       
-        return {time: d.decade, value: d.popularity*100 };
-    });
-    var myColor = d3.scaleOrdinal()
-   .domain(popularity)
-   .range(d3.schemeSet2);
-    // Give these new data to update line 
-    line
-          .datum(dataFilter)
-          .transition()
-          .duration(1000)
-          .attr("d", d3.line()
-            .x(function(d) { return xScale(+d.time) })
-            .y(function(d) { 
+//         return {time: d.decade, value: d.popularity*100 };
+//     });
+//     var myColor = d3.scaleOrdinal()
+//    .domain(popularity)
+//    .range(d3.schemeSet2);
+//     // Give these new data to update line 
+//     line
+//           .datum(dataFilter)
+//           .transition()
+//           .duration(1000)
+//           .attr("d", d3.line()
+//             .x(function(d) { return xScale(+d.time) })
+//             .y(function(d) { 
                 
-                return yScale(+d.value) })
-          )
-          .attr("stroke", function(d){ return myColor(selectedGenre) })
-    }
+//                 return yScale(+d.value) })
+//           )
+//           .attr("stroke", function(d){ return myColor(selectedGenre) })
+//     }
 
 
 

@@ -2,40 +2,61 @@
 export var dispatchClickBar = d3.dispatch("clickBar");
 export var dispatchClickMap = d3.dispatch("clickMap");
 
+// color scheme for each genre
+export const genreColor = {
+    "Avant-garde": "#606060", // light grey
+    "Blues": "#643117", // brown
+    "Caribbean and Caribbean-influenced": "#1f0db2", // bright dark blue
+    "Comedy": "#15c1a7",    // greenish blue
+    "Country": "#eac896",   // sand color
+    "Easy listening": "#df9b6f",    // skin color
+    "Electronic": "#100460",    // dark blue
+    "Folk": "#a35090",  // redish purple
+    "Heavy metal": "#2e6f3e",   // green
+    "Hip hop": "#d3742f",   // orange
+    "House": "#5cfc5d", // bright green
+    "Jazz": "#947bdf",  // light purple
+    "Latin": "#fa777e", // light magenta
+    "Pop": "#e21651",   // magenta
+    "Punk rock": "#2e3d53", // greyish blue
+    "R&B and soul": "#74118d",  // purple
+    "Rock": "#000000",  // black
+};
 
-// global variables
-var width = 600;
-var height = 400;
-var padding = 60;
 
-var decades;
-var artists;
-var svg_bar;
-var svg_map
-var dispatch;
-var selectedBar;
-var context = 0; // 0 - Reset; 1 - New; 2 - Old.
-var dropdown;
-var mapData;
-var selectedCountry;  
+// // global variables
+// var width = 600;
+// var height = 400;
+// var padding = 60;
 
-// dispatch = d3.dispatch("click_bar", "click_map");
+// var decades;
+// var artists;
+// var svg_bar;
+// var svg_map
+// var dispatch;
+// var selectedBar;
+// var context = 0; // 0 - Reset; 1 - New; 2 - Old.
+// var dropdown;
+// var mapData;
+// var selectedCountry;  
 
-// get decade dataset
-d3.csv("dataset/decade.csv").then(function(data1) {
-    d3.csv("dataset/artistV6.csv").then(function(data2) {
-        d3.json("dataset/countries-110m.json").then(function(data3) {
-            decades = data1;
-            artists = data2;
-            mapData = data3;
+// // dispatch = d3.dispatch("click_bar", "click_map");
 
-            // gen_bar_chart();
-            // gen_bubble_map();
-            // addZoom();
-            // prepare_event();
-        })
-    })
-});
+// // get decade dataset
+// d3.csv("dataset/decade.csv").then(function(data1) {
+//     d3.csv("dataset/artistV6.csv").then(function(data2) {
+//         d3.json("dataset/countries-110m.json").then(function(data3) {
+//             decades = data1;
+//             artists = data2;
+//             mapData = data3;
+
+//             // gen_bar_chart();
+//             // gen_bubble_map();
+//             // addZoom();
+//             // prepare_event();
+//         })
+//     })
+// });
 
 // Adding zoom to the map
 // function addZoom() {

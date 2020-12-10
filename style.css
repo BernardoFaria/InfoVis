@@ -1,3 +1,20 @@
-.paths-map{
+/* html title */
+.title {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.axisSubtitle {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+}
+
+/* map */
+.paths-map {
     fill: steelblue;
+}
+
+/* Linechart */
+.line-lineplot {
+    fill: none;
+    stroke-width: 2px;
 }
