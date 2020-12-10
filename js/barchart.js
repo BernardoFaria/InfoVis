@@ -95,12 +95,18 @@ function gen_bar_chart() {
     //     updateBarPlot(selected);
     // });
 
-    // inicial state: the most popular artists  
-    var filteredData = artists;
+    // filtering data
+    var filteredData = [];
+    var i;
+    // loop on artist dataset
+    for(i = 0; i < Object.keys(artists).length-1; i++) {    
+        filteredData.push(artists[i]);  // to get a copy of the dataset artists
+    }
     // sort data by popularity => bigger to smaller
     filteredData.sort(function(a, b) { return b.popularitySpotify - a.popularitySpotify; });
     // first 5 elements
     filteredData.splice(5, filteredData.length);
+    // console.log(filteredData);
 
     // create X scale   => artists
     var xScale = d3.scaleBand()
