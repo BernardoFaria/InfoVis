@@ -95,18 +95,8 @@ function gen_bar_chart() {
     //     updateBarPlot(selected);
     // });
 
-    // filtering data
-    var filteredData = [];
-    var i,j;
-    // loop on artist dataset
-    for(i = 0; i < Object.keys(artists).length-1; i++) {    
-        var string = artists[i].genre;  // get genre string
-        var res = string.split(",");    // split it by commas
-        for(j = 0; j < res.length; j ++) {  // loop the splitted string
-            if(res[j] == "Pop") { 
-                filteredData.push(artists[i]); }  // add to array 
-            }
-    }   
+    // inicial state: the most popular artists  
+    var filteredData = artists;
     // sort data by popularity => bigger to smaller
     filteredData.sort(function(a, b) { return b.popularitySpotify - a.popularitySpotify; });
     // first 5 elements
