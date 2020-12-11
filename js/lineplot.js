@@ -9,7 +9,7 @@ const genres= ["Avant-garde", "Blues", "Caribbean and Caribbean-influenced", "Co
 "Jazz", "Latin", "Pop", "Punk rock", "R&B and soul", "Rock"];
 
 // global variables
-var width = 600;
+var width = 500;
 var height = 400;
 var padding = 60;
 var decades;    // dataset 1
@@ -89,16 +89,15 @@ function gen_line_chart() {
                 .append("svg")        // append svg to the "id" div
                 .attr("width", width)
                 .attr("height", height)
-                .attr("transform", "translate(" + width + ",0)");   // move svg to the right
+                .attr("transform", "translate(" + 50 + ",0)");   // move svg to the right
 
-    // append title
-    svg.append("text")
-       .attr("x", (width / 2))             
-       .attr("y", height / 9 )
-       .attr("text-anchor", "middle")  
-       .style("font-size", "20px") 
-       .style("text-decoration", "underline")  
-       .text("Genre Evolution");
+    // // append title
+    // svg.append("text")
+    //    .attr("x", (width / 2))             
+    //    .attr("y", height / 13 )
+    //    .attr("text-anchor", "middle")  
+    //    .style("font-size", "20px") 
+    //    .text("Genre Evolution");
   
 
     // create X scale data
@@ -121,11 +120,12 @@ function gen_line_chart() {
     // create X axis
     svg.append("g")
         .attr("class", "axisSubtitle")
+        .style("font-size", "13px")
         .attr("transform", "translate(0," + (height - padding) + ")")
         .call(d3.axisBottom(xScale));
     
     svg.append("text")
-        .attr("transform", "translate(" + width/2.2 + "," + (height -padding / 3) + ")")
+        .attr("transform", "translate(" + width/2.2 + "," + (height -padding / 5) + ")")
         .text("Decades");
 
     // create Y scale
@@ -137,13 +137,14 @@ function gen_line_chart() {
     // create Y axis
     svg.append("g")
         .attr("class", "axisSubtitle")
+        .style("font-size", "13px")
         .attr("transform", "translate(" + padding + ",0)")
         .call(d3.axisLeft(yScale));
 
     svg.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 0)
-        .attr("x", 0 - height / 1.5)
+        .attr("x", 0 - height / 1.6)
         .attr("dy", "1em")
         .text("Popularity");
 

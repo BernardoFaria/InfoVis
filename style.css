@@ -1,8 +1,46 @@
+/* alligning divs */
+.first-container .box{
+    width: 1500;
+    height: 350;
+}
+.first-container .box .box-row { 
+    display:table-row; 
+} 
+.first-container .box .box-cell { 
+    display:table-cell; 
+    width:25%; 
+    padding:10px; 
+} 
+.first-container .box .box-cell.box1 { 
+    border: solid red;
+} 
+.first-container .box .box-cell.box2 { 
+    border: solid blue; 
+} 
+.first-container .box .box-cell.box3 { 
+    border: solid green;
+}
 /* html title */
 .title {
     font-family: 'Montserrat', sans-serif;
+    margin-top:  1px;
+    margin-bottom: 0.5px;
+    margin-left: 0px;
+    margin-right: 0px;
 }
 
+.idiom-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+    text-anchor: middle;
+    text-align: center;
+    margin-top:  1px;
+    margin-bottom: 0.5px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+/* text on axis */
 .axisSubtitle {
     font-family: 'Montserrat', sans-serif;
     font-weight: bold;

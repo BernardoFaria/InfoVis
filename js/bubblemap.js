@@ -5,7 +5,7 @@ import { dispatchClickBar } from "./main.js";
 import { dispatchClickMap } from "./main.js";
 
 // global variables
-var width = 600;
+var width = 500;
 var height = 400;
 var padding = 60;
 
@@ -66,9 +66,10 @@ function gen_bubble_map() {
     // create svg
     svg = d3.select("#bubblemap")  // call id in div
             .append("svg")          // append svg to the "id" div
-            .attr("width", width)
-            .attr("height", height)
-            .attr("transform", "translate(" + (width*2) + "," + (-60 -  height) +")");
+            .attr("width", width + 100)
+            .attr("height", height - 20)
+            .attr("transform", "translate(" + 40 + ",0)");
+
 
     svg.selectAll("path")
        .data(topojson.feature(mapData, mapData.objects.countries).features)
