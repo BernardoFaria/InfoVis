@@ -1,37 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>Music Evolution</title>
-		<meta charset="utf-8">
-		<meta name="description" content="Group 06 - Music Evolution">
-		<meta name="author" content="Bernardo Faria, Samuel Vicente, Sofia Martins">
 
-    <link rel="shortcut icon" type="image/ico" href="img/favicon.ico"/>
-    <link rel="stylesheet" href="style.css"/>
+<head>
+    <title>Music Evolution</title>
+    <meta charset="utf-8">
+    <meta name="description" content="Group 06 - Music Evolution">
+    <meta name="author" content="Bernardo Faria, Samuel Vicente, Sofia Martins">
+
+    <link rel="shortcut icon" type="image/ico" href="img/favicon.ico" />
+    <link rel="stylesheet" href="style.css" />
 
     <!-- d3 js local run -->
     <script src="D3/d3.js" charset="utf-8"></script>
     <!-- d3 topojson for map -->
     <script src="D3/topojson.js" charset="utf-8"></script>
 
-		<!-- Our JS -->
+    <!-- Our JS -->
     <script src="js/main.js" type="module"></script>
     <script src="js/lineplot.js" type="module"></script>
     <script src="js/barchart.js" type="module"></script>
     <script src="js/bubblemap.js" type="module"></script>
-	</head>
-  
-	<body>
-    <h1>Music Evolution</h1>
-    <div id ="selectbutton" name="genre"></div>
+    <script src="js/lollipop.js" type="module"></script>
+</head>
+
+<body>
+    <h1 id="main-title"> Music Evolution </h1>
+    <div id="selectbutton" name="genre"></div>
     <section id="grid">
-      <div id="search-box" class="grid-cell"></div>
-      <div id="lineplot" class="grid-cell"></div>
-      <div id="bubblemap" class="grid-cell"></div>
-      <div id="lolipop" class="grid-cell"></div>
-      <div id="barchart" class="grid-cell"></div>
-      <div id="network" class="grid-cell"></div>
-      <div id="sankey" class="grid-cell"></div>
+        <div id="search-box" class="search-box"></div>
+        <div id="lineplot" class="lineplot"></div>
+        <div id="bubblemap" class="bubblemap"></div>
+        <div id="lollipop" class="lollipop"></div>
+        <div id="barchart" class="barchart"></div>
+        <div id="network" class="network"></div>
+        <div id="sankey" class="sankey"></div>
     </section>
-	</body>
+</body>
+
 </html>

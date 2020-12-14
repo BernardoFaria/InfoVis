@@ -1,3 +1,64 @@
-.paths-map{
+.paths-map {
     fill: steelblue;
+}
+
+
+/* body {
+    background-image: url("adrien-olichon-ilVYjf0J378-unsplash.jpg");
+    margin: 0px;
+    background-color: rgb(7, 8, 7);
+    background-position: center;
+    
+    background-repeat: no-repeat;
+
+    background-size: cover;
+ 
+} */
+
+
+/* /* 
+#grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-content: center;
+} */
+
+.lineplot {
+    color: black
+}
+
+.bubblemap {
+    color: black
+}
+
+.barchart {
+    color: black
+}
+
+#main-title {
+    /* ocupa 24.5 */
+    font-family: Georgia, serif;
+    font-size: 24px;
+    color: black;
+    text-align: left;
+    margin-top: 10.5px;
+    margin-bottom: 0.5px;
+    margin-left: 0px;
+    margin-right: 0px;
+    position: relative;
+    left: 15.5px;
+}
+
+#selectbutton {
+    top: 51px;
+    position: fixed;
+    left: 16.5px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+#mySelect {
+    padding: 10px;
 }
