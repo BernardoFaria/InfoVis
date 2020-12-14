@@ -11,17 +11,19 @@ const genres= ["Avant-garde", "Blues", "Caribbean and Caribbean-influenced", "Co
 // global variables
 var width = 500;
 var height = 400;
-var padding = 60;
+var padding = 40;
 var decades;    // dataset 1
 var artists;    // dataset 2
 var popularity; // dataset 3
 var xScale;     // x scale
 var yScale      // y scale
 var lines;      // lines of line chart
+var toolTip;    // tooltip
 
 var opacityOn = 0.3;    // when mouseover, other bars's opacity lows down
 var opacityOff = 2;     // when mouseover, THIS bar's opacity gets higher
 var opacityNormal = 1;  // when mouseout, all bars return to normal
+
 
 // all the lines
 var lineAvant, lineBlues, lineCarib, lineComedy, lineCountry, lineEasy, lineElec, lineFolk, 
@@ -143,7 +145,7 @@ function gen_line_chart() {
 
     svg.append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", 0)
+        .attr("y", -5)
         .attr("x", 0 - height / 1.6)
         .attr("dy", "1em")
         .text("Popularity");
@@ -156,8 +158,12 @@ function gen_line_chart() {
           .x(d => xScale(d.decade))
           .y(d => yScale(d.popularity*100));    // * 100 because we only have percentage 
 
+          // Tooltip
+    const toolTip = svg.append("g")
+                      .attr("class", "tooltip")
+                      .style("opacity", 0);
+          
     lines = svg.append("g");
-
     // adding lines
     genres.forEach(function (genre){
         var genreArray = [];
@@ -192,11 +198,23 @@ function gen_line_chart() {
                     // ...except the current one
                     d3.select(this)
                       .style("opacity", opacityOff);
+                    // tooltip
+                    toolTip.transition()
+                           .style("opacity", 0.9);
+                           var text = "Genre: " + genre;
+                    toolTip.html(text);
+                        //    .style("left", (event.pageX) + "px")
+                        //    .style("top", (event.pageY - 28) + "px");
+                    console.log(text);
                 })
                 .on("mouseout", function(d) {
                     //return all bars' opacity to normal
                     d3.selectAll(".line-lineplot")
                       .style("opacity", opacityNormal);
+                    // tooltip off
+                    toolTip.transition()
+                           .duration(500)
+                           .style("opacity", 0);
                 });
     });
 }

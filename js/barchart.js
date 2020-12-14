@@ -10,7 +10,7 @@ import { dispatchClickMap } from "./main.js";
 // global variables
 var width = 500;
 var height = 350;
-var padding = 60;
+var padding = 40;
 
 var decades;
 var xAxis;
@@ -125,17 +125,17 @@ function gen_bar_chart() {
                 .append("svg")          // append svg to the "id" div
                 .attr("width", width)
                 .attr("height", height + 30)
-                .attr("transform", "translate(" + 40 + ",0)");   // move svg to the right
+                .attr("transform", "translate(" + 55 + ",0)");   // move svg to the right
 
     // x Axis
     xAxis = svg.append("g")
                .attr("class", "axisSubtitle")
                .style("font-size", "13px")
-               .attr("transform", "translate(0," + (height - padding) + ")")
+               .attr("transform", "translate(" + 10 + "," + (height - padding) + ")")
                .call(d3.axisBottom(xScale));
 
     svg.append("text")
-        .attr("transform", "translate(" + width/2.2 + "," + (height -padding / 5) + ")")
+        .attr("transform", "translate(" + width/2.2 + "," + (height) + ")")
         .text("Top Artists");
 
     
@@ -146,12 +146,12 @@ function gen_bar_chart() {
     svg.append("g")
            .attr("class", "axisSubtitle")
            .style("font-size", "13px")
-           .attr("transform", "translate(" + padding + ",0)")
+           .attr("transform", "translate(" + (padding + 10) + ",0)")
            .call(yAxis);
 
     svg.append("text")
            .attr("transform", "rotate(-90)")
-           .attr("y", 0)
+           .attr("y", -2)
            .attr("x", 0 - height / 1.6)
            .attr("font-size", "16px")
            .attr("dy", "1em")
@@ -161,6 +161,7 @@ function gen_bar_chart() {
     svg.selectAll("rect")
        .data(filteredData)
        .join("rect")
+       .attr("transform", "translate(" + 10 + ",0)")
        .attr("width", xScale.bandwidth())
        .attr("height", d => (height - padding - yScale(d.popularitySpotify)))
        .attr("fill", "steelblue") 

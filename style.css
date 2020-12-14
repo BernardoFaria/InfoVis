@@ -15,7 +15,7 @@
     border: solid red;
 } 
 .first-container .box .box-cell.box2 { 
-    border: solid blue; 
+    border: solid blue;
 } 
 .first-container .box .box-cell.box3 { 
     border: solid green;
@@ -55,4 +55,26 @@
 .line-lineplot {
     fill: none;
     stroke-width: 2px;
+}
+
+/* tooltip for hovering */
+.tooltip {
+    position: absolute;
+    text-align: center;
+
+    border: 0px;
+    border-radius: 5px;
+    
+    opacity: 0.5;
+    background: black;
+    color: white;
+    fill: white;
+
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    
+    padding: 5px;
+    border-color: white;
+    border-width: 1px;
+    border-style: solid;
 }
