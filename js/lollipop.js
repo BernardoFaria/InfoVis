@@ -1,5 +1,13 @@
 // Theme: Music Evolution Through Decades
 
+// global variables
+var width = 600;
+var height = 400;
+var padding = 60;
+
+// datasets variables
+var artists;
+var decades;
 
 
 // o	artist selected -> color the line and dot of the respective birth date/creation date and adds label with the year;
@@ -8,26 +16,27 @@
 // o	hover -> displays label with the year.
 
 
-d3.csv("dataset/artistV5.csv".then(function(data1) {
+d3.csv("dataset/artistV6.csv").then(function(data1) {
     d3.csv("dataset/decade.csv").then(function(data2) {
         artists = data1;
-        decade = data2;
+        decades = data2;
         gen_lollipop();
     })
-
-}));
+});
 
 
 function gen_lollipop() {
     // set the dimensions and margins of the graph
-    var margin = { top: 30, right: 30, bottom: 70, left: 60 },
-        width = 460 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+    // var margin = { top: 30, right: 30, bottom: 70, left: 60 },
+    //     width = 460 - margin.left - margin.right,
+    //     height = 400 - margin.top - margin.bottom;
     // append the svg object to the body of the page
     var svg = d3.select("#lollipop")
         .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        // .attr("width", width + margin.left + margin.right)
+        // .attr("height", height + margin.top + margin.bottom)
+        .attr("width", width)
+        .attr("height", height)
         .append("g")
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
