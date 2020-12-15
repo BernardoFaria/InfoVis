@@ -154,8 +154,9 @@ function gen_line_chart() {
   // create X scale
   xScale = d3.scaleBand()
                   .domain(xScaleDataFiltered)
-                  .range([padding, width - padding]);
-  xScale.paddingInner(0.5);   // separate elements
+                  .range([padding, width - padding])
+                  .padding(1);
+//   xScale.paddingInner(0.5);   // separate elements
 
   // create X axis
   svg.append("g")
