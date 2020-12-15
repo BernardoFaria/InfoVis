@@ -78,6 +78,7 @@ function gen_lollipop() {
        .call(d3.axisBottom(xScale));
 
     svg.append("text")
+       .attr("class", "axisSubtitle")
        .attr("transform", "translate(" + width/2.2 + "," + (height -padding / 3) + ")")
        .text("Decades");
 
@@ -95,6 +96,7 @@ function gen_lollipop() {
        .call(d3.axisLeft(yScale));
 
     svg.append("text")
+       .attr("class", "axisSubtitle")
        .attr("transform", "rotate(-90)")
        .attr("y", 0)
        .attr("x", 0 - height / 1.4)

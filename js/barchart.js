@@ -149,8 +149,9 @@ function gen_bar_chart() {
                .call(d3.axisBottom(xScale));
 
     svg.append("text")
-        .attr("transform", "translate(" + width/2.2 + "," + (height - padding / 3) + ")")
-        .text("Top Artists");
+       .attr("class", "axisSubtitle")
+       .attr("transform", "translate(" + width/2.2 + "," + (height - padding / 3) + ")")
+       .text("Top Artists");
 
     
     // y Axis
@@ -164,12 +165,13 @@ function gen_bar_chart() {
            .call(yAxis);
 
     svg.append("text")
-           .attr("transform", "rotate(-90)")
-           .attr("y", 0)
-           .attr("x", 0 - height / 1.6)
-           .attr("font-size", "16px")
-           .attr("dy", "1em")
-           .text("Popularity");
+       .attr("class", "axisSubtitle")
+       .attr("transform", "rotate(-90)")
+       .attr("y", 0)
+       .attr("x", 0 - height / 1.6)
+       .attr("font-size", "16px")
+       .attr("dy", "1em")
+       .text("Popularity");
 
     // create bars
     svg.selectAll("rect")

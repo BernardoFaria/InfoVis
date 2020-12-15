@@ -82,8 +82,9 @@ function gen_line_chart() {
         .call(d3.axisBottom(xScale));
     
     svg.append("text")
-        .attr("transform", "translate(" + width/2.2 + "," + (height -padding / 3) + ")")
-        .text("Decades");
+       .attr("class", "axisSubtitle")
+       .attr("transform", "translate(" + width/2.2 + "," + (height -padding / 3) + ")")
+       .text("Decades");
 
     // create Y scale
     yScale = d3.scaleLinear()
@@ -99,11 +100,12 @@ function gen_line_chart() {
         .call(d3.axisLeft(yScale).ticks(5));
 
     svg.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 0)
-        .attr("x", 0 - height / 1.6)
-        .attr("dy", "1em")
-        .text("Popularity");
+       .attr("class", "axisSubtitle")
+       .attr("transform", "rotate(-90)")
+       .attr("y", 0)
+       .attr("x", 0 - height / 1.6)
+       .attr("dy", "1em")
+       .text("Popularity");
 
     // creating lines
     lineAvant = lineBlues = lineCarib = lineComedy = lineCountry = 
