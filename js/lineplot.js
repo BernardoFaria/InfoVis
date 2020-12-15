@@ -69,7 +69,8 @@ function gen_line_chart() {
     // create X scale
     xScale = d3.scaleBand()
                     .domain(xScaleDataFiltered)
-                    .range([padding, width - padding]);
+                    .range([padding, width - padding])
+                    // .padding(1);
     xScale.paddingInner(0.5);   // separate elements
 
 
@@ -86,7 +87,7 @@ function gen_line_chart() {
 
     // create Y scale
     yScale = d3.scaleLinear()
-                    .domain([0, 40])
+                    .domain([0, 30])
                     // .domain([0, d3.max(artists, function(d) { return +d.popularitySpotify; })])  // the + sign adds 100 to the axis
                     .range([height - padding, padding]);
 
@@ -95,7 +96,7 @@ function gen_line_chart() {
         .attr("class", "axisSubtitle")
         .style("font-size", "13px")
         .attr("transform", "translate(" + padding + ",0)")
-        .call(d3.axisLeft(yScale));
+        .call(d3.axisLeft(yScale).ticks(5));
 
     svg.append("text")
         .attr("transform", "rotate(-90)")

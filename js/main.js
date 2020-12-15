@@ -4,22 +4,30 @@ export var dispatchClickMap = d3.dispatch("clickMap");
 
 // color scheme for each genre
 export const genreColor = {
-    "Avant-garde": "#606060", // light grey
-    "Blues": "#643117", // brown
-    "Caribbean and Caribbean-influenced": "#1f0db2", // bright dark blue
-    "Comedy": "#15c1a7",    // greenish blue
-    "Country": "#eac896",   // sand color
-    "Easy listening": "#df9b6f",    // skin color
-    "Electronic": "#100460",    // dark blue
-    "Folk": "#a35090",  // redish purple
-    "Heavy metal": "#2e6f3e",   // green
-    "Hip hop": "#d3742f",   // orange
-    "House": "#5cfc5d", // bright green
-    "Jazz": "#947bdf",  // light purple
-    "Latin": "#fa777e", // light magenta
-    "Pop": "#e21651",   // magenta
-    "Punk rock": "#2e3d53", // greyish blue
-    "R&B and soul": "#74118d",  // purple
+    "Avant-garde": "#ff0000", // light grey
+    "Blues": "#ae0000", // brown
+
+    "Caribbean and Caribbean-influenced": "#ffae00", // bright dark blue
+    "Comedy": "#ba7f00",    // greenish blue
+
+    "Country": "#fffb06",   // sand color
+    "Easy listening": "#b0ad00",    // skin color
+
+    "Electronic": "#6cff00",    // dark blue
+    "Folk": "#3f9500",  // redish purple
+
+    "Heavy metal": "#00fff7",   // green
+    "Hip hop": "#009e99",   // orange
+
+    "House": "#0061ff", // bright green
+    "Jazz": "#003995",  // light purple
+
+    "Latin": "#ff00f3", // light magenta
+    "Pop": "#9a0093",   // magenta
+
+    "Punk rock": "#ff009b", // greyish blue
+    "R&B and soul": "#830050",  // purple
+
     "Rock": "#000000",  // black
 };
 

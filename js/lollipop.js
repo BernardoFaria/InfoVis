@@ -4,7 +4,7 @@
 var width = 600;
 var height = 400;
 var padding = 60;
-var radius = 4;
+var radius = 6;
 var xScale;
 var fullDataset;
 
@@ -121,7 +121,7 @@ function gen_lollipop() {
        .attr("cx", function(d) { return xScale(d.decade); })
        .attr("cy", function(d) { return yScale(d.total); })
        .attr("r", radius)
-       .style("fill", "#69b3a2")
+       .style("fill", "steelblue")
        .attr("stroke", "black")
 
 }
