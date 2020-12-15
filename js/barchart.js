@@ -3,8 +3,9 @@
 // import colors from main
 import { genreColor } from "./main.js";
 
-// events
-import { dispatchClickBar } from "./main.js";
+// events; dispatch[where it comes]_[where it goes]
+import { dispatchClickBar_Line } from "./main.js";
+import { dispatchClickBar_Map } from "./main.js";
 import { dispatchClickMap } from "./main.js";
 
 // global variables
@@ -91,7 +92,8 @@ dispatchClickMap.on("clickMap", function(countrySelected) {
             // color selected bar
             d3.select(this).attr("fill", "red");
             
-            dispatchClickBar.call("clickBar", this, d);
+            dispatchClickBar_Map.call("clickBar", this, d);
+            dispatchClickBar_Line.call("clickBar", this, d);
         })
         .transition()
         .duration(1000);
@@ -199,6 +201,7 @@ function gen_bar_chart() {
             // color selected bar
             d3.select(this).attr("fill", "red");
             
-            dispatchClickBar.call("clickBar", this, d);
+            dispatchClickBar_Line.call("clickBar", this, d);
+            dispatchClickBar_Map.call("clickBar", this, d);
         });
 }

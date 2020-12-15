@@ -1,7 +1,7 @@
 // Theme: Music Evolution Through Decades
 
 // events
-import { dispatchClickBar } from "./main.js";
+import { dispatchClickBar_Map } from "./main.js";
 import { dispatchClickMap } from "./main.js";
 
 // global variables
@@ -24,9 +24,7 @@ d3.json("dataset/countries-110m.json").then(function(data) {
 });
 
 
-//FIXME: mudar o nome do event
-dispatchClickBar.on("clickBar", function(artistSelected) {
-    
+dispatchClickBar_Map.on("clickBar", function(artistSelected) {
     var id;
     var jData = topojson.feature(mapData, mapData.objects.countries).features;
     
