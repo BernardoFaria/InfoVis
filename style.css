@@ -20,6 +20,7 @@
 .first-container .box .box-cell.box3 { 
     border: solid green;
 }
+
 /* html title */
 .title {
     font-family: 'Montserrat', sans-serif;
@@ -116,7 +117,7 @@
     left: 15.5px;
 } */
 
-#selectbutton {
+/* #selectbutton {
     top: 51px;
     position: fixed;
     left: 16.5px;
@@ -126,4 +127,4 @@
 
 #mySelect {
     padding: 10px;
-}
+} */

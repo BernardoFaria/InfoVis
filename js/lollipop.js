@@ -35,16 +35,6 @@ function gen_lollipop() {
                 .attr("width", width)
                 .attr("height", height);
         // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    svg.append("text")
-       .attr("x", (width / 2))             
-       .attr("y", height / 5 )
-       .attr("class", "title")  // para posterior CSS (se houver tempo eheh)
-       .attr("text-anchor", "middle")  
-       .style("font-size", "20px") 
-       .style("text-decoration", "underline")  
-       .text("Lolipop");
-
     
     // get all decades
     var decAux = decades.map((a) => a.decade);  // get all decades
