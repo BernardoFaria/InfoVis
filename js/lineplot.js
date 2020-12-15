@@ -9,9 +9,9 @@ const genres= ["Avant-garde", "Blues", "Caribbean and Caribbean-influenced", "Co
 "Jazz", "Latin", "Pop", "Punk rock", "R&B and soul", "Rock"];
 
 // global variables
-var width = 500;
+var width = 600;
 var height = 400;
-var padding = 40;
+var padding = 60;
 var decades;    // dataset 1
 var artists;    // dataset 2
 var popularity; // dataset 3
@@ -36,42 +36,10 @@ d3.csv("dataset/decade.csv").then(function(data1) {
             decades = data1;
             artists = data2;
             popularity = data3;
-            // buildOptions();
             gen_line_chart();
         })
     })
 });
-
-// function buildOptions(){
-//     var myDiv = document.getElementById("selectbutton");
-//     //Create array of options to be added
-//     var array = getGenresFiltered();
-//     //Create and append select list
-//     var selectList = document.createElement("select");
-//     selectList.setAttribute("id", "mySelect");
-//     myDiv.appendChild(selectList);
-
-//     //Create and append the options
-//     for (var i = 0; i < array.length; i++) {
-        
-//         var option = document.createElement("option");
-//         option.setAttribute("value", array[i]);
-//         option.text = array[i];
-//         selectList.appendChild(option);
-//     }
-// }
-
-// function getGenresFiltered(){
-//     var genres = popularity.map((a) => a.genre)
-//     var genresFiltered = [];
-//     genres.forEach((c) => {     // forEach to remove duplicates, couldn't find another way
-//         if (!genresFiltered.includes(c)) {
-//             genresFiltered.push(c);
-//         }
-//     });
-//     genresFiltered.sort();
-//     return genresFiltered
-// }
 
 
 /**************************
@@ -80,11 +48,6 @@ d3.csv("dataset/decade.csv").then(function(data1) {
  *************************/
 
 function gen_line_chart() {
-    // var dropdown = d3.select("#mySelect");
-    // dropdown.on("change", function(){
-    //     var selected = this.value;
-    //     updateLinePlot(selected);
-    //  });
 
     // create svg
     var svg = d3.select("#lineplot")  // call id in div
@@ -92,15 +55,6 @@ function gen_line_chart() {
                 .attr("width", width)
                 .attr("height", height)
                 .attr("transform", "translate(" + 50 + ",0)");   // move svg to the right
-
-    // // append title
-    // svg.append("text")
-    //    .attr("x", (width / 2))             
-    //    .attr("y", height / 13 )
-    //    .attr("text-anchor", "middle")  
-    //    .style("font-size", "20px") 
-    //    .text("Genre Evolution");
-  
 
     // create X scale data
     var xScaleData = decades.map((a) => a.decade);  // get all decades
@@ -118,12 +72,6 @@ function gen_line_chart() {
                     .range([padding, width - padding]);
     xScale.paddingInner(0.5);   // separate elements
 
-  // create X scale
-  xScale = d3.scaleBand()
-                  .domain(xScaleDataFiltered)
-                  .range([padding, width - padding])
-                  .padding(1);
-//   xScale.paddingInner(0.5);   // separate elements
 
     // create X axis
     svg.append("g")
@@ -133,7 +81,7 @@ function gen_line_chart() {
         .call(d3.axisBottom(xScale));
     
     svg.append("text")
-        .attr("transform", "translate(" + width/2.2 + "," + (height -padding / 5) + ")")
+        .attr("transform", "translate(" + width/2.2 + "," + (height -padding / 3) + ")")
         .text("Decades");
 
     // create Y scale
@@ -151,7 +99,7 @@ function gen_line_chart() {
 
     svg.append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", -5)
+        .attr("y", 0)
         .attr("x", 0 - height / 1.6)
         .attr("dy", "1em")
         .text("Popularity");

@@ -30,11 +30,12 @@ d3.csv("dataset/artistV6.csv").then(function(data1) {
 
 function gen_lollipop() {
 
+    // create lollipop
     var svg = d3.select("#lollipop")
                 .append("svg")
                 .attr("width", width)
-                .attr("height", height);
-        // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                .attr("height", height)
+                .attr("transform", "translate(" + 50 + ",0)");
     
     // get all decades
     var decAux = decades.map((a) => a.decade);  // get all decades
@@ -68,11 +69,12 @@ function gen_lollipop() {
                .domain(getDecades)
                .range([padding, width - padding])
                .padding(1);
-    // xScale.paddingInner(0.5);   // separate elements
 
     // create X axis
     svg.append("g")
-       .attr("transform", "translate(0," + (height-padding) + ")")
+       .attr("class", "axisSubtitle")
+       .style("font-size", "13px")
+       .attr("transform", "translate(0," + (height - padding) + ")")
        .call(d3.axisBottom(xScale));
 
     svg.append("text")
@@ -84,10 +86,20 @@ function gen_lollipop() {
                    .domain([0, 100])
                    .range([height - padding, padding]);
 
+    // FIXME: TEMOS DE VER SE QUEREMOS O EIXO DO Y OU NÃO
     // create Y axis
     svg.append("g")
+       .attr("class", "axisSubtitle")
+       .style("font-size", "13px")
        .attr("transform", "translate(" + padding + ",0)")
        .call(d3.axisLeft(yScale));
+
+    svg.append("text")
+       .attr("transform", "rotate(-90)")
+       .attr("y", 0)
+       .attr("x", 0 - height / 1.4)
+       .attr("dy", "1em")
+       .text("Total Number Of Artists");
 
 
     // Lines

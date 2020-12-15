@@ -11,15 +11,15 @@
     width:25%; 
     padding:10px; 
 } 
-.first-container .box .box-cell.box1 { 
+/* .first-container .box .box-cell.box1 { 
     border: solid red;
 } 
 .first-container .box .box-cell.box2 { 
-    border: solid blue;
+    border: solid red;
 } 
 .first-container .box .box-cell.box3 { 
-    border: solid green;
-}
+    border: solid red;
+} */
 
 /* html title */
 .title {
