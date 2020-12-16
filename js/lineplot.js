@@ -5,6 +5,7 @@ import { genreColor } from "./main.js";
 
 // events
 import { dispatchClickBar_Line } from "./main.js";
+import { dispatchClickLine_Bar } from "./main.js";
 
 // all genres; they never change
 const genres= ["Avant-garde", "Blues", "Caribbean and Caribbean-influenced", "Comedy",
@@ -152,6 +153,9 @@ dispatchClickBar_Line.on("clickBar", function(artistSelected) {
                     // toolTip.transition()
                     //        .duration(500)
                     //        .style("opacity", 0);
+                })
+                .on("click", function(event, d) {                    
+                    dispatchClickLine_Bar.call("clickLine", this, d);
                 });
     });
     xAxis.transition()
@@ -294,6 +298,9 @@ function gen_line_chart() {
                     // toolTip.transition()
                     //        .duration(500)
                     //        .style("opacity", 0);
+                })
+                .on("click", function(event, d) {                    
+                    dispatchClickLine_Bar.call("clickLine", this, d);
                 });
     });
 }
