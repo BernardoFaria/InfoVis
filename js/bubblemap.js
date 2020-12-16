@@ -2,7 +2,8 @@
 
 // events
 import { dispatchClickBar_Map } from "./main.js";
-import { dispatchClickMap } from "./main.js";
+import { dispatchClickMap_Bar } from "./main.js";
+import { dispatchClickMap_Line } from "./main.js";
 
 // global variables
 var width = 500;
@@ -23,7 +24,7 @@ d3.json("dataset/countries-110m.json").then(function(data) {
     addZoom();
 });
 
-
+// update map when clicking on barchart
 dispatchClickBar_Map.on("clickBar", function(artistSelected) {
     var id;
     var jData = topojson.feature(mapData, mapData.objects.countries).features;
@@ -92,7 +93,8 @@ function gen_bubble_map() {
             // color selected country
             d3.select(this).style("fill", "red");
             
-            dispatchClickMap.call("clickMap", this, d);
+            dispatchClickMap_Bar.call("clickMap", this, d);
+            dispatchClickMap_Line.call("clickMap", this, d);
         });
 }
 

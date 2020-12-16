@@ -7,7 +7,7 @@ import { genreColor } from "./main.js";
 import { dispatchClickBar_Line } from "./main.js";
 import { dispatchClickBar_Map } from "./main.js";
 import { dispatchClickBar_Lollipop } from "./main.js";
-import { dispatchClickMap } from "./main.js";
+import { dispatchClickMap_Bar } from "./main.js";
 import { dispatchClickLine_Bar } from "./main.js";
 
 // global variables
@@ -31,14 +31,14 @@ d3.csv("dataset/decade.csv").then(function(data1) {
     })
 });
 
-
-dispatchClickMap.on("clickMap", function(countrySelected) {
+// update barchart when clicking on map
+dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
 
     var filteredDataUpdate = [];
     var i,j;
     // loop on artist dataset
     for(i = 0; i < Object.keys(artists).length-1; i++) {    
-        var string = artists[i].country;  // get genre string
+        var string = artists[i].country; 
         var res = string.split(",");    // split it by commas
         for(j = 0; j < res.length; j ++) {  // loop the splitted string
             if(res[j] == countrySelected.properties.name) { 
@@ -106,6 +106,7 @@ dispatchClickMap.on("clickMap", function(countrySelected) {
         
 });
 
+// uptade barchart when clicking on linechart
 dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
 
     var filteredDataUpdate = [];
