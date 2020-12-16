@@ -6,6 +6,7 @@ import { genreColor } from "./main.js";
 // events; dispatch[where it comes]_[where it goes]
 import { dispatchClickBar_Line } from "./main.js";
 import { dispatchClickBar_Map } from "./main.js";
+import { dispatchClickBar_Lollipop } from "./main.js";
 import { dispatchClickMap } from "./main.js";
 
 // global variables
@@ -22,7 +23,7 @@ var dropdown;
 
 // get decade dataset
 d3.csv("dataset/decade.csv").then(function(data1) {
-    d3.csv("dataset/artistV6.csv").then(function(data2) {
+    d3.csv("dataset/artistV7.csv").then(function(data2) {
         decades = data1;
         artists = data2;
         gen_bar_chart();
@@ -94,6 +95,7 @@ dispatchClickMap.on("clickMap", function(countrySelected) {
             
             dispatchClickBar_Map.call("clickBar", this, d);
             dispatchClickBar_Line.call("clickBar", this, d);
+            dispatchClickBar_Lollipop.call("clickBar", this, d);
         })
         .transition()
         .duration(1000);
@@ -202,6 +204,7 @@ function gen_bar_chart() {
             d3.select(this).attr("fill", "red");
             
             dispatchClickBar_Line.call("clickBar", this, d);
-            dispatchClickBar_Map.call("clickBar", this, d);
+            dispatchClickBar_Map.call("clickBar", this, d)
+            dispatchClickBar_Lollipop.call("clickBar", this, d);
         });
 }

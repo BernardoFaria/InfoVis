@@ -1,25 +1,28 @@
 // Theme: Music Evolution Through Decades
 
+// events
+import { dispatchClickBar_Lollipop } from "./main.js";
+
 // global variables
 var width = 600;
 var height = 400;
 var padding = 60;
 var radius = 6;
 var xScale;
+var yScale;
 var fullDataset;
+var svg;
 
 // datasets variables
 var artists;
 var decades;
 
-
-// o	artist selected -> color the line and dot of the respective birth date/creation date and adds label with the year;
-// o	genre selected -> displays only the birth/creation date of artists of that genre;
-// o	location selected -> displays only the birth/creation date of artists of that location.
-// o	hover -> displays label with the year.
+var auxDec = [1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020];  // aux with all decades
+var id_line = [0,1,2,3,4,5,6,7,8,9,10,11];  // id's for lollipop's lines
+var id_circle = [12,13,14,15,16,17,18,19,20,21,22,23]; // id's for lollipop's circles ; + 12
 
 
-d3.csv("dataset/artistV6.csv").then(function(data1) {
+d3.csv("dataset/artistV7.csv").then(function(data1) {
     d3.csv("dataset/decade.csv").then(function(data2) {
         artists = data1;
         decades = data2;
@@ -28,45 +31,72 @@ d3.csv("dataset/artistV6.csv").then(function(data1) {
 });
 
 
+// update lollipop when clicking on barchart
+dispatchClickBar_Lollipop.on("clickBar", function(artistSelected) {
+
+    var flagVec = [0,0,0,0,0,0,0,0,0,0,0,0];    // couldn't find a better way again
+    
+    if (artistSelected.creationDate > 1900 && artistSelected.creationDate <= 1910) { flagVec[0]++; }
+    if (artistSelected.creationDate > 1910 && artistSelected.creationDate <= 1920) { flagVec[1]++; }
+    if (artistSelected.creationDate > 1920 && artistSelected.creationDate <= 1930) { flagVec[2]++; }
+    if (artistSelected.creationDate > 1930 && artistSelected.creationDate <= 1940) { flagVec[3]++; }
+    if (artistSelected.creationDate > 1940 && artistSelected.creationDate <= 1950) { flagVec[4]++; }
+    if (artistSelected.creationDate > 1950 && artistSelected.creationDate <= 1960) { flagVec[5]++; }
+    if (artistSelected.creationDate > 1960 && artistSelected.creationDate <= 1970) { flagVec[6]++; }
+    if (artistSelected.creationDate > 1970 && artistSelected.creationDate <= 1980) { flagVec[7]++; }
+    if (artistSelected.creationDate > 1980 && artistSelected.creationDate <= 1990) { flagVec[8]++; }
+    if (artistSelected.creationDate > 1990 && artistSelected.creationDate <= 2000) { flagVec[9]++; }
+    if (artistSelected.creationDate > 2000 && artistSelected.creationDate <= 2010) { flagVec[10]++; }
+    if (artistSelected.creationDate > 2010 && artistSelected.creationDate <= 2020) { flagVec[11]++; }
+
+
+    var idAux = flagVec.indexOf(1)
+
+    // all lines black...
+    svg.selectAll("line").attr("stroke", "black");
+    // ...except the one selected
+    svg.select("#_" + idAux).attr("stroke", "red");
+    // all circles black...
+    svg.selectAll("circle").attr("stroke", "black").style("fill", "black");
+    // ...except the one selected
+    svg.select("#_" + (idAux + 12)).attr("stroke", "red").style("fill", "red");
+
+});
+
+
 function gen_lollipop() {
 
     // create lollipop
-    var svg = d3.select("#lollipop")
+    svg = d3.select("#lollipop")
                 .append("svg")
                 .attr("width", width)
                 .attr("height", height)
                 .attr("transform", "translate(" + 50 + ",0)");
-    
-    // get all decades
-    var decAux = decades.map((a) => a.decade);  // get all decades
-    var getDecades = [];    // aux
-    decAux.forEach((c) => {     // forEach to remove duplicates, couldn't find another way
-        if (!getDecades.includes(c)) {
-            getDecades.push(c);
-        }
-    });
-    getDecades.sort();  // sort from old to new
 
     // get total artists per decade
-    var getTotalArtists = [0,0,0,0,0,0,0];    // aux
-    for(var i = 0; i < Object.keys(decades).length-1; i++) {    
-        if (decades[i].decade == 1950) { getTotalArtists[0]++; }
-        if (decades[i].decade == 1960) { getTotalArtists[1]++; }
-        if (decades[i].decade == 1970) { getTotalArtists[2]++; }
-        if (decades[i].decade == 1980) { getTotalArtists[3]++; }
-        if (decades[i].decade == 1990) { getTotalArtists[4]++; }
-        if (decades[i].decade == 2000) { getTotalArtists[5]++; }
-        if (decades[i].decade == 2010) { getTotalArtists[6]++; }
+    var getTotalArtists = [0,0,0,0,0,0,0,0,0,0,0,0];    // couldn't find a better way
+    for(var i = 0; i < Object.keys(artists).length-1; i++) {    
+        if (artists[i].creationDate > 1900 && artists[i].creationDate <= 1910) { getTotalArtists[0]++; }
+        if (artists[i].creationDate > 1910 && artists[i].creationDate <= 1920) { getTotalArtists[1]++; }
+        if (artists[i].creationDate > 1920 && artists[i].creationDate <= 1930) { getTotalArtists[2]++; }
+        if (artists[i].creationDate > 1930 && artists[i].creationDate <= 1940) { getTotalArtists[3]++; }
+        if (artists[i].creationDate > 1940 && artists[i].creationDate <= 1950) { getTotalArtists[4]++; }
+        if (artists[i].creationDate > 1950 && artists[i].creationDate <= 1960) { getTotalArtists[5]++; }
+        if (artists[i].creationDate > 1960 && artists[i].creationDate <= 1970) { getTotalArtists[6]++; }
+        if (artists[i].creationDate > 1970 && artists[i].creationDate <= 1980) { getTotalArtists[7]++; }
+        if (artists[i].creationDate > 1980 && artists[i].creationDate <= 1990) { getTotalArtists[8]++; }
+        if (artists[i].creationDate > 1990 && artists[i].creationDate <= 2000) { getTotalArtists[9]++; }
+        if (artists[i].creationDate > 2000 && artists[i].creationDate <= 2010) { getTotalArtists[10]++; }
+        if (artists[i].creationDate > 2010 && artists[i].creationDate <= 2020) { getTotalArtists[11]++; }
     }
     // join [decade, totalArtists]
-    fullDataset = getDecades.map(function(d, i) {
-      return { 'decade' : d, 'total' : getTotalArtists[i] };
+    fullDataset = getTotalArtists.map(function(d, i) {
+      return { 'decade' : auxDec[i], 'total' : getTotalArtists[i] };
     });
-
 
     // create X scale
     xScale = d3.scaleBand()
-               .domain(getDecades)
+               .domain(auxDec)
                .range([padding, width - padding])
                .padding(1);
 
@@ -83,11 +113,10 @@ function gen_lollipop() {
        .text("Decades");
 
     // create Y scale
-    var yScale = d3.scaleLinear()
+    yScale = d3.scaleLinear()
                    .domain([0, 100])
                    .range([height - padding, padding]);
 
-    // FIXME: TEMOS DE VER SE QUEREMOS O EIXO DO Y OU NÃO
     // create Y axis
     svg.append("g")
        .attr("class", "axisSubtitle")
@@ -105,7 +134,7 @@ function gen_lollipop() {
 
 
     // Lines
-    svg.selectAll("myline")
+    svg.selectAll("mylollipop")
        .data(fullDataset)
        .enter()
        .append("line")
@@ -113,9 +142,11 @@ function gen_lollipop() {
        .attr("x2", function(d) { return xScale(d.decade); })
        .attr("y1", function(d) { return yScale(d.total); })
        .attr("y2", yScale(0))
-       .attr("stroke", "grey");
+       .attr("id", function(d, i) { return "_" + id_line[i]; })
+       .attr("stroke", "black")
+       .attr("stroke-width", 2);
 
-// Circles
+    // Circles
     svg.selectAll("mycircle")
        .data(fullDataset)
        .enter()
@@ -123,59 +154,8 @@ function gen_lollipop() {
        .attr("cx", function(d) { return xScale(d.decade); })
        .attr("cy", function(d) { return yScale(d.total); })
        .attr("r", radius)
-       .style("fill", "steelblue")
-       .attr("stroke", "black")
+       .attr("id", function(d, i) { return "_" + id_circle[i]; })
+       .style("fill", "black")
+       .attr("stroke", "black");
 
 }
-
-// // A function that create / update the plot for a given variable:
-// function update(selectedVar) {
-
-//     var data = data1;
-
-//     // X axis
-//     x.domain(data.map(function(d) { return d.group; }))
-//     xAxis.transition().duration(1000).call(d3.axisBottom(x))
-
-//     // Add Y axis
-//     y.domain([0, d3.max(data, function(d) { return +d[selectedVar] })]);
-//     yAxis.transition().duration(1000).call(d3.axisLeft(y));
-
-//     // variable u: map data to existing circle
-//     var j = svg.selectAll(".myLine")
-//         .data(data)
-//         // update lines
-//     j
-//         .enter()
-//         .append("line")
-//         .attr("class", "myLine")
-//         .merge(j)
-//         .transition()
-//         .duration(1000)
-//         .attr("x1", function(d) { console.log(x(d.group)); return x(d.group); })
-//         .attr("x2", function(d) { return x(d.group); })
-//         .attr("y1", y(0))
-//         .attr("y2", function(d) { return y(d[selectedVar]); })
-//         .attr("stroke", "grey")
-
-
-//     // variable u: map data to existing circle
-//     var u = svg.selectAll("circle")
-//         .data(data)
-//         // update bars
-//     u
-//         .enter()
-//         .append("circle")
-//         .merge(u)
-//         .transition()
-//         .duration(1000)
-//         .attr("cx", function(d) { return x(d.group); })
-//         .attr("cy", function(d) { return y(d[selectedVar]); })
-//         .attr("r", 8)
-//         .attr("fill", "#69b3a2");
-
-
-// };
-
-// // Initialize plot
-// update('var1')

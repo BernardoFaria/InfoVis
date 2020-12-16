@@ -37,7 +37,7 @@ lineHeavy, lineHip, lineHouse, lineJazz, lineLatin, linePop, linePunk, lineRB, l
 
 // get decade dataset
 d3.csv("dataset/decade.csv").then(function(data1) {
-    d3.csv("dataset/artistV6.csv").then(function(data2) {
+    d3.csv("dataset/artistV7.csv").then(function(data2) {
         d3.csv("dataset/genDecPop.csv").then(function(data3) {
             decades = data1;
             artists = data2;

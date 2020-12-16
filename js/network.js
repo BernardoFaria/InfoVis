@@ -13,7 +13,7 @@ var svg = d3.select("network")
         "translate(" + margin.left + "," + margin.top + ")");
 
 d3.csv("dataset/decade.csv").then(function(data1) {
-    d3.csv("dataset/artistV5.csv").then(function(data2) {
+    d3.csv("dataset/artistV7.csv").then(function(data2) {
         d3.csv("dataset/genDecPop.csv").then(function(data3) {
             decades = data1;
             artists = data2;

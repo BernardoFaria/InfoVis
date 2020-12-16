@@ -1,6 +1,8 @@
-// predicates of the events
+// events when clicking bar chart
 export var dispatchClickBar_Map = d3.dispatch("clickBar");
 export var dispatchClickBar_Line = d3.dispatch("clickBar");
+export var dispatchClickBar_Lollipop = d3.dispatch("clickBar");
+
 export var dispatchClickMap = d3.dispatch("clickMap");
 
 // color scheme for each genre
