@@ -34,7 +34,6 @@ d3.csv("dataset/decade.csv").then(function(data1) {
 
 dispatchClickMap.on("clickMap", function(countrySelected) {
 
-    // console.log(countrySelected);
     var filteredDataUpdate = [];
     var i,j;
     // loop on artist dataset
