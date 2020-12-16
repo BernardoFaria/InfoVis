@@ -3,7 +3,11 @@ export var dispatchClickBar_Map = d3.dispatch("clickBar");
 export var dispatchClickBar_Line = d3.dispatch("clickBar");
 export var dispatchClickBar_Lollipop = d3.dispatch("clickBar");
 
+// events when clicking map
 export var dispatchClickMap = d3.dispatch("clickMap");
+
+// events when clicking linechart
+export var dispatchClickLine_Bar = d3.dispatch("clickLine");
 
 // color scheme for each genre
 export const genreColor = {
