@@ -7,6 +7,7 @@ import { genreColor } from "./main.js";
 import { dispatchClickBar_Line } from "./main.js";
 import { dispatchClickLine_Bar } from "./main.js";
 import { dispatchClickMap_Line } from "./main.js";
+import { dispatchClickLine_Lollipop } from "./main.js";
 
 // all genres; they never change
 const genres= ["Avant-garde", "Blues", "Caribbean and Caribbean-influenced", "Comedy",
@@ -162,6 +163,7 @@ dispatchClickBar_Line.on("clickBar", function(artistSelected) {
                     d3.select(this)
                       .style("opacity", opacityOff);                  
                     dispatchClickLine_Bar.call("clickLine", this, d);
+                    dispatchClickLine_Lollipop.call("clickLine", this, d);
                 });
     });
     xAxis.transition()
@@ -308,6 +310,7 @@ dispatchClickMap_Line.on("clickMap", function(countrySelected) {
                     d3.select(this)
                         .style("opacity", opacityOff);                  
                     dispatchClickLine_Bar.call("clickLine", this, d);
+                    dispatchClickLine_Lollipop.call("clickLine", this, d);
                 });
     });
     xAxis.transition()
@@ -458,6 +461,7 @@ function gen_line_chart() {
                     d3.select(this)
                       .style("opacity", opacityOff);                  
                     dispatchClickLine_Bar.call("clickLine", this, d);
+                    dispatchClickLine_Lollipop.call("clickLine", this, d);
                 });
     });
 }

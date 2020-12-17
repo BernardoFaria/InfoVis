@@ -76,7 +76,7 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
        .attr("x", function(d, i) { return xscale(filteredDataUpdate[i].displayName); })
        .attr("y", function(d, i) { return yscale(filteredDataUpdate[i].popularitySpotify); })
        .on("mouseover", function(event) {
-            if(d3.select(this) == null) console.log("entrei");
+            // if(d3.select(this) == null) console.log("entrei");
             // all bars on blue...
             d3.selectAll("rect").attr("fill", "steelblue");
             // ...except the one selected
@@ -129,7 +129,6 @@ dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
     else{
         filteredDataUpdate.splice(filteredDataUpdate.length, filteredDataUpdate.length)
     }
-    console.log(filteredDataUpdate);
 
     // create X scale   => artists
     var xscale = d3.scaleBand()
@@ -152,7 +151,7 @@ dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
        .attr("x", function(d, i) { return xscale(filteredDataUpdate[i].displayName); })
        .attr("y", function(d, i) { return yscale(filteredDataUpdate[i].popularitySpotify); })
        .on("mouseover", function(event) {
-            if(d3.select(this) == null) console.log("entrei");
+            // if(d3.select(this) == null) console.log("entrei");
             // all bars on blue...
             d3.selectAll("rect").attr("fill", "steelblue");
             // ...except the one selected
@@ -199,7 +198,6 @@ function gen_bar_chart() {
     filteredData.sort(function(a, b) { return b.popularitySpotify - a.popularitySpotify; });
     // first 5 elements
     filteredData.splice(5, filteredData.length);
-    // console.log(filteredData);
 
     // create X scale   => artists
     var xScale = d3.scaleBand()

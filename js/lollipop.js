@@ -2,6 +2,7 @@
 
 // events
 import { dispatchClickBar_Lollipop } from "./main.js";
+import { dispatchClickLine_Lollipop } from "./main.js";
 
 // global variables
 var width = 600;
@@ -12,6 +13,7 @@ var xScale;
 var yScale;
 var fullDataset;
 var svg;
+var yAxis;
 
 // datasets variables
 var artists;
@@ -60,6 +62,84 @@ dispatchClickBar_Lollipop.on("clickBar", function(artistSelected) {
     svg.selectAll("circle").attr("stroke", "black").style("fill", "black");
     // ...except the one selected
     svg.select("#_" + (idAux + 12)).attr("stroke", "red").style("fill", "red");
+
+});
+
+// update lollipop when clicking on lineplot
+dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
+
+   svg.selectAll("line").remove();
+   svg.selectAll("circle").remove();
+
+   var filteredDataUpdate = [];
+   var i, j;
+   // loop on artist dataset
+   for(i = 0; i < Object.keys(artists).length-1; i++) {    
+      var string = artists[i].genre; 
+      var res = string.split(",");    // split genres it by commas
+      for(j = 0; j < res.length; j ++) {  // loop the splitted string
+         if(res[j] == genreSelected.genre) { 
+               filteredDataUpdate.push(artists[i]);  // add to array 
+         }
+      }
+   }  
+
+   // get total artists per decade
+   var getTotalArtists = [0,0,0,0,0,0,0,0,0,0,0,0];    // couldn't find a better way
+   for(var i = 0; i < Object.keys(filteredDataUpdate).length-1; i++) {    
+      if (filteredDataUpdate[i].creationDate > 1900 && filteredDataUpdate[i].creationDate <= 1910) { getTotalArtists[0]++; }
+      if (filteredDataUpdate[i].creationDate > 1910 && filteredDataUpdate[i].creationDate <= 1920) { getTotalArtists[1]++; }
+      if (filteredDataUpdate[i].creationDate > 1920 && filteredDataUpdate[i].creationDate <= 1930) { getTotalArtists[2]++; }
+      if (filteredDataUpdate[i].creationDate > 1930 && filteredDataUpdate[i].creationDate <= 1940) { getTotalArtists[3]++; }
+      if (filteredDataUpdate[i].creationDate > 1940 && filteredDataUpdate[i].creationDate <= 1950) { getTotalArtists[4]++; }
+      if (filteredDataUpdate[i].creationDate > 1950 && filteredDataUpdate[i].creationDate <= 1960) { getTotalArtists[5]++; }
+      if (filteredDataUpdate[i].creationDate > 1960 && filteredDataUpdate[i].creationDate <= 1970) { getTotalArtists[6]++; }
+      if (filteredDataUpdate[i].creationDate > 1970 && filteredDataUpdate[i].creationDate <= 1980) { getTotalArtists[7]++; }
+      if (filteredDataUpdate[i].creationDate > 1980 && filteredDataUpdate[i].creationDate <= 1990) { getTotalArtists[8]++; }
+      if (filteredDataUpdate[i].creationDate > 1990 && filteredDataUpdate[i].creationDate <= 2000) { getTotalArtists[9]++; }
+      if (filteredDataUpdate[i].creationDate > 2000 && filteredDataUpdate[i].creationDate <= 2010) { getTotalArtists[10]++; }
+      if (filteredDataUpdate[i].creationDate > 2010 && filteredDataUpdate[i].creationDate <= 2020) { getTotalArtists[11]++; }
+   }
+   // join [decade, totalArtists]
+   fullDataset = getTotalArtists.map(function(d, i) {
+      return { 'decade' : auxDec[i], 'total' : getTotalArtists[i] };
+   })
+
+   // // create Y scale
+   // var yscale = d3.scaleLinear()
+   //            .domain([0, d3.max(fullDataset, function(d) { return +d.total; })]) 
+   //            .range([height - padding, padding]);
+   
+
+   // yAxis.transition()
+   //      .duration(1000)
+   //      .call(d3.axisLeft(yscale));
+
+
+   // Lines
+   svg.selectAll("mylollipop")
+      .data(fullDataset)
+      .enter()
+      .append("line")
+      .attr("x1", function(d) { return xScale(d.decade); })
+      .attr("x2", function(d) { return xScale(d.decade); })
+      .attr("y1", function(d) { return yScale(d.total); })
+      .attr("y2", yScale(0))
+      .attr("id", function(d, i) { return "_" + id_line[i]; })
+      .attr("stroke", "black")
+      .attr("stroke-width", 2);
+
+   // Circles
+   svg.selectAll("mycircle")
+      .data(fullDataset)
+      .enter()
+      .append("circle")
+      .attr("cx", function(d) { return xScale(d.decade); })
+      .attr("cy", function(d) { return yScale(d.total); })
+      .attr("r", radius)
+      .attr("id", function(d, i) { return "_" + id_circle[i]; })
+      .style("fill", "black")
+      .attr("stroke", "black");
 
 });
 
@@ -118,11 +198,11 @@ function gen_lollipop() {
                    .range([height - padding, padding]);
 
     // create Y axis
-    svg.append("g")
-       .attr("class", "axisSubtitle")
-       .style("font-size", "13px")
-       .attr("transform", "translate(" + padding + ",0)")
-       .call(d3.axisLeft(yScale));
+    yAxis = svg.append("g")
+               .attr("class", "axisSubtitle")
+               .style("font-size", "13px")
+               .attr("transform", "translate(" + padding + ",0)")
+               .call(d3.axisLeft(yScale));
 
     svg.append("text")
        .attr("class", "axisSubtitle")
