@@ -17,10 +17,13 @@ var svg;
 var artists;
 var decades;
 
-var auxDec = [1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020];  // aux with all decades
-var id_line = [0,1,2,3,4,5,6,7,8,9,10,11];  // id's for lollipop's lines
-var id_circle = [12,13,14,15,16,17,18,19,20,21,22,23]; // id's for lollipop's circles ; + 12
+var auxDec = [1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020]; // aux with all decades
+var id_line = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]; // id's for lollipop's lines
+var id_circle = [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]; // id's for lollipop's circles ; + 12
 
+var variable = {
+    tooltipText: function(d, i) { return ''; }
+}
 
 d3.csv("dataset/artistV7.csv").then(function(data1) {
     d3.csv("dataset/decade.csv").then(function(data2) {
@@ -34,8 +37,8 @@ d3.csv("dataset/artistV7.csv").then(function(data1) {
 // update lollipop when clicking on barchart
 dispatchClickBar_Lollipop.on("clickBar", function(artistSelected) {
 
-    var flagVec = [0,0,0,0,0,0,0,0,0,0,0,0];    // couldn't find a better way again
-    
+    var flagVec = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // couldn't find a better way again
+
     if (artistSelected.creationDate > 1900 && artistSelected.creationDate <= 1910) { flagVec[0]++; }
     if (artistSelected.creationDate > 1910 && artistSelected.creationDate <= 1920) { flagVec[1]++; }
     if (artistSelected.creationDate > 1920 && artistSelected.creationDate <= 1930) { flagVec[2]++; }
@@ -68,14 +71,24 @@ function gen_lollipop() {
 
     // create lollipop
     svg = d3.select("#lollipop")
-                .append("svg")
-                .attr("width", width)
-                .attr("height", height)
-                .attr("transform", "translate(" + 50 + ",0)");
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("transform", "translate(" + 50 + ",0)").tooltipText(function(d) { return "<span style='color: #black'> clicks:</span> " + d.artists; });
+
+    variable.__tooltip__ = variable.__tooltip__ || (function() {
+        var dom = document.getElementById('tooltip');
+        if (!dom) {
+            dom = document.createElement('div');
+            dom.id = 'tooltip';
+            document.body.appendChild(dom);
+        }
+        return d3.select('#tooltip');
+    })();
 
     // get total artists per decade
-    var getTotalArtists = [0,0,0,0,0,0,0,0,0,0,0,0];    // couldn't find a better way
-    for(var i = 0; i < Object.keys(artists).length-1; i++) {    
+    var getTotalArtists = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // couldn't find a better way
+    for (var i = 0; i < Object.keys(artists).length - 1; i++) {
         if (artists[i].creationDate > 1900 && artists[i].creationDate <= 1910) { getTotalArtists[0]++; }
         if (artists[i].creationDate > 1910 && artists[i].creationDate <= 1920) { getTotalArtists[1]++; }
         if (artists[i].creationDate > 1920 && artists[i].creationDate <= 1930) { getTotalArtists[2]++; }
@@ -91,71 +104,88 @@ function gen_lollipop() {
     }
     // join [decade, totalArtists]
     fullDataset = getTotalArtists.map(function(d, i) {
-      return { 'decade' : auxDec[i], 'total' : getTotalArtists[i] };
+        return { 'decade': auxDec[i], 'total': getTotalArtists[i] };
     });
 
     // create X scale
     xScale = d3.scaleBand()
-               .domain(auxDec)
-               .range([padding, width - padding])
-               .padding(1);
+        .domain(auxDec)
+        .range([padding, width - padding])
+        .padding(1);
 
     // create X axis
     svg.append("g")
-       .attr("class", "axisSubtitle")
-       .style("font-size", "13px")
-       .attr("transform", "translate(0," + (height - padding) + ")")
-       .call(d3.axisBottom(xScale));
+        .attr("class", "axisSubtitle")
+        .style("font-size", "13px")
+        .attr("transform", "translate(0," + (height - padding) + ")")
+        .call(d3.axisBottom(xScale));
 
     svg.append("text")
-       .attr("class", "axisSubtitle")
-       .attr("transform", "translate(" + width/2.2 + "," + (height -padding / 3) + ")")
-       .text("Decades");
+        .attr("class", "axisSubtitle")
+        .attr("transform", "translate(" + width / 2.2 + "," + (height - padding / 3) + ")")
+        .text("Decades");
 
     // create Y scale
     yScale = d3.scaleLinear()
-                   .domain([0, 100])
-                   .range([height - padding, padding]);
+        .domain([0, 100])
+        .range([height - padding, padding]);
 
     // create Y axis
     svg.append("g")
-       .attr("class", "axisSubtitle")
-       .style("font-size", "13px")
-       .attr("transform", "translate(" + padding + ",0)")
-       .call(d3.axisLeft(yScale));
+        .attr("class", "axisSubtitle")
+        .style("font-size", "13px")
+        .attr("transform", "translate(" + padding + ",0)")
+        .call(d3.axisLeft(yScale));
 
     svg.append("text")
-       .attr("class", "axisSubtitle")
-       .attr("transform", "rotate(-90)")
-       .attr("y", 0)
-       .attr("x", 0 - height / 1.4)
-       .attr("dy", "1em")
-       .text("Total Number Of Artists");
+        .attr("class", "axisSubtitle")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0)
+        .attr("x", 0 - height / 1.4)
+        .attr("dy", "1em")
+        .text("Total Number Of Artists");
 
 
     // Lines
     svg.selectAll("mylollipop")
-       .data(fullDataset)
-       .enter()
-       .append("line")
-       .attr("x1", function(d) { return xScale(d.decade); })
-       .attr("x2", function(d) { return xScale(d.decade); })
-       .attr("y1", function(d) { return yScale(d.total); })
-       .attr("y2", yScale(0))
-       .attr("id", function(d, i) { return "_" + id_line[i]; })
-       .attr("stroke", "black")
-       .attr("stroke-width", 2);
-
+        .data(fullDataset)
+        .enter()
+        .append("line")
+        .attr("x1", function(d) { return xScale(d.decade); })
+        .attr("x2", function(d) { return xScale(d.decade); })
+        .attr("y1", function(d) { return yScale(d.total); })
+        .attr("y2", yScale(0))
+        .attr("id", function(d, i) { return "_" + id_line[i]; })
+        .attr("stroke", "black")
+        .attr("stroke-width", 2)
+        .on("mouseover", function(d) {
+            variable.__tooltip__.style({
+                'font-size': '10px'
+            }).html(variable.tooltipText(d));
+            console.log("here")
+            variable.__tooltip__
+                .transition()
+                .duration(200)
+                .style({
+                    'opacity': visible
+                });
+        })
+        .on('mouseout', function(d, i) {
+            variable.__tooltip__
+                .transition()
+                .duration(200)
+                .style('opacity', invisible);
+        });
     // Circles
     svg.selectAll("mycircle")
-       .data(fullDataset)
-       .enter()
-       .append("circle")
-       .attr("cx", function(d) { return xScale(d.decade); })
-       .attr("cy", function(d) { return yScale(d.total); })
-       .attr("r", radius)
-       .attr("id", function(d, i) { return "_" + id_circle[i]; })
-       .style("fill", "black")
-       .attr("stroke", "black");
+        .data(fullDataset)
+        .enter()
+        .append("circle")
+        .attr("cx", function(d) { return xScale(d.decade); })
+        .attr("cy", function(d) { return yScale(d.total); })
+        .attr("r", radius)
+        .attr("id", function(d, i) { return "_" + id_circle[i]; })
+        .style("fill", "black")
+        .attr("stroke", "black");
 
 }

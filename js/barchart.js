@@ -21,6 +21,8 @@ var artists;
 var svg;
 var dropdown;
 
+// tooltips
+var div;
 
 // get decade dataset
 d3.csv("dataset/decade.csv").then(function(data1) {
@@ -35,150 +37,150 @@ d3.csv("dataset/decade.csv").then(function(data1) {
 dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
 
     var filteredDataUpdate = [];
-    var i,j;
+    var i, j;
     // loop on artist dataset
-    for(i = 0; i < Object.keys(artists).length-1; i++) {    
-        var string = artists[i].country; 
-        var res = string.split(",");    // split it by commas
-        for(j = 0; j < res.length; j ++) {  // loop the splitted string
-            if(res[j] == countrySelected.properties.name) { 
-                filteredDataUpdate.push(artists[i]); }  // add to array 
-            }
-    }   
+    for (i = 0; i < Object.keys(artists).length - 1; i++) {
+        var string = artists[i].country;
+        var res = string.split(","); // split it by commas
+        for (j = 0; j < res.length; j++) { // loop the splitted string
+            if (res[j] == countrySelected.properties.name) {
+                filteredDataUpdate.push(artists[i]);
+            } // add to array 
+        }
+    }
     // sort data by popularity => bigger to smaller
     filteredDataUpdate.sort(function(a, b) { return b.popularitySpotify - a.popularitySpotify; });
     // first 5 elements
-    if(filteredDataUpdate.length >= 5) {
+    if (filteredDataUpdate.length >= 5) {
         filteredDataUpdate.splice(5, filteredDataUpdate.length);
-    }
-    else{
+    } else {
         filteredDataUpdate.splice(filteredDataUpdate.length, filteredDataUpdate.length)
     }
 
     // create X scale   => artists
     var xscale = d3.scaleBand()
-                .domain(filteredDataUpdate.map(d => d.displayName))
-                .range([padding, width - padding]);
+        .domain(filteredDataUpdate.map(d => d.displayName))
+        .range([padding, width - padding]);
     xscale.paddingInner(0.5);
 
     // create Y scale   => popularity
     var yscale = d3.scaleLinear()
-            .domain([0, d3.max(filteredDataUpdate, function(d) { return +d.popularitySpotify; })]) 
-            .range([height - padding, padding]); 
+        .domain([0, d3.max(filteredDataUpdate, function(d) { return +d.popularitySpotify; })])
+        .range([height - padding, padding]);
 
 
     svg.selectAll("rect")
-       .data(filteredDataUpdate)
-       .join("rect")
-       .attr("width", xscale.bandwidth())
-       .attr("height", function(d, i) { return (height - padding - yscale(filteredDataUpdate[i].popularitySpotify)); })
-       .attr("fill", "steelblue")
-       .attr("x", function(d, i) { return xscale(filteredDataUpdate[i].displayName); })
-       .attr("y", function(d, i) { return yscale(filteredDataUpdate[i].popularitySpotify); })
-       .on("mouseover", function(event) {
-            if(d3.select(this) == null) console.log("entrei");
+        .data(filteredDataUpdate)
+        .join("rect")
+        .attr("width", xscale.bandwidth())
+        .attr("height", function(d, i) { return (height - padding - yscale(filteredDataUpdate[i].popularitySpotify)); })
+        .attr("fill", "steelblue")
+        .attr("x", function(d, i) { return xscale(filteredDataUpdate[i].displayName); })
+        .attr("y", function(d, i) { return yscale(filteredDataUpdate[i].popularitySpotify); })
+        .on("mouseover", function(event) {
+            if (d3.select(this) == null) console.log("entrei");
             // all bars on blue...
             d3.selectAll("rect").attr("fill", "steelblue");
             // ...except the one selected
             d3.select(this).attr("fill", "green");
         })
         .on("mouseout", function(event) {
-        //     d3.selectAll("rect").attr("fill", "steelblue");
+            //     d3.selectAll("rect").attr("fill", "steelblue");
         })
         .on("click", function(event, d) {
             // clean all bars => all blue
-            if(d3.select(this) != null) {
+            if (d3.select(this) != null) {
                 d3.select(this).attr("fill", "steelblue");
             }
             // color selected bar
             d3.select(this).attr("fill", "red");
-            
+
             dispatchClickBar_Map.call("clickBar", this, d);
             dispatchClickBar_Line.call("clickBar", this, d);
             dispatchClickBar_Lollipop.call("clickBar", this, d);
         })
         .transition()
         .duration(1000);
-        
+
     xAxis.transition()
-         .duration(1000)
-         .call(d3.axisBottom(xscale));
-        
+        .duration(1000)
+        .call(d3.axisBottom(xscale));
+
 });
 
 // uptade barchart when clicking on linechart
 dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
 
     var filteredDataUpdate = [];
-    var i,j;
+    var i, j;
     // loop on artist dataset
-    for(i = 0; i < Object.keys(artists).length-1; i++) {    
-        var string = artists[i].genre;  // get genre string
-        var res = string.split(",");    // split it by commas
-        for(j = 0; j < res.length; j ++) {  // loop the splitted string
-            if(res[j] == genreSelected.genre) { 
-                filteredDataUpdate.push(artists[i]); }  // add to array 
-            }
-    }   
+    for (i = 0; i < Object.keys(artists).length - 1; i++) {
+        var string = artists[i].genre; // get genre string
+        var res = string.split(","); // split it by commas
+        for (j = 0; j < res.length; j++) { // loop the splitted string
+            if (res[j] == genreSelected.genre) {
+                filteredDataUpdate.push(artists[i]);
+            } // add to array 
+        }
+    }
     // sort data by popularity => bigger to smaller
     filteredDataUpdate.sort(function(a, b) { return b.popularitySpotify - a.popularitySpotify; });
     // first 5 elements
-    if(filteredDataUpdate.length >= 5) {
+    if (filteredDataUpdate.length >= 5) {
         filteredDataUpdate.splice(5, filteredDataUpdate.length);
-    }
-    else{
+    } else {
         filteredDataUpdate.splice(filteredDataUpdate.length, filteredDataUpdate.length)
     }
     console.log(filteredDataUpdate);
 
     // create X scale   => artists
     var xscale = d3.scaleBand()
-                .domain(filteredDataUpdate.map(d => d.displayName))
-                .range([padding, width - padding]);
+        .domain(filteredDataUpdate.map(d => d.displayName))
+        .range([padding, width - padding]);
     xscale.paddingInner(0.5);
 
     // create Y scale   => popularity
     var yscale = d3.scaleLinear()
-            .domain([0, d3.max(filteredDataUpdate, function(d) { return +d.popularitySpotify; })]) 
-            .range([height - padding, padding]); 
+        .domain([0, d3.max(filteredDataUpdate, function(d) { return +d.popularitySpotify; })])
+        .range([height - padding, padding]);
 
 
     svg.selectAll("rect")
-       .data(filteredDataUpdate)
-       .join("rect")
-       .attr("width", xscale.bandwidth())
-       .attr("height", function(d, i) { return (height - padding - yscale(filteredDataUpdate[i].popularitySpotify)); })
-       .attr("fill", "steelblue")
-       .attr("x", function(d, i) { return xscale(filteredDataUpdate[i].displayName); })
-       .attr("y", function(d, i) { return yscale(filteredDataUpdate[i].popularitySpotify); })
-       .on("mouseover", function(event) {
-            if(d3.select(this) == null) console.log("entrei");
+        .data(filteredDataUpdate)
+        .join("rect")
+        .attr("width", xscale.bandwidth())
+        .attr("height", function(d, i) { return (height - padding - yscale(filteredDataUpdate[i].popularitySpotify)); })
+        .attr("fill", "steelblue")
+        .attr("x", function(d, i) { return xscale(filteredDataUpdate[i].displayName); })
+        .attr("y", function(d, i) { return yscale(filteredDataUpdate[i].popularitySpotify); })
+        .on("mouseover", function(event) {
+            if (d3.select(this) == null) console.log("entrei");
             // all bars on blue...
             d3.selectAll("rect").attr("fill", "steelblue");
             // ...except the one selected
             d3.select(this).attr("fill", "green");
         })
         .on("mouseout", function(event) {
-        //     d3.selectAll("rect").attr("fill", "steelblue");
+            //     d3.selectAll("rect").attr("fill", "steelblue");
         })
         .on("click", function(event, d) {
             // clean all bars => all blue
-            if(d3.select(this) != null) {
+            if (d3.select(this) != null) {
                 d3.select(this).attr("fill", "steelblue");
             }
             // color selected bar
             d3.select(this).attr("fill", "red");
-            
+
             dispatchClickBar_Map.call("clickBar", this, d);
             dispatchClickBar_Line.call("clickBar", this, d);
             dispatchClickBar_Lollipop.call("clickBar", this, d);
         })
         .transition()
         .duration(1000);
-        
+
     xAxis.transition()
-         .duration(1000)
-         .call(d3.axisBottom(xscale));
+        .duration(1000)
+        .call(d3.axisBottom(xscale));
 
 });
 
@@ -192,8 +194,8 @@ function gen_bar_chart() {
     // filtering data
     var filteredData = [];
     // loop on artist dataset
-    for(var i = 0; i < Object.keys(artists).length-1; i++) {    
-        filteredData.push(artists[i]);  // to get a copy of the dataset artists
+    for (var i = 0; i < Object.keys(artists).length - 1; i++) {
+        filteredData.push(artists[i]); // to get a copy of the dataset artists
     }
     // sort data by popularity => bigger to smaller
     filteredData.sort(function(a, b) { return b.popularitySpotify - a.popularitySpotify; });
@@ -203,84 +205,110 @@ function gen_bar_chart() {
 
     // create X scale   => artists
     var xScale = d3.scaleBand()
-                   .domain(filteredData.map(d => d.displayName))
-                   .range([padding, width - padding]);
+        .domain(filteredData.map(d => d.displayName))
+        .range([padding, width - padding]);
     xScale.paddingInner(0.5);
 
 
     // create Y scale   => popularity
     var yScale = d3.scaleLinear()
-              .domain([0, d3.max(filteredData, function(d) { return +d.popularitySpotify; })]) 
-              .range([height - padding, padding]); 
+        .domain([0, d3.max(filteredData, function(d) { return +d.popularitySpotify; })])
+        .range([height - padding, padding]);
 
 
     // create svg
-    svg = d3.select("#barchart")  // call id in div
-                .append("svg")          // append svg to the "id" div
-                .attr("width", width)
-                .attr("height", height)
-                .attr("transform", "translate(" + 50 + ",0)");   // move svg to the right
+    svg = d3.select("#barchart") // call id in div
+        .append("svg") // append svg to the "id" div
+        .attr("width", width)
+        .attr("height", height)
+        .attr("transform", "translate(" + 50 + ",0)"); // move svg to the right
+
+    // create tooltip
+    div = svg.append('div').attr('class', 'tooltip1').style('display', 'none');
+
+
 
     // x Axis
     xAxis = svg.append("g")
-               .attr("class", "axisSubtitle")
-               .style("font-size", "13px")
-               .attr("transform", "translate(0," + (height - padding) + ")")
-               .call(d3.axisBottom(xScale));
+        .attr("class", "axisSubtitle")
+        .style("font-size", "13px")
+        .attr("transform", "translate(0," + (height - padding) + ")")
+        .call(d3.axisBottom(xScale));
 
     svg.append("text")
-       .attr("class", "axisSubtitle")
-       .attr("transform", "translate(" + width/2.2 + "," + (height - padding / 3) + ")")
-       .text("Top Artists");
+        .attr("class", "axisSubtitle")
+        .attr("transform", "translate(" + width / 2.2 + "," + (height - padding / 3) + ")")
+        .text("Top Artists");
 
-    
+
     // y Axis
     var yAxis = d3.axisLeft()
-                  .scale(yScale);
+        .scale(yScale);
 
     svg.append("g")
-           .attr("class", "axisSubtitle")
-           .style("font-size", "13px")
-           .attr("transform", "translate(" + padding + ",0)")
-           .call(yAxis);
+        .attr("class", "axisSubtitle")
+        .style("font-size", "13px")
+        .attr("transform", "translate(" + padding + ",0)")
+        .call(yAxis);
 
     svg.append("text")
-       .attr("class", "axisSubtitle")
-       .attr("transform", "rotate(-90)")
-       .attr("y", 0)
-       .attr("x", 0 - height / 1.6)
-       .attr("font-size", "16px")
-       .attr("dy", "1em")
-       .text("Popularity");
+        .attr("class", "axisSubtitle")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0)
+        .attr("x", 0 - height / 1.6)
+        .attr("font-size", "16px")
+        .attr("dy", "1em")
+        .text("Popularity");
 
     // create bars
     svg.selectAll("rect")
-       .data(filteredData)
-       .join("rect")
-       .attr("width", xScale.bandwidth())
-       .attr("height", d => (height - padding - yScale(d.popularitySpotify)))
-       .attr("fill", "steelblue") 
-       .attr("x", function(d,i) { return xScale(d.displayName); })
-       .attr("y", function(d,i) { return yScale(d.popularitySpotify); })
-       .on("mouseover", function(event) {
+        .data(filteredData)
+        .join("rect")
+        .attr("width", xScale.bandwidth())
+        .attr("height", d => (height - padding - yScale(d.popularitySpotify)))
+        .attr("fill", "steelblue")
+        .attr("x", function(d, i) { return xScale(d.displayName); })
+        .attr("y", function(d, i) { return yScale(d.popularitySpotify); })
+        .on("mouseover", function(event) {
             // all bars on blue...
             d3.selectAll("rect").attr("fill", "steelblue");
             // ...except the one selected
             d3.select(this).attr("fill", "green");
+            // --- 1a
+            mouseover();
         })
         .on("mouseout", function(event) {
-        //     d3.selectAll("rect").attr("fill", "steelblue");
+            //     d3.selectAll("rect").attr("fill", "steelblue");
+            // ---1a 
+            mouseout();
         })
+        // --- 1a
+        .on("mousemove", mousemove)
         .on("click", function(event, d) {
             // clean all bars => all blue
-            if(d3.select(this) != null) {
+            if (d3.select(this) != null) {
                 d3.select(this).attr("fill", "steelblue");
             }
             // color selected bar
             d3.select(this).attr("fill", "red");
-            
+
             dispatchClickBar_Line.call("clickBar", this, d);
             dispatchClickBar_Map.call("clickBar", this, d)
             dispatchClickBar_Lollipop.call("clickBar", this, d);
         });
+
+    function mouseover() {
+        div.style('display', 'inline');
+    }
+
+    function mousemove() {
+        var d = d3.select(this).data()[0]
+        console.log(d.artist)
+        div.html(d.artist);
+    }
+
+    function mouseout() {
+        div.style('display', 'none');
+    }
+
 }
