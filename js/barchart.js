@@ -3,7 +3,10 @@
 // import colors from main
 import { genreColor } from "./main.js";
 
-// events; dispatch[where it comes]_[where it goes]
+// import tooltip
+import { toolTip } from "./main.js";
+
+// events
 import { dispatchClickBar_Line } from "./main.js";
 import { dispatchClickBar_Map } from "./main.js";
 import { dispatchClickBar_Lollipop } from "./main.js";
@@ -35,6 +38,8 @@ d3.csv("dataset/decade.csv").then(function(data1) {
 
 // update barchart when clicking on map
 dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
+
+    svg.selectAll("rect").attr("class", "bars-style").remove();
 
     var filteredDataUpdate = [];
     var i,j;
@@ -75,10 +80,10 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
        .join("rect")
        .attr("class", "bars-style")
        .attr("width", xscale.bandwidth())
-       .attr("height", function(d, i) { return (height - padding - yscale(filteredDataUpdate[i].popularitySpotify)); })
        .attr("x", function(d, i) { return xscale(filteredDataUpdate[i].displayName); })
        .attr("y", function(d, i) { return yscale(filteredDataUpdate[i].popularitySpotify); })
        .on("mouseover", function(event) {
+            // toolTip.transition().duration(1000);
             // if(d3.select(this) == null) console.log("entrei");
             // all bars on blue...
             d3.selectAll("rect").attr("class", "bars-style").style("fill", "#a9a9a9");
@@ -89,6 +94,7 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
         //     d3.selectAll("rect").attr("fill", "steelblue");
         })
         .on("click", function(event, d) {
+            // toolTip.transition().duration(1000);
             // clean all bars => all blue
             if(d3.select(this) != null) {
                 d3.select(this).attr("fill", "#a9a9a9");
@@ -101,7 +107,8 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
             dispatchClickBar_Lollipop.call("clickBar", this, d);
         })
         .transition()
-        .duration(1000);
+        .duration(1000)
+        .attr("height", function(d, i) { return (height - padding - yscale(filteredDataUpdate[i].popularitySpotify)); });
         
     xAxis.transition()
          .duration(1000)
@@ -111,6 +118,8 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
 
 // uptade barchart when clicking on linechart
 dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
+
+    svg.selectAll("rect").attr("class", "bars-style").remove();
 
     var filteredDataUpdate = [];
     var i,j;
@@ -151,7 +160,6 @@ dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
        .join("rect")
        .attr("class", "bars-style")
        .attr("width", xscale.bandwidth())
-       .attr("height", function(d, i) { return (height - padding - yscale(filteredDataUpdate[i].popularitySpotify)); })
        .attr("x", function(d, i) { return xscale(filteredDataUpdate[i].displayName); })
        .attr("y", function(d, i) { return yscale(filteredDataUpdate[i].popularitySpotify); })
        .on("mouseover", function(event) {
@@ -177,7 +185,8 @@ dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
             dispatchClickBar_Lollipop.call("clickBar", this, d);
         })
         .transition()
-        .duration(1000);
+        .duration(1000)
+        .attr("height", function(d, i) { return (height - padding - yscale(filteredDataUpdate[i].popularitySpotify)); });
         
     xAxis.transition()
          .duration(1000)
@@ -260,7 +269,6 @@ function gen_bar_chart() {
        .join("rect")
        .attr("class", "bars-style")
        .attr("width", xScale.bandwidth())
-       .attr("height", d => (height - padding - yScale(d.popularitySpotify)))
        .attr("x", function(d,i) { return xScale(d.displayName); })
        .attr("y", function(d,i) { return yScale(d.popularitySpotify); })
        .on("mouseover", function(event) {
@@ -283,7 +291,10 @@ function gen_bar_chart() {
             dispatchClickBar_Line.call("clickBar", this, d);
             dispatchClickBar_Map.call("clickBar", this, d)
             dispatchClickBar_Lollipop.call("clickBar", this, d);
-        });
+        })
+        .transition()
+        .duration(1000)
+        .attr("height", d => (height - padding - yScale(d.popularitySpotify)));
 }
 
 
