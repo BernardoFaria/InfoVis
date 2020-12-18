@@ -16,29 +16,29 @@ export var dispatchClickLine_Lollipop = d3.dispatch("clickLine");
 
 // color scheme for each genre
 export const genreColor = {
-    "Avant-garde": "#ff0000", // light grey
-    "Blues": "#ae0000", // brown
+    "Avant-garde": "#ff0000", // bright red
+    "Blues": "#ae0000", // dark red
 
-    "Caribbean and Caribbean-influenced": "#ffae00", // bright dark blue
-    "Comedy": "#ba7f00",    // greenish blue
+    "Caribbean and Caribbean-influenced": "#ffae00", // bright orange
+    "Comedy": "#ba7f00",    // dark orange
 
-    "Country": "#fffb06",   // sand color
-    "Easy listening": "#b0ad00",    // skin color
+    "Country": "#fffb06",   // bright yellow
+    "Easy listening": "#b0ad00",    // dark yellow
 
-    "Electronic": "#6cff00",    // dark blue
-    "Folk": "#3f9500",  // redish purple
+    "Electronic": "#6cff00",    // bright green
+    "Folk": "#3f9500",  // dark green
 
-    "Heavy metal": "#00fff7",   // green
-    "Hip hop": "#009e99",   // orange
+    "Heavy metal": "#00fff7",   // bright water blue
+    "Hip hop": "#009e99",   // water blue
 
-    "House": "#0061ff", // bright green
-    "Jazz": "#003995",  // light purple
+    "House": "#0061ff", // bright blue
+    "Jazz": "#003995",  // dark blue
 
-    "Latin": "#ff00f3", // light magenta
-    "Pop": "#9a0093",   // magenta
+    "Latin": "#ff00f3", // brigh purple
+    "Pop": "#9a0093",   // dark purple
 
-    "Punk rock": "#ff009b", // greyish blue
-    "R&B and soul": "#830050",  // purple
+    "Punk rock": "#ff009b", // bright magenta
+    "R&B and soul": "#830050",  // dark magenta 
 
-    "Rock": "#000000",  // black
+    "Rock": "#ffffff",  // white
 };

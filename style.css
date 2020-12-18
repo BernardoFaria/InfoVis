@@ -25,6 +25,7 @@
     margin-bottom: 1px;
     margin-left: 0px;
     margin-right: 0px;
+    color: #ffffff;
 }
 
 .idiom-title {
@@ -36,23 +37,68 @@
     margin-bottom: 0.5px;
     margin-left: 0px;
     margin-right: 0px;
+    color: #ffffff;
 }
+
 
 /* text on axis */
 .axisSubtitle {
     font-family: 'Montserrat', sans-serif;
-    /* font-weight: bold; */
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 13px;
 }
+
+.axisLabel {
+    font-family: 'Montserrat', sans-serif;
+    fill: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+}
+
 
 /* map */
 .paths-map {
-    fill: steelblue;
+    fill: #a9a9a9;
+    stroke: #000000;
+}
+
+/* bars on barchart */
+.bars-style {
+    fill: #a9a9a9;
+    stroke: #ffffff;
 }
 
 /* Linechart */
 .line-lineplot {
     fill: none;
     stroke-width: 2px;
+}
+
+
+/* Network link*/
+.network-link {
+    fill: none;
+    stroke-width: 2px;
+    stroke:#aaa
+}
+
+/* Network node */
+.network-node {
+    fill: #69b3a2;
+}
+
+
+/* Lollipop lines */
+.lines-lollipop {
+    stroke: #a9a9a9;
+    stroke-width: 2;
+}
+
+/* Lollipop circles */
+.circle-lollipop {
+    fill: #a9a9a9;
+    stroke: #a9a9a9;
 }
 
 /* tooltip for hovering */

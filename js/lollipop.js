@@ -55,21 +55,21 @@ dispatchClickBar_Lollipop.on("clickBar", function(artistSelected) {
     var idAux = flagVec.indexOf(1)
 
     // all lines black...
-    svg.selectAll("line").attr("stroke", "black");
+    svg.selectAll("line").attr("class", "lines-lollipop").style("stroke", "#a9a9a9");
     // ...except the one selected
-    svg.select("#_" + idAux).attr("stroke", "red");
+    svg.select("#_" + idAux).style("stroke", "#444444");
     // all circles black...
-    svg.selectAll("circle").attr("stroke", "black").style("fill", "black");
+    svg.selectAll("circle").attr("class", "circle-lollipop").style("stroke", "#a9a9a9").style("fill", "#a9a9a9");
     // ...except the one selected
-    svg.select("#_" + (idAux + 12)).attr("stroke", "red").style("fill", "red");
+    svg.select("#_" + (idAux + 12)).style("stroke", "#444444").style("fill", "#444444");
 
 });
 
 // update lollipop when clicking on lineplot
 dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
 
-   svg.selectAll("line").remove();
-   svg.selectAll("circle").remove();
+   svg.selectAll("line").attr("class", "lines-lollipop").remove();
+   svg.selectAll("circle").attr("class", "circle-lollipop").remove();
 
    var filteredDataUpdate = [];
    var i, j;
@@ -121,27 +121,31 @@ dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
       .data(fullDataset)
       .enter()
       .append("line")
+      .transition()
+      .duration(1000)
+      .attr("class", "lines-lollipop")
       .attr("x1", function(d) { return xScale(d.decade); })
       .attr("x2", function(d) { return xScale(d.decade); })
       .attr("y1", function(d) { return yScale(d.total); })
       .attr("y2", yScale(0))
-      .attr("id", function(d, i) { return "_" + id_line[i]; })
-      .attr("stroke", "black")
-      .attr("stroke-width", 2);
+      .attr("id", function(d, i) { return "_" + id_line[i]; });
 
    // Circles
    svg.selectAll("mycircle")
       .data(fullDataset)
       .enter()
       .append("circle")
+      .transition()
+      .duration(1000)
+      .attr("class", "circle-lollipop")
       .attr("cx", function(d) { return xScale(d.decade); })
       .attr("cy", function(d) { return yScale(d.total); })
       .attr("r", radius)
-      .attr("id", function(d, i) { return "_" + id_circle[i]; })
-      .style("fill", "black")
-      .attr("stroke", "black");
+      .attr("id", function(d, i) { return "_" + id_circle[i]; });
 
 });
+
+
 
 
 function gen_lollipop() {
@@ -151,7 +155,6 @@ function gen_lollipop() {
                 .append("svg")
                 .attr("width", width)
                 .attr("height", height);
-               //  .attr("transform", "translate(" + 50 + ",0)");
 
     // get total artists per decade
     var getTotalArtists = [0,0,0,0,0,0,0,0,0,0,0,0];    // couldn't find a better way
@@ -183,13 +186,12 @@ function gen_lollipop() {
     // create X axis
     svg.append("g")
        .attr("class", "axisSubtitle")
-       .style("font-size", "13px")
        .attr("transform", "translate(0," + (height - padding) + ")")
        .call(d3.axisBottom(xScale));
 
     svg.append("text")
-       .attr("class", "axisSubtitle")
-       .attr("transform", "translate(" + width/2.2 + "," + (height -padding / 3) + ")")
+       .attr("class", "axisLabel")
+       .attr("transform", "translate(" + width/2.2 + "," + (height -padding / 5) + ")")
        .text("Decades");
 
     // create Y scale
@@ -200,12 +202,11 @@ function gen_lollipop() {
     // create Y axis
     yAxis = svg.append("g")
                .attr("class", "axisSubtitle")
-               .style("font-size", "13px")
                .attr("transform", "translate(" + padding + ",0)")
                .call(d3.axisLeft(yScale));
 
     svg.append("text")
-       .attr("class", "axisSubtitle")
+       .attr("class", "axisLabel")
        .attr("transform", "rotate(-90)")
        .attr("y", 0)
        .attr("x", 0 - height / 1.4)
@@ -218,24 +219,22 @@ function gen_lollipop() {
        .data(fullDataset)
        .enter()
        .append("line")
+       .attr("class", "lines-lollipop")
        .attr("x1", function(d) { return xScale(d.decade); })
        .attr("x2", function(d) { return xScale(d.decade); })
        .attr("y1", function(d) { return yScale(d.total); })
        .attr("y2", yScale(0))
-       .attr("id", function(d, i) { return "_" + id_line[i]; })
-       .attr("stroke", "black")
-       .attr("stroke-width", 2);
+       .attr("id", function(d, i) { return "_" + id_line[i]; });
 
     // Circles
     svg.selectAll("mycircle")
        .data(fullDataset)
        .enter()
        .append("circle")
+       .attr("class", "circle-lollipop")
        .attr("cx", function(d) { return xScale(d.decade); })
        .attr("cy", function(d) { return yScale(d.total); })
        .attr("r", radius)
-       .attr("id", function(d, i) { return "_" + id_circle[i]; })
-       .style("fill", "black")
-       .attr("stroke", "black");
+       .attr("id", function(d, i) { return "_" + id_circle[i]; });
 
 }

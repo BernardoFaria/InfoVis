@@ -361,13 +361,12 @@ function gen_line_chart() {
     // create X axis
     xAxis = svg.append("g")
         .attr("class", "axisSubtitle")
-        .style("font-size", "13px")
         .attr("transform", "translate(0," + (height - padding) + ")")
         .call(d3.axisBottom(xScale));
     
     svg.append("text")
-       .attr("class", "axisSubtitle")
-       .attr("transform", "translate(" + width/2.2 + "," + (height -padding / 3) + ")")
+       .attr("class", "axisLabel")
+       .attr("transform", "translate(" + width/2.2 + "," + (height -padding / 5) + ")")
        .text("Decades");
 
     // create Y scale
@@ -379,12 +378,11 @@ function gen_line_chart() {
     // create Y axis
     yAxis = svg.append("g")
         .attr("class", "axisSubtitle")
-        .style("font-size", "13px")
         .attr("transform", "translate(" + padding + ",0)")
         .call(d3.axisLeft(yScale).ticks(5));
 
     svg.append("text")
-       .attr("class", "axisSubtitle")
+       .attr("class", "axisLabel")
        .attr("transform", "rotate(-90)")
        .attr("y", 0)
        .attr("x", 0 - height / 1.6)

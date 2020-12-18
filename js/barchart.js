@@ -28,7 +28,7 @@ d3.csv("dataset/decade.csv").then(function(data1) {
         decades = data1;
         artists = data2;
         gen_bar_chart();
-        reset_button();
+        // reset_button();
     })
 });
 
@@ -224,13 +224,12 @@ function gen_bar_chart() {
     // x Axis
     xAxis = svg.append("g")
                .attr("class", "axisSubtitle")
-               .style("font-size", "13px")
                .attr("transform", "translate(0," + (height - padding) + ")")
                .call(d3.axisBottom(xScale));
 
     svg.append("text")
-       .attr("class", "axisSubtitle")
-       .attr("transform", "translate(" + width/2.2 + "," + (height - padding / 3) + ")")
+       .attr("class", "axisLabel")
+       .attr("transform", "translate(" + width/2.2 + "," + (height - padding / 5) + ")")
        .text("Top Artists");
 
     
@@ -239,45 +238,45 @@ function gen_bar_chart() {
                   .scale(yScale);
 
     svg.append("g")
-           .attr("class", "axisSubtitle")
-           .style("font-size", "13px")
-           .attr("transform", "translate(" + padding + ",0)")
-           .call(yAxis);
+       .attr("class", "axisSubtitle")
+       .style("font-size", "13px")
+       .attr("transform", "translate(" + padding + ",0)")
+       .call(yAxis);
 
     svg.append("text")
-       .attr("class", "axisSubtitle")
+       .attr("class", "axisLabel")
        .attr("transform", "rotate(-90)")
        .attr("y", 0)
        .attr("x", 0 - height / 1.6)
-       .attr("font-size", "16px")
        .attr("dy", "1em")
        .text("Popularity");
 
     // create bars
     svg.selectAll("rect")
+       .attr("class", "bars-style")
        .data(filteredData)
        .join("rect")
+       .attr("class", "bars-style")
        .attr("width", xScale.bandwidth())
        .attr("height", d => (height - padding - yScale(d.popularitySpotify)))
-       .attr("fill", "steelblue") 
        .attr("x", function(d,i) { return xScale(d.displayName); })
        .attr("y", function(d,i) { return yScale(d.popularitySpotify); })
        .on("mouseover", function(event) {
-            // all bars on blue...
-            d3.selectAll("rect").attr("fill", "steelblue");
-            // ...except the one selected
-            d3.select(this).attr("fill", "green");
+           // all bars on blue...
+           d3.selectAll("rect").attr("class", "bars-style").style("fill", "#a9a9a9");
+           // ...except the one selected
+           d3.select(this).style("fill", "#444444");
         })
         .on("mouseout", function(event) {
         //     d3.selectAll("rect").attr("fill", "steelblue");
         })
         .on("click", function(event, d) {
-            // clean all bars => all blue
+            // clean all bars => all light gray
             if(d3.select(this) != null) {
-                d3.select(this).attr("fill", "steelblue");
+                d3.select(this).style("fill", "#a9a9a9");
             }
             // color selected bar
-            d3.select(this).attr("fill", "red");
+            d3.select(this).style("fill", "#333333");
             
             dispatchClickBar_Line.call("clickBar", this, d);
             dispatchClickBar_Map.call("clickBar", this, d)

@@ -29,8 +29,8 @@ dispatchClickBar_Map.on("clickBar", function(artistSelected) {
     var id;
     var jData = topojson.feature(mapData, mapData.objects.countries).features;
     
-    // update map: all countries blue
-    svg.selectAll(".paths-map").style("fill", "steelblue");
+    // update map: all countries grey
+    svg.selectAll(".paths-map").style("fill", "#a9a9a9").style("stroke", "black");
 
     // loop to get the correspondent id 
     for(var i = 0; i < jData.length; i++) {
@@ -41,7 +41,7 @@ dispatchClickBar_Map.on("clickBar", function(artistSelected) {
     }
 
     // fill the selected country
-    svg.select("#_" + id).style("fill", "red");
+    svg.select("#_" + id).style("fill", "#333333").style("stroke", "white");
 });
 
 
@@ -67,8 +67,6 @@ function gen_bubble_map() {
             .append("svg")          // append svg to the "id" div
             .attr("width", width)
             .attr("height", height);
-            // .attr("transform", "translate(" + 40 + ",0)");
-
 
     svg.selectAll("path")
        .data(topojson.feature(mapData, mapData.objects.countries).features)
@@ -78,20 +76,20 @@ function gen_bubble_map() {
        .attr("d", path)
        .attr("id", function(d, i) { return ("_" + d.id); })
        .on("mouseover", function(event) {
-            // all countries on blue...
-            d3.selectAll(".paths-map").style("fill", "steelblue");
+            // all countries on light grey...
+            d3.selectAll(".paths-map").style("fill", "#a9a9a9").style("stroke", "#000000");
             // ...except the one selected
-            d3.select(this).style("fill", "green");
+            d3.select(this).style("fill", "#444444").style("stroke", "#000000");
         })
         .on("mouseout", function(event) {
             //TODO: escolher se metemos ou não
             // d3.select(this).attr("fill", "steelblue");
         })
         .on("click", function(event, d) {
-            // clean entire map => all blue
-            svg.selectAll(".paths-map").style("fill", "steelblue");
-            // color selected country
-            d3.select(this).style("fill", "red");
+            // clean entire map => all light grey
+            svg.selectAll(".paths-map").style("fill", "#a9a9a9").style("stroke", "#000000");
+            // color selected country white
+            d3.select(this).style("fill", "#333333").style("stroke", "#000000");
             
             dispatchClickMap_Bar.call("clickMap", this, d);
             dispatchClickMap_Line.call("clickMap", this, d);
