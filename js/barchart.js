@@ -28,8 +28,10 @@ d3.csv("dataset/decade.csv").then(function(data1) {
         decades = data1;
         artists = data2;
         gen_bar_chart();
+        reset_button();
     })
 });
+
 
 // update barchart when clicking on map
 dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
@@ -216,8 +218,8 @@ function gen_bar_chart() {
     svg = d3.select("#barchart")  // call id in div
                 .append("svg")          // append svg to the "id" div
                 .attr("width", width)
-                .attr("height", height)
-                .attr("transform", "translate(" + 50 + ",0)");   // move svg to the right
+                .attr("height", height);
+                // .attr("transform", "translate(" + 50 + ",0)");   // move svg to the right
 
     // x Axis
     xAxis = svg.append("g")
@@ -282,3 +284,74 @@ function gen_bar_chart() {
             dispatchClickBar_Lollipop.call("clickBar", this, d);
         });
 }
+
+
+/**************************
+ * reset_button()
+ *  - resets bar chart
+ *************************/
+function reset_button() {
+
+    d3.select("#reset").on("click", function() {
+        
+        // filtering data
+        var filteredData = [];
+        // loop on artist dataset
+        for(var i = 0; i < Object.keys(artists).length-1; i++) {    
+            filteredData.push(artists[i]);  // to get a copy of the dataset artists
+        }
+        // sort data by popularity => bigger to smaller
+        filteredData.sort(function(a, b) { return b.popularitySpotify - a.popularitySpotify; });
+        // first 5 elements
+        filteredData.splice(5, filteredData.length);
+
+        // create X scale   => artists
+        var xScale = d3.scaleBand()
+                    .domain(filteredData.map(d => d.displayName))
+                    .range([padding, width - padding]);
+        xScale.paddingInner(0.5);
+
+
+        // create Y scale   => popularity
+        var yScale = d3.scaleLinear()
+                .domain([0, d3.max(filteredData, function(d) { return +d.popularitySpotify; })]) 
+                .range([height - padding, padding]); 
+
+        svg.selectAll("rect")
+           .data(filteredData)
+           .join("rect")
+           .attr("width", xScale.bandwidth())
+           .attr("height", function(d, i) { return (height - padding - yScale(filteredData[i].popularitySpotify)); })
+           .attr("fill", "steelblue")
+           .attr("x", function(d, i) { return xScale(filteredData[i].displayName); })
+           .attr("y", function(d, i) { return yScale(filteredData[i].popularitySpotify); })
+           .on("mouseover", function(event) {
+                // if(d3.select(this) == null) console.log("entrei");
+                // all bars on blue...
+                d3.selectAll("rect").attr("fill", "steelblue");
+                // ...except the one selected
+                d3.select(this).attr("fill", "green");
+           })
+           .on("mouseout", function(event) {
+           //     d3.selectAll("rect").attr("fill", "steelblue");
+           })
+           .on("click", function(event, d) {
+                // clean all bars => all blue
+                if(d3.select(this) != null) {
+                    d3.select(this).attr("fill", "steelblue");
+                }
+                // color selected bar
+                d3.select(this).attr("fill", "red");
+                
+                dispatchClickBar_Map.call("clickBar", this, d);
+                dispatchClickBar_Line.call("clickBar", this, d);
+                dispatchClickBar_Lollipop.call("clickBar", this, d);
+           })
+           .transition()
+           .duration(1000);
+            
+    xAxis.transition()
+         .duration(1000)
+         .call(d3.axisBottom(xScale));
+    })
+};

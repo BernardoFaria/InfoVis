@@ -1,3 +1,6 @@
+// reset button
+export var dispatchReset = d3.dispatch("reset");
+
 // events when clicking bar chart
 export var dispatchClickBar_Map = d3.dispatch("clickBar");
 export var dispatchClickBar_Line = d3.dispatch("clickBar");

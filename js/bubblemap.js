@@ -6,7 +6,7 @@ import { dispatchClickMap_Bar } from "./main.js";
 import { dispatchClickMap_Line } from "./main.js";
 
 // global variables
-var width = 500;
+var width = 600;
 var height = 400;
 var padding = 60;
 
@@ -65,9 +65,9 @@ function gen_bubble_map() {
     // create svg
     svg = d3.select("#bubblemap")  // call id in div
             .append("svg")          // append svg to the "id" div
-            .attr("width", width + 100)
-            .attr("height", height - 20)
-            .attr("transform", "translate(" + 40 + ",0)");
+            .attr("width", width)
+            .attr("height", height);
+            // .attr("transform", "translate(" + 40 + ",0)");
 
 
     svg.selectAll("path")

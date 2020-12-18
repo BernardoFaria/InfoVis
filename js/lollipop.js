@@ -150,8 +150,8 @@ function gen_lollipop() {
     svg = d3.select("#lollipop")
                 .append("svg")
                 .attr("width", width)
-                .attr("height", height)
-                .attr("transform", "translate(" + 50 + ",0)");
+                .attr("height", height);
+               //  .attr("transform", "translate(" + 50 + ",0)");
 
     // get total artists per decade
     var getTotalArtists = [0,0,0,0,0,0,0,0,0,0,0,0];    // couldn't find a better way
