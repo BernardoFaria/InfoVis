@@ -70,19 +70,20 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
 
 
     svg.selectAll("rect")
+       .attr("class", "bars-style")
        .data(filteredDataUpdate)
        .join("rect")
+       .attr("class", "bars-style")
        .attr("width", xscale.bandwidth())
        .attr("height", function(d, i) { return (height - padding - yscale(filteredDataUpdate[i].popularitySpotify)); })
-       .attr("fill", "steelblue")
        .attr("x", function(d, i) { return xscale(filteredDataUpdate[i].displayName); })
        .attr("y", function(d, i) { return yscale(filteredDataUpdate[i].popularitySpotify); })
        .on("mouseover", function(event) {
             // if(d3.select(this) == null) console.log("entrei");
             // all bars on blue...
-            d3.selectAll("rect").attr("fill", "steelblue");
+            d3.selectAll("rect").attr("class", "bars-style").style("fill", "#a9a9a9");
             // ...except the one selected
-            d3.select(this).attr("fill", "green");
+            d3.select(this).style("fill", "#444444");
         })
         .on("mouseout", function(event) {
         //     d3.selectAll("rect").attr("fill", "steelblue");
@@ -90,10 +91,10 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
         .on("click", function(event, d) {
             // clean all bars => all blue
             if(d3.select(this) != null) {
-                d3.select(this).attr("fill", "steelblue");
+                d3.select(this).attr("fill", "#a9a9a9");
             }
             // color selected bar
-            d3.select(this).attr("fill", "red");
+            d3.select(this).attr("fill", "#333333");
             
             dispatchClickBar_Map.call("clickBar", this, d);
             dispatchClickBar_Line.call("clickBar", this, d);
@@ -145,19 +146,20 @@ dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
 
 
     svg.selectAll("rect")
+       .attr("class", "bars-style")
        .data(filteredDataUpdate)
        .join("rect")
+       .attr("class", "bars-style")
        .attr("width", xscale.bandwidth())
        .attr("height", function(d, i) { return (height - padding - yscale(filteredDataUpdate[i].popularitySpotify)); })
-       .attr("fill", "steelblue")
        .attr("x", function(d, i) { return xscale(filteredDataUpdate[i].displayName); })
        .attr("y", function(d, i) { return yscale(filteredDataUpdate[i].popularitySpotify); })
        .on("mouseover", function(event) {
             // if(d3.select(this) == null) console.log("entrei");
             // all bars on blue...
-            d3.selectAll("rect").attr("fill", "steelblue");
+            d3.selectAll("rect").attr("class", "bars-style").style("fill", "#a9a9a9");
             // ...except the one selected
-            d3.select(this).attr("fill", "green");
+            d3.select(this).style("fill", "#444444");
         })
         .on("mouseout", function(event) {
         //     d3.selectAll("rect").attr("fill", "steelblue");
@@ -165,10 +167,10 @@ dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
         .on("click", function(event, d) {
             // clean all bars => all blue
             if(d3.select(this) != null) {
-                d3.select(this).attr("fill", "steelblue");
+                d3.select(this).style("fill", "#a9a9a9");
             }
             // color selected bar
-            d3.select(this).attr("fill", "red");
+            d3.select(this).style("fill", "#333333");
             
             dispatchClickBar_Map.call("clickBar", this, d);
             dispatchClickBar_Line.call("clickBar", this, d);
