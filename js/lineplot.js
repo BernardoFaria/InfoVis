@@ -3,6 +3,9 @@
 // import colors from main
 import { genreColor } from "./main.js";
 
+// import tooltip
+import { toolTip } from "./main.js";
+
 // import reset button
 import { dispatchReset } from "./main.js";
 
@@ -27,7 +30,7 @@ var popularity; // dataset 3
 var xScale;     // x scale
 var yScale      // y scale
 var lines;      // lines of line chart
-var toolTip;    // tooltip
+// var toolTip;    // tooltip
 var svg;
 var xAxis;
 var yAxis;
@@ -138,7 +141,8 @@ dispatchClickBar_Line.on("clickBar", function(artistSelected) {
                         if(genre === "Rock") { return lineRock(genreArray); }
                     })
                     .style("stroke", genreColor[genre])
-                    .on("mouseover", function(d) { 
+                    .style("opacity", 0.5)
+                    .on("mouseover", function(event, d) { 
                         // fade all lines...
                         d3.selectAll(".line-lineplot")
                         .style("opacity", opacityOn);
@@ -146,21 +150,23 @@ dispatchClickBar_Line.on("clickBar", function(artistSelected) {
                         d3.select(this)
                         .style("opacity", opacityOff);
                         // tooltip
-                        // toolTip.transition()
-                        //        .style("opacity", 0.9);
-                        //        var text = "Genre: " + genre;
-                        // toolTip.html(text);
-                            //    .style("left", (event.pageX) + "px")
-                            //    .style("top", (event.pageY - 28) + "px");
+                        const[x, y] = d3.pointer(event);
+                        toolTip.transition()
+                               .duration(500)
+                               .style("opacity", 0.9);
+                        var text = genre;
+                        toolTip.html(text)
+                               .style("left", (x) + "px")
+                               .style("top", (y + 40) + "px");
                     })
                     .on("mouseout", function(d) {
                         //return all bars' opacity to normal
                         d3.selectAll(".line-lineplot")
                         .style("opacity", opacityNormal);
                         // tooltip off
-                        // toolTip.transition()
-                        //        .duration(500)
-                        //        .style("opacity", 0);
+                        toolTip.transition()
+                               .duration(500)
+                               .style("opacity", 0);
                     })
                     .on("click", function(event, d) {  
                         d3.selectAll(".line-lineplot")
@@ -295,7 +301,8 @@ dispatchClickMap_Line.on("clickMap", function(countrySelected) {
                         if(genre === "Rock") { return lineRock(genreArray); }
                     })
                     .style("stroke", genreColor[genre])
-                    .on("mouseover", function(d) { 
+                    .style("opacity", 0.5)
+                    .on("mouseover", function(event, d) { 
                         // fade all lines...
                         d3.selectAll(".line-lineplot")
                             .style("opacity", opacityOn);
@@ -303,21 +310,23 @@ dispatchClickMap_Line.on("clickMap", function(countrySelected) {
                         d3.select(this)
                             .style("opacity", opacityOff);
                         // tooltip
-                        // toolTip.transition()
-                        //        .style("opacity", 0.9);
-                        //        var text = "Genre: " + genre;
-                        // toolTip.html(text);
-                            //    .style("left", (event.pageX) + "px")
-                            //    .style("top", (event.pageY - 28) + "px");
+                        const[x, y] = d3.pointer(event);
+                        toolTip.transition()
+                               .duration(500)
+                               .style("opacity", 0.9);
+                               var text = genre;
+                        toolTip.html(text)
+                               .style("left", (x) + "px")
+                               .style("top", (y + 40) + "px");
                     })
                     .on("mouseout", function(d) {
                         //return all bars' opacity to normal
                         d3.selectAll(".line-lineplot")
                             .style("opacity", opacityNormal);
                         // tooltip off
-                        // toolTip.transition()
-                        //        .duration(500)
-                        //        .style("opacity", 0);
+                        toolTip.transition()
+                               .duration(500)
+                               .style("opacity", 0);
                     })
                     .on("click", function(event, d) {  
                         d3.selectAll(".line-lineplot")
@@ -416,11 +425,6 @@ function gen_line_chart() {
         d3.line()
           .x(d => xScale(d.decade))
           .y(d => yScale(d.popularity*100));    // * 100 because we only have percentage 
-
-          // Tooltip
-    // const toolTip = svg.append("g")
-    //                   .attr("class", "tooltip")
-    //                   .style("opacity", 0);
     
     // for drawing all lines
     lines = svg.append("g");
@@ -456,7 +460,7 @@ function gen_line_chart() {
                     })
                     .style("stroke", genreColor[genre])
                     .style("opacity", 0.5)
-                    .on("mouseover", function(d) { 
+                    .on("mouseover", function(event, d) { 
                         // fade all lines...
                         d3.selectAll(".line-lineplot")
                         .style("opacity", opacityOn);
@@ -464,21 +468,23 @@ function gen_line_chart() {
                         d3.select(this)
                         .style("opacity", opacityOff);
                         // tooltip
-                        // toolTip.transition()
-                        //        .style("opacity", 0.9);
-                        //        var text = "Genre: " + genre;
-                        // toolTip.html(text);
-                            //    .style("left", (event.pageX) + "px")
-                            //    .style("top", (event.pageY - 28) + "px");
+                        const[x, y] = d3.pointer(event);
+                        toolTip.transition()
+                               .duration(500)
+                               .style("opacity", 0.9);
+                        var text = genre;
+                        toolTip.html(text)
+                               .style("left", (x) + "px")
+                               .style("top", (y + 40) + "px");
                     })
                     .on("mouseout", function(d) {
                         //return all bars' opacity to normal
                         d3.selectAll(".line-lineplot")
                         .style("opacity", opacityNormal);
                         // tooltip off
-                        // toolTip.transition()
-                        //        .duration(500)
-                        //        .style("opacity", 0);
+                        toolTip.transition()
+                               .duration(500)
+                               .style("opacity", 0);
                     })
                     .on("click", function(event, d) {  
                         d3.selectAll(".line-lineplot")

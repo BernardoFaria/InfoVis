@@ -116,10 +116,13 @@
     fill: white;
 
     font-family: 'Montserrat', sans-serif;
-    font-size: 10px;
+    font-size: 15px;
+    font-weight: bold;
     
     padding: 5px;
     border-style: solid;
     border-width: 1px;
     border-color: white;
 }
+
+
