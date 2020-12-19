@@ -17,6 +17,10 @@ var outerRadius = Math.min(width, height) / 2;  // goes from  the center to the 
 var mapData; 
 var svg;
 
+var opacityOn = 0.2;    // when mouseover, other countries' opacity lows down
+var opacityOff = 1;     // when mouseover, THIS countries' opacity gets higher
+var opacityNormal = 0.5;  // when mouseout, all countries return to normal
+
 // get map dataset
 d3.json("dataset/countries-110m.json").then(function(data) {
     mapData = data;
@@ -31,7 +35,8 @@ dispatchClickBar_Map.on("clickBar", function(artistSelected) {
     var jData = topojson.feature(mapData, mapData.objects.countries).features;
     
     // update map: all countries grey
-    svg.selectAll(".paths-map").style("fill", "#a9a9a9").style("stroke", "black");
+    // svg.selectAll(".paths-map").style("fill", "#a9a9a9").style("stroke", "black");
+    svg.selectAll("path").attr("class", "paths-map").style("opacity", opacityNormal);
 
     // loop to get the correspondent id 
     for(var i = 0; i < jData.length; i++) {
@@ -42,7 +47,8 @@ dispatchClickBar_Map.on("clickBar", function(artistSelected) {
     }
 
     // fill the selected country
-    svg.select("#_" + id).style("fill", "#333333").style("stroke", "white");
+    // svg.select("#_" + id).attr("class", "paths-map").style("fill", "#333333").style("stroke", "white");
+    svg.select("#_" + id).attr("class", "paths-map").style("opacity", opacityOff);
 });
 
 
@@ -70,27 +76,34 @@ function gen_bubble_map() {
             .attr("height", height);
 
     svg.selectAll("path")
+       .attr("class", "paths-map")
        .data(topojson.feature(mapData, mapData.objects.countries).features)
        .enter()
        .append("path")
        .attr("class", "paths-map")
+       .attr("opacity", opacityNormal)
        .attr("d", path)
        .attr("id", function(d, i) { return ("_" + d.id); })
        .on("mouseover", function(event) {
             // all countries on light grey...
-            d3.selectAll(".paths-map").style("fill", "#a9a9a9").style("stroke", "#000000");
+            d3.selectAll(".paths-map").style("opacity", opacityNormal);
+            //   .style("fill", "#a9a9a9")
+            //   .style("stroke", "#000000");
             // ...except the one selected
-            d3.select(this).style("fill", "#444444").style("stroke", "#000000");
+            // d3.select(this).style("fill", "#444444").style("stroke", "#000000")
+            d3.select(this).attr("class", "paths-map").style("opacity", opacityOff);
         })
         .on("mouseout", function(event) {
             //TODO: escolher se metemos ou não
-            // d3.select(this).attr("fill", "steelblue");
+            d3.select(this).attr("class", "paths-map").style("opacity", opacityNormal);
         })
         .on("click", function(event, d) {
             // clean entire map => all light grey
-            svg.selectAll(".paths-map").style("fill", "#a9a9a9").style("stroke", "#000000");
+            // svg.selectAll(".paths-map").style("fill", "#a9a9a9").style("stroke", "#000000");
+            d3.selectAll(".paths-map").style("opacity", opacityNormal);
             // color selected country white
-            d3.select(this).style("fill", "#333333").style("stroke", "#000000");
+            // d3.select(this).style("fill", "#333333").style("stroke", "#000000");
+            d3.select(this).attr("class", "paths-map").style("opacity", opacityOff);
             
             dispatchClickMap_Bar.call("clickMap", this, d);
             dispatchClickMap_Line.call("clickMap", this, d);

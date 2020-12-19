@@ -20,9 +20,14 @@ var padding = 60;
 
 var decades;
 var xAxis;
+var yAxis;
 var artists;
 var svg;
 var dropdown;
+
+var opacityOn = 0.2;    // when mouseover, other bar's opacity lows down
+var opacityOff = 1;     // when mouseover, THIS bar's opacity gets higher
+var opacityNormal = 0.5;  // when mouseout, all bars return to normal
 
 
 // get decade dataset
@@ -72,6 +77,7 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
     var yscale = d3.scaleLinear()
             .domain([0, d3.max(filteredDataUpdate, function(d) { return +d.popularitySpotify; })]) 
             .range([height - padding, padding]); 
+    console.log(d3.max(filteredDataUpdate, function(d) { return +d.popularitySpotify; }));
 
 
     svg.selectAll("rect")
@@ -79,37 +85,45 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
        .data(filteredDataUpdate)
        .join("rect")
        .attr("class", "bars-style")
+       .attr("opacity", opacityNormal)
+       .attr("height", 0)            //setting height 0 for the transition effect
        .attr("width", xscale.bandwidth())
        .attr("x", function(d, i) { return xscale(filteredDataUpdate[i].displayName); })
-       .attr("y", function(d, i) { return yscale(filteredDataUpdate[i].popularitySpotify); })
+       .attr("y", height - padding)  //setting y at the bottom for the transition effect
        .on("mouseover", function(event) {
             // all bars on grey...
-            d3.selectAll("rect").attr("class", "bars-style").style("fill", "#a9a9a9");
+            d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
             // ...except the one selected
-            d3.select(this).style("fill", "#444444");
+            d3.select(this).style("opacity", opacityOff);
         })
         .on("mouseout", function(event) {
-        //     d3.selectAll("rect").attr("fill", "steelblue");
+            d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
         })
         .on("click", function(event, d) {
             // clean all bars => all grey
             if(d3.select(this) != null) {
-                d3.select(this).attr("fill", "#a9a9a9");
+                d3.select(this).style("opacity", opacityNormal);
             }
             // color selected bar
-            d3.select(this).attr("fill", "#333333");
+            d3.select(this).attr("opacity", opacityOff);
             
             dispatchClickBar_Map.call("clickBar", this, d);
             dispatchClickBar_Line.call("clickBar", this, d);
             dispatchClickBar_Lollipop.call("clickBar", this, d);
         })
         .transition()
-        .duration(2000)
-        .attr("height", function(d, i) { return (height - padding - yscale(filteredDataUpdate[i].popularitySpotify)); });
+        .duration(1000)
+        // .attr("height", function(d, i) { return (height - padding - yscale(filteredDataUpdate[i].popularitySpotify)); });
+        .attr("height", function(d,i) { return height - padding - yscale(filteredDataUpdate[i].popularitySpotify); })
+        .attr("y", function(d,i) { return yscale(filteredDataUpdate[i].popularitySpotify); });
         
     xAxis.transition()
-         .duration(2000)
+         .duration(1000)
          .call(d3.axisBottom(xscale));
+    
+    yAxis.transition()
+         .duration(1000)
+         .call(d3.axisLeft(yscale));
         
 });
 
@@ -156,38 +170,46 @@ dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
        .data(filteredDataUpdate)
        .join("rect")
        .attr("class", "bars-style")
+       .attr("opacity", opacityNormal)
+       .attr("height", 0)            //setting height 0 for the transition effect
        .attr("width", xscale.bandwidth())
        .attr("x", function(d, i) { return xscale(filteredDataUpdate[i].displayName); })
-       .attr("y", function(d, i) { return yscale(filteredDataUpdate[i].popularitySpotify); })
+       .attr("y", height - padding)  //setting y at the bottom for the transition effect
        .on("mouseover", function(event) {
-            // if(d3.select(this) == null) console.log("entrei");
-            // all bars on blue...
-            d3.selectAll("rect").attr("class", "bars-style").style("fill", "#a9a9a9");
+            // all bars on gray...
+            d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
             // ...except the one selected
-            d3.select(this).style("fill", "#444444");
+            d3.select(this).style("opacity", opacityOff);
         })
         .on("mouseout", function(event) {
-        //     d3.selectAll("rect").attr("fill", "steelblue");
+            d3.selectAll("rect").attr("class", "bars-style").attr("opacity", opacityNormal);
         })
         .on("click", function(event, d) {
-            // clean all bars => all blue
+            // clean all bars => all gray
             if(d3.select(this) != null) {
-                d3.select(this).style("fill", "#a9a9a9");
+                d3.select(this).style("opacity", opacityNormal);
             }
             // color selected bar
-            d3.select(this).style("fill", "#333333");
+            d3.select(this).style("opacity", opacityOff);
             
             dispatchClickBar_Map.call("clickBar", this, d);
             dispatchClickBar_Line.call("clickBar", this, d);
             dispatchClickBar_Lollipop.call("clickBar", this, d);
         })
         .transition()
-        .duration(2000)
-        .attr("height", function(d, i) { return (height - padding - yscale(filteredDataUpdate[i].popularitySpotify)); });
+        .duration(1000)
+        // .attr("height", function(d, i) { return (height - padding - yscale(filteredDataUpdate[i].popularitySpotify)); });
+        .attr("height", function(d,i) { return height - padding - yscale(filteredDataUpdate[i].popularitySpotify); })
+        .attr("y", function(d,i) { return yscale(filteredDataUpdate[i].popularitySpotify); });
+        
         
     xAxis.transition()
-         .duration(2000)
+         .duration(1000)
          .call(d3.axisBottom(xscale));
+
+    yAxis.transition()
+         .duration(1000)
+         .call(d3.axisLeft(yscale));
 
 });
 
@@ -242,14 +264,10 @@ function gen_bar_chart() {
 
     
     // y Axis
-    var yAxis = d3.axisLeft()
-                  .scale(yScale);
-
-    svg.append("g")
-       .attr("class", "axisSubtitle")
-       .style("font-size", "13px")
-       .attr("transform", "translate(" + padding + ",0)")
-       .call(yAxis);
+    yAxis = svg.append("g")
+               .attr("class", "axisSubtitle")
+               .attr("transform", "translate(" + padding + ",0)")
+               .call(d3.axisLeft(yScale));
 
     svg.append("text")
        .attr("class", "axisLabel")
@@ -265,25 +283,30 @@ function gen_bar_chart() {
        .data(filteredData)
        .join("rect")
        .attr("class", "bars-style")
+       .attr("opacity", opacityNormal)
+       .attr("y", height - padding)  //setting y at the bottom for the transition effect
+       .attr("height", 0)            //setting height 0 for the transition effect
        .attr("width", xScale.bandwidth())
        .attr("x", function(d,i) { return xScale(d.displayName); })
-       .attr("y", function(d,i) { return yScale(d.popularitySpotify); })
+    //    .attr("y", function(d,i) { return yScale(d.popularitySpotify); })
        .on("mouseover", function(event) {
-           // all bars on blue...
-           d3.selectAll("rect").attr("class", "bars-style").style("fill", "#a9a9a9");
-           // ...except the one selected
-           d3.select(this).style("fill", "#444444");
+            // all bars on gray...
+            d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
+            // ...except the one selected
+            d3.select(this).style("opacity", opacityOff);
         })
         .on("mouseout", function(event) {
-        //     d3.selectAll("rect").attr("fill", "steelblue");
+            d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
         })
         .on("click", function(event, d) {
             // clean all bars => all light gray
             if(d3.select(this) != null) {
-                d3.select(this).style("fill", "#a9a9a9");
+                // d3.select(this).style("fill", "#a9a9a9");
+                d3.select(this).style("opacity", opacityNormal);
             }
             // color selected bar
-            d3.select(this).style("fill", "#333333");
+            // d3.select(this).style("fill", "#333333");
+            d3.select(this).style("opacity", opacityOff);
             
             dispatchClickBar_Line.call("clickBar", this, d);
             dispatchClickBar_Map.call("clickBar", this, d)
@@ -291,7 +314,8 @@ function gen_bar_chart() {
         })
         .transition()
         .duration(2000)
-        .attr("height", d => (height - padding - yScale(d.popularitySpotify)));
+        .attr("height", function(d,i) { return height - padding- yScale(d.popularitySpotify); })
+        .attr("y", function(d,i) { return yScale(d.popularitySpotify); });
 }
 
 

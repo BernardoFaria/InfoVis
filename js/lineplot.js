@@ -32,9 +32,9 @@ var svg;
 var xAxis;
 var yAxis;
 
-var opacityOn = 0.2;    // when mouseover, other bars's opacity lows down
-var opacityOff = 1;     // when mouseover, THIS bar's opacity gets higher
-var opacityNormal = 0.5;  // when mouseout, all bars return to normal
+var opacityOn = 0.2;    // when mouseover, other lines's opacity lows down
+var opacityOff = 1;     // when mouseover, THIS line's opacity gets higher
+var opacityNormal = 0.5;  // when mouseout, all lines return to normal
 
 
 // all the lines
@@ -117,6 +117,7 @@ dispatchClickBar_Line.on("clickBar", function(artistSelected) {
         path = lines.append("path")
                     .data(genreArray)
                     .attr("class", "line-lineplot")
+                    .attr("transform", "translate(" + 18 + ",0)")   // move lines to the right
                     .attr("d", function(d) {
                         if(genre === "Avant-garde") { return lineAvant(genreArray); }
                         if(genre === "Blues") { return lineBlues(genreArray); }
@@ -174,15 +175,15 @@ dispatchClickBar_Line.on("clickBar", function(artistSelected) {
         path.attr("stroke-dasharray", width + " " + width)
             .attr("stroke-dashoffset", width)
             .transition()
-            .duration(2000)
+            .duration(1000)
             .attr("stroke-dashoffset", 0);
     });
     xAxis.transition()
-         .duration(2000)
+         .duration(1000)
          .call(d3.axisBottom(xscale));
 
     yAxis.transition()
-         .duration(2000)
+         .duration(1000)
          .call(d3.axisLeft(yscale).ticks(5));
 });
 
@@ -273,6 +274,7 @@ dispatchClickMap_Line.on("clickMap", function(countrySelected) {
         path = lines.append("path")
                     .data(genreArray)
                     .attr("class", "line-lineplot")
+                    .attr("transform", "translate(" + 18 + ",0)")   // move lines to the right
                     .attr("d", function(d) {
                         if(genre === "Avant-garde") { return lineAvant(genreArray); }
                         if(genre === "Blues") { return lineBlues(genreArray); }
@@ -330,15 +332,15 @@ dispatchClickMap_Line.on("clickMap", function(countrySelected) {
         path.attr("stroke-dasharray", width + " " + width)
             .attr("stroke-dashoffset", width)
             .transition()
-            .duration(2000)
+            .duration(1000)
             .attr("stroke-dashoffset", 0);
     });
     xAxis.transition()
-            .duration(2000)
+            .duration(1000)
             .call(d3.axisBottom(xscale));
 
     yAxis.transition()
-            .duration(2000)
+            .duration(1000)
             .call(d3.axisLeft(yscale).ticks(5));
 
 })
@@ -432,6 +434,7 @@ function gen_line_chart() {
         path = lines.append("path")
                     .data(genreArray)
                     .attr("class", "line-lineplot")
+                    .attr("transform", "translate(" + 18 + ",0)")   // move lines to the right
                     .attr("d", function(d) {
                         if(genre === "Avant-garde") { return lineAvant(genreArray); }
                         if(genre === "Blues") { return lineBlues(genreArray); }

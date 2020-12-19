@@ -16,6 +16,10 @@ var fullDataset;
 var svg;
 var yAxis;
 
+var opacityOn = 0.2;    // when mouseover, other lollipops' opacity lows down
+var opacityOff = 1;     // when mouseover, THIS lollipops' opacity gets higher
+var opacityNormal = 0.5;  // when mouseout, all lollipops return to normal
+
 // datasets variables
 var artists;
 
@@ -52,15 +56,17 @@ dispatchClickBar_Lollipop.on("clickBar", function(artistSelected) {
     var idAux = flagVec.indexOf(1)
 
     // all lines black...
-    svg.selectAll("line").attr("class", "lines-lollipop").style("stroke", "#a9a9a9");
+   //  svg.selectAll("line").attr("class", "lines-lollipop").style("stroke", "#a9a9a9");
+   svg.selectAll("line").attr("class", "lines-lollipop").style("stroke", "#606060");
     // ...except the one selected
-    svg.select("#_" + idAux).style("stroke", "#444444");
+    svg.select("#_" + idAux).attr("class", "lines-lollipop").style("stroke", "#A0A0A0");  //.style("stroke", "#444444");
     // all circles black...
-    svg.selectAll("circle").attr("class", "circle-lollipop").style("stroke", "#a9a9a9").style("fill", "#a9a9a9");
+    svg.selectAll("circle").attr("class", "circle-lollipop").style("stroke", "#606060").style("fill", "#606060");  //.style("stroke", "#a9a9a9").style("fill", "#a9a9a9");
     // ...except the one selected
-    svg.select("#_" + (idAux + 12)).style("stroke", "#444444").style("fill", "#444444");
+    svg.select("#_" + (idAux + 12)).attr("class", "circle-lollipop").style("stroke", "#A0A0A0").style("fill", "#A0A0A0");    //.style("stroke", "#444444").style("fill", "#444444");
 
 });
+
 
 // update lollipop when clicking on lineplot
 dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
@@ -119,7 +125,7 @@ dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
       .enter()
       .append("line")
       .transition()
-      .duration(2000)
+      .duration(1000)
       .attr("class", "lines-lollipop")
       .attr("x1", function(d) { return xScale(d.decade); })
       .attr("x2", function(d) { return xScale(d.decade); })
@@ -133,7 +139,7 @@ dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
       .enter()
       .append("circle")
       .transition()
-      .duration(2000)
+      .duration(1000)
       .attr("class", "circle-lollipop")
       .attr("cx", function(d) { return xScale(d.decade); })
       .attr("cy", function(d) { return yscale(d.total); })
@@ -179,9 +185,8 @@ dispatchClickMap_Lollipop.on("clickMap", function(countrySelected) {
    fullDataset = getTotalArtists.map(function(d, i) {
       return { 'decade' : auxDec[i], 'total' : getTotalArtists[i] };
    })
+
    // 3 - construir lollipop 
-   // console.log(fullDataset);
-   // console.log(d3.max(fullDataset, function(d) { return d.total; }));
    // create Y scale
    var yscale = d3.scaleLinear()
               .domain([0, d3.max(fullDataset, function(d) { return d.total; })]) 
@@ -198,7 +203,7 @@ dispatchClickMap_Lollipop.on("clickMap", function(countrySelected) {
       .enter()
       .append("line")
       .transition()
-      .duration(2000)
+      .duration(1000)
       .attr("class", "lines-lollipop")
       .attr("x1", function(d) { return xScale(d.decade); })
       .attr("x2", function(d) { return xScale(d.decade); })
@@ -212,7 +217,7 @@ dispatchClickMap_Lollipop.on("clickMap", function(countrySelected) {
       .enter()
       .append("circle")
       .transition()
-      .duration(2000)
+      .duration(1000)
       .attr("class", "circle-lollipop")
       .attr("cx", function(d) { return xScale(d.decade); })
       .attr("cy", function(d) { return yscale(d.total); })
@@ -222,6 +227,10 @@ dispatchClickMap_Lollipop.on("clickMap", function(countrySelected) {
 
 
 
+/**************************
+ * gen_lollipop()
+ *  -creates a lollipop chart
+ *************************/
 function gen_lollipop() {
 
     // create lollipop

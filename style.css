@@ -59,15 +59,16 @@
 
 /* map */
 .paths-map {
-    fill: #a9a9a9;
+    fill: #808080;
     stroke: #000000;
 }
 
 /* bars on barchart */
 .bars-style {
-    fill: #a9a9a9;
+    fill: #808080;
     stroke: #ffffff;
 }
+
 
 /* Linechart */
 .line-lineplot {
@@ -91,14 +92,14 @@
 
 /* Lollipop lines */
 .lines-lollipop {
-    stroke: #a9a9a9;
+    stroke: #606060;
     stroke-width: 2;
 }
 
 /* Lollipop circles */
 .circle-lollipop {
-    fill: #a9a9a9;
-    stroke: #a9a9a9;
+    fill: #606060;
+    stroke: #606060;
 }
 
 /* tooltip for hovering */
