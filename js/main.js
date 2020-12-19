@@ -3,6 +3,7 @@ export var dispatchReset = d3.dispatch("reset");
 
 
 // events names: dispatch[where it comes]_[where it goes]
+
 // events when clicking bar chart
 export var dispatchClickBar_Map = d3.dispatch("clickBar");
 export var dispatchClickBar_Line = d3.dispatch("clickBar");
@@ -11,6 +12,7 @@ export var dispatchClickBar_Lollipop = d3.dispatch("clickBar");
 // events when clicking map
 export var dispatchClickMap_Bar = d3.dispatch("clickMap");
 export var dispatchClickMap_Line = d3.dispatch("clickMap");
+export var dispatchClickMap_Lollipop = d3.dispatch("clickMap");
 
 // events when clicking linechart
 export var dispatchClickLine_Bar = d3.dispatch("clickLine");

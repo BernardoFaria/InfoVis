@@ -3,6 +3,7 @@
 // events
 import { dispatchClickBar_Lollipop } from "./main.js";
 import { dispatchClickLine_Lollipop } from "./main.js";
+import { dispatchClickMap_Lollipop } from "./main.js";
 
 // global variables
 var width = 600;
@@ -17,19 +18,15 @@ var yAxis;
 
 // datasets variables
 var artists;
-var decades;
 
 var auxDec = [1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020];  // aux with all decades
 var id_line = [0,1,2,3,4,5,6,7,8,9,10,11];  // id's for lollipop's lines
 var id_circle = [12,13,14,15,16,17,18,19,20,21,22,23]; // id's for lollipop's circles ; + 12
 
 
-d3.csv("dataset/artistV7.csv").then(function(data1) {
-    d3.csv("dataset/decade.csv").then(function(data2) {
-        artists = data1;
-        decades = data2;
-        gen_lollipop();
-    })
+d3.csv("dataset/artistV7.csv").then(function(data) {
+   artists = data;
+   gen_lollipop();
 });
 
 
@@ -86,7 +83,7 @@ dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
 
    // get total artists per decade
    var getTotalArtists = [0,0,0,0,0,0,0,0,0,0,0,0];    // couldn't find a better way
-   for(var i = 0; i < Object.keys(filteredDataUpdate).length-1; i++) {    
+   for(var i = 0; i < Object.keys(filteredDataUpdate).length; i++) {    
       if (filteredDataUpdate[i].creationDate > 1900 && filteredDataUpdate[i].creationDate <= 1910) { getTotalArtists[0]++; }
       if (filteredDataUpdate[i].creationDate > 1910 && filteredDataUpdate[i].creationDate <= 1920) { getTotalArtists[1]++; }
       if (filteredDataUpdate[i].creationDate > 1920 && filteredDataUpdate[i].creationDate <= 1930) { getTotalArtists[2]++; }
@@ -105,15 +102,15 @@ dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
       return { 'decade' : auxDec[i], 'total' : getTotalArtists[i] };
    })
 
-   // // create Y scale
-   // var yscale = d3.scaleLinear()
-   //            .domain([0, d3.max(fullDataset, function(d) { return +d.total; })]) 
-   //            .range([height - padding, padding]);
+   // create Y scale
+   var yscale = d3.scaleLinear()
+              .domain([0, d3.max(fullDataset, function(d) { return +d.total; })]) 
+              .range([height - padding, padding]);
    
 
-   // yAxis.transition()
-   //      .duration(1000)
-   //      .call(d3.axisLeft(yscale));
+   yAxis.transition()
+        .duration(2000)
+        .call(d3.axisLeft(yscale));
 
 
    // Lines
@@ -122,12 +119,12 @@ dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
       .enter()
       .append("line")
       .transition()
-      .duration(1000)
+      .duration(2000)
       .attr("class", "lines-lollipop")
       .attr("x1", function(d) { return xScale(d.decade); })
       .attr("x2", function(d) { return xScale(d.decade); })
-      .attr("y1", function(d) { return yScale(d.total); })
-      .attr("y2", yScale(0))
+      .attr("y1", function(d) { return yscale(d.total); })
+      .attr("y2", yscale(0))
       .attr("id", function(d, i) { return "_" + id_line[i]; });
 
    // Circles
@@ -136,15 +133,92 @@ dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
       .enter()
       .append("circle")
       .transition()
-      .duration(1000)
+      .duration(2000)
       .attr("class", "circle-lollipop")
       .attr("cx", function(d) { return xScale(d.decade); })
-      .attr("cy", function(d) { return yScale(d.total); })
+      .attr("cy", function(d) { return yscale(d.total); })
       .attr("r", radius)
       .attr("id", function(d, i) { return "_" + id_circle[i]; });
 
 });
 
+
+// update lollipop when clicking on map
+dispatchClickMap_Lollipop.on("clickMap", function(countrySelected) {
+
+   svg.selectAll("line").attr("class", "lines-lollipop").remove();
+   svg.selectAll("circle").attr("class", "circle-lollipop").remove();
+   
+   var filteredDataUpdate = [];
+   // loop on artist dataset
+   for(var i = 0; i < Object.keys(artists).length-1; i++) {    
+      if(artists[i].country == countrySelected.properties.name) {   // get country
+         filteredDataUpdate.push(artists[i]);  // add to array 
+      }
+   } 
+   console.log(filteredDataUpdate[0].creationDate);
+
+   // 2 - buscar as datas de inicio
+   // get total artists per decade
+   var getTotalArtists = [0,0,0,0,0,0,0,0,0,0,0,0];    // couldn't find a better way
+   for(var i = 0; i < Object.keys(filteredDataUpdate).length; i++) {  
+      if (filteredDataUpdate[i].creationDate > 1900 && filteredDataUpdate[i].creationDate <= 1910) { getTotalArtists[0]++; }
+      if (filteredDataUpdate[i].creationDate > 1910 && filteredDataUpdate[i].creationDate <= 1920) { getTotalArtists[1]++; }
+      if (filteredDataUpdate[i].creationDate > 1920 && filteredDataUpdate[i].creationDate <= 1930) { getTotalArtists[2]++; }
+      if (filteredDataUpdate[i].creationDate > 1930 && filteredDataUpdate[i].creationDate <= 1940) { getTotalArtists[3]++; }
+      if (filteredDataUpdate[i].creationDate > 1940 && filteredDataUpdate[i].creationDate <= 1950) { getTotalArtists[4]++; }
+      if (filteredDataUpdate[i].creationDate > 1950 && filteredDataUpdate[i].creationDate <= 1960) { getTotalArtists[5]++; }
+      if (filteredDataUpdate[i].creationDate > 1960 && filteredDataUpdate[i].creationDate <= 1970) { getTotalArtists[6]++; }
+      if (filteredDataUpdate[i].creationDate > 1970 && filteredDataUpdate[i].creationDate <= 1980) { getTotalArtists[7]++; }
+      if (filteredDataUpdate[i].creationDate > 1980 && filteredDataUpdate[i].creationDate <= 1990) { getTotalArtists[8]++; }
+      if (filteredDataUpdate[i].creationDate > 1990 && filteredDataUpdate[i].creationDate <= 2000) { getTotalArtists[9]++; }
+      if (filteredDataUpdate[i].creationDate > 2000 && filteredDataUpdate[i].creationDate <= 2010) { getTotalArtists[10]++; }
+      if (filteredDataUpdate[i].creationDate > 2010 && filteredDataUpdate[i].creationDate <= 2020) { getTotalArtists[11]++; }
+   }
+   // join [decade, totalArtists]
+   fullDataset = getTotalArtists.map(function(d, i) {
+      return { 'decade' : auxDec[i], 'total' : getTotalArtists[i] };
+   })
+   // 3 - construir lollipop 
+   // console.log(fullDataset);
+   // console.log(d3.max(fullDataset, function(d) { return d.total; }));
+   // create Y scale
+   var yscale = d3.scaleLinear()
+              .domain([0, d3.max(fullDataset, function(d) { return d.total; })]) 
+              .range([height - padding, padding]);
+   
+
+   yAxis.transition()
+        .duration(2000)
+        .call(d3.axisLeft(yscale));
+
+   // Lines
+   svg.selectAll("mylollipop")
+      .data(fullDataset)
+      .enter()
+      .append("line")
+      .transition()
+      .duration(2000)
+      .attr("class", "lines-lollipop")
+      .attr("x1", function(d) { return xScale(d.decade); })
+      .attr("x2", function(d) { return xScale(d.decade); })
+      .attr("y1", function(d) { return yscale(d.total); })
+      .attr("y2", yscale(0))
+      .attr("id", function(d, i) { return "_" + id_line[i]; });
+
+   // Circles
+   svg.selectAll("mycircle")
+      .data(fullDataset)
+      .enter()
+      .append("circle")
+      .transition()
+      .duration(2000)
+      .attr("class", "circle-lollipop")
+      .attr("cx", function(d) { return xScale(d.decade); })
+      .attr("cy", function(d) { return yscale(d.total); })
+      .attr("r", radius)
+      .attr("id", function(d, i) { return "_" + id_circle[i]; });
+})
 
 
 
@@ -219,6 +293,8 @@ function gen_lollipop() {
        .data(fullDataset)
        .enter()
        .append("line")
+       .transition()
+       .duration(2000)
        .attr("class", "lines-lollipop")
        .attr("x1", function(d) { return xScale(d.decade); })
        .attr("x2", function(d) { return xScale(d.decade); })
@@ -231,6 +307,8 @@ function gen_lollipop() {
        .data(fullDataset)
        .enter()
        .append("circle")
+       .transition()
+       .duration(2000)
        .attr("class", "circle-lollipop")
        .attr("cx", function(d) { return xScale(d.decade); })
        .attr("cy", function(d) { return yScale(d.total); })

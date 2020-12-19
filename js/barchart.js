@@ -83,9 +83,7 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
        .attr("x", function(d, i) { return xscale(filteredDataUpdate[i].displayName); })
        .attr("y", function(d, i) { return yscale(filteredDataUpdate[i].popularitySpotify); })
        .on("mouseover", function(event) {
-            // toolTip.transition().duration(1000);
-            // if(d3.select(this) == null) console.log("entrei");
-            // all bars on blue...
+            // all bars on grey...
             d3.selectAll("rect").attr("class", "bars-style").style("fill", "#a9a9a9");
             // ...except the one selected
             d3.select(this).style("fill", "#444444");
@@ -94,8 +92,7 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
         //     d3.selectAll("rect").attr("fill", "steelblue");
         })
         .on("click", function(event, d) {
-            // toolTip.transition().duration(1000);
-            // clean all bars => all blue
+            // clean all bars => all grey
             if(d3.select(this) != null) {
                 d3.select(this).attr("fill", "#a9a9a9");
             }
@@ -107,11 +104,11 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
             dispatchClickBar_Lollipop.call("clickBar", this, d);
         })
         .transition()
-        .duration(1000)
+        .duration(2000)
         .attr("height", function(d, i) { return (height - padding - yscale(filteredDataUpdate[i].popularitySpotify)); });
         
     xAxis.transition()
-         .duration(1000)
+         .duration(2000)
          .call(d3.axisBottom(xscale));
         
 });
@@ -185,11 +182,11 @@ dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
             dispatchClickBar_Lollipop.call("clickBar", this, d);
         })
         .transition()
-        .duration(1000)
+        .duration(2000)
         .attr("height", function(d, i) { return (height - padding - yscale(filteredDataUpdate[i].popularitySpotify)); });
         
     xAxis.transition()
-         .duration(1000)
+         .duration(2000)
          .call(d3.axisBottom(xscale));
 
 });
@@ -293,7 +290,7 @@ function gen_bar_chart() {
             dispatchClickBar_Lollipop.call("clickBar", this, d);
         })
         .transition()
-        .duration(1000)
+        .duration(2000)
         .attr("height", d => (height - padding - yScale(d.popularitySpotify)));
 }
 
@@ -360,10 +357,10 @@ function reset_button() {
                 dispatchClickBar_Lollipop.call("clickBar", this, d);
            })
            .transition()
-           .duration(1000);
+           .duration(2000);
             
     xAxis.transition()
-         .duration(1000)
+         .duration(2000)
          .call(d3.axisBottom(xScale));
     })
 };

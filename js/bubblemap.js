@@ -4,6 +4,7 @@
 import { dispatchClickBar_Map } from "./main.js";
 import { dispatchClickMap_Bar } from "./main.js";
 import { dispatchClickMap_Line } from "./main.js";
+import { dispatchClickMap_Lollipop } from "./main.js";
 
 // global variables
 var width = 600;
@@ -93,6 +94,7 @@ function gen_bubble_map() {
             
             dispatchClickMap_Bar.call("clickMap", this, d);
             dispatchClickMap_Line.call("clickMap", this, d);
+            dispatchClickMap_Lollipop.call("clickMap", this, d);
         });
 }
 
