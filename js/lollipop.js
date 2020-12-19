@@ -115,7 +115,7 @@ dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
    
 
    yAxis.transition()
-        .duration(2000)
+        .duration(1000)
         .call(d3.axisLeft(yscale));
 
 
@@ -124,12 +124,10 @@ dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
       .data(fullDataset)
       .enter()
       .append("line")
-      .transition()
-      .duration(1000)
       .attr("class", "lines-lollipop")
       .attr("x1", function(d) { return xScale(d.decade); })
       .attr("x2", function(d) { return xScale(d.decade); })
-      .attr("y1", function(d) { return yscale(d.total); })
+      .attr("y1", yscale(0))
       .attr("y2", yscale(0))
       .attr("id", function(d, i) { return "_" + id_line[i]; });
 
@@ -138,13 +136,21 @@ dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
       .data(fullDataset)
       .enter()
       .append("circle")
-      .transition()
-      .duration(1000)
       .attr("class", "circle-lollipop")
       .attr("cx", function(d) { return xScale(d.decade); })
-      .attr("cy", function(d) { return yscale(d.total); })
+      .attr("cy", yscale(0))
       .attr("r", radius)
       .attr("id", function(d, i) { return "_" + id_circle[i]; });
+
+   svg.selectAll(".lines-lollipop")
+      .transition()
+      .duration(1000)
+      .attr("y1", function(d) { return yscale(d.total); });
+
+  svg.selectAll(".circle-lollipop")
+      .transition()
+      .duration(1000)
+      .attr("cy", function(d) { return yscale(d.total); });
 
 });
 
@@ -194,7 +200,7 @@ dispatchClickMap_Lollipop.on("clickMap", function(countrySelected) {
    
 
    yAxis.transition()
-        .duration(2000)
+        .duration(1000)
         .call(d3.axisLeft(yscale));
 
    // Lines
@@ -202,12 +208,10 @@ dispatchClickMap_Lollipop.on("clickMap", function(countrySelected) {
       .data(fullDataset)
       .enter()
       .append("line")
-      .transition()
-      .duration(1000)
       .attr("class", "lines-lollipop")
       .attr("x1", function(d) { return xScale(d.decade); })
       .attr("x2", function(d) { return xScale(d.decade); })
-      .attr("y1", function(d) { return yscale(d.total); })
+      .attr("y1", yscale(0))
       .attr("y2", yscale(0))
       .attr("id", function(d, i) { return "_" + id_line[i]; });
 
@@ -216,13 +220,21 @@ dispatchClickMap_Lollipop.on("clickMap", function(countrySelected) {
       .data(fullDataset)
       .enter()
       .append("circle")
-      .transition()
-      .duration(1000)
       .attr("class", "circle-lollipop")
       .attr("cx", function(d) { return xScale(d.decade); })
-      .attr("cy", function(d) { return yscale(d.total); })
+      .attr("cy", yscale(0))
       .attr("r", radius)
       .attr("id", function(d, i) { return "_" + id_circle[i]; });
+
+   svg.selectAll(".lines-lollipop")
+      .transition()
+      .duration(1000)
+      .attr("y1", function(d) { return yscale(d.total); });
+
+  svg.selectAll(".circle-lollipop")
+      .transition()
+      .duration(1000)
+      .attr("cy", function(d) { return yscale(d.total); });
 })
 
 
@@ -302,12 +314,10 @@ function gen_lollipop() {
        .data(fullDataset)
        .enter()
        .append("line")
-       .transition()
-       .duration(2000)
        .attr("class", "lines-lollipop")
        .attr("x1", function(d) { return xScale(d.decade); })
        .attr("x2", function(d) { return xScale(d.decade); })
-       .attr("y1", function(d) { return yScale(d.total); })
+       .attr("y1", yScale(0))
        .attr("y2", yScale(0))
        .attr("id", function(d, i) { return "_" + id_line[i]; });
 
@@ -316,12 +326,20 @@ function gen_lollipop() {
        .data(fullDataset)
        .enter()
        .append("circle")
-       .transition()
-       .duration(2000)
        .attr("class", "circle-lollipop")
        .attr("cx", function(d) { return xScale(d.decade); })
-       .attr("cy", function(d) { return yScale(d.total); })
+       .attr("cy", yScale(0))
        .attr("r", radius)
        .attr("id", function(d, i) { return "_" + id_circle[i]; });
+      
+   svg.selectAll(".lines-lollipop")
+       .transition()
+       .duration(2000)
+       .attr("y1", function(d) { return yScale(d.total); });
+
+   svg.selectAll(".circle-lollipop")
+       .transition()
+       .duration(2000)
+       .attr("cy", function(d) { return yScale(d.total); });
 
 }

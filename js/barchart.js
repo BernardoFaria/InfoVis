@@ -182,7 +182,7 @@ dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
             d3.select(this).style("opacity", opacityOff);
         })
         .on("mouseout", function(event) {
-            d3.selectAll("rect").attr("class", "bars-style").attr("opacity", opacityNormal);
+            d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
         })
         .on("click", function(event, d) {
             // clean all bars => all gray
