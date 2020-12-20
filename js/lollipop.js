@@ -63,6 +63,33 @@ dispatchClickBar_Lollipop.on("clickBar", function(artistSelected) {
    // ...except the one selected
    svg.select("#_" + (idAux + 12)).attr("class", "circle-lollipop").style("stroke", "#A0A0A0").style("fill", "#A0A0A0");    //.style("stroke", "#444444").style("fill", "#444444");
 
+   // tooltip
+   svg.select("#_" + idAux)
+      .on("mouseover", function(event, d) {
+         // tooltip
+         const[x, y] = d3.pointer(event);
+         toolTip.transition()
+               .duration(500)
+               .style("opacity", 0.9);
+         var text = artistSelected.displayName + " Birth Date: " + artistSelected.creationDate;
+         toolTip.html(text)
+               .style("left", (x) + "px")
+               .style("top", (y + 470) + "px");
+   });
+
+   svg.select("#_" + (idAux + 12))
+      .on("mouseover", function(event, d) {
+         // tooltip
+         const[x, y] = d3.pointer(event);
+         toolTip.transition()
+               .duration(500)
+               .style("opacity", 0.9);
+         var text = artistSelected.displayName + " Birth Date: " + artistSelected.creationDate;
+         toolTip.html(text)
+               .style("left", (x) + "px")
+               .style("top", (y + 470) + "px");
+   });
+
 });
 
 
