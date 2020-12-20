@@ -54,3 +54,7 @@ export const genreColor = {
 
     "Rock": "#ffffff",  // white
 };
+
+export const countries = ["Australia", "Austria", /*"Barbados",*/ "Canada", "Colombia", "Cuba", "Denmark", "France", "Germany", "India", "Ireland",
+                            "Italy", "Jamaica", "Japan", "Netherlands", "Norway", "Puerto Rico", "Russia", "South Korea", "Spain", "Sweden",
+                            "Trinidad and Tobago", "Tunisia", "United Kingdom", "United States of America"];
