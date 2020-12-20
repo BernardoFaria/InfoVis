@@ -63,6 +63,11 @@
     stroke: #000000;
 }
 
+/* circles in bubble map */
+.circle-map {
+    fill: #000000;
+}
+
 /* bars on barchart */
 .bars-style {
     fill: #808080;

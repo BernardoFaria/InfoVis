@@ -6,49 +6,59 @@ import { dispatchClickMap_Bar } from "./main.js";
 import { dispatchClickMap_Line } from "./main.js";
 import { dispatchClickMap_Lollipop } from "./main.js";
 
+// import countries
+import { countries } from "./main.js";
+
+// import tooltip
+import { toolTip } from "./main.js";
+
+
 // global variables
 var width = 600;
 var height = 400;
 var padding = 60;
 
-var innerRadius = 10;
-var outerRadius = Math.min(width, height) / 2;  // goes from  the center to the border
+var r = 5;
 
 var mapData; 
+var artists;
 var svg;
+var group;
+var geojson;
+var countryList = [];
 
-var opacityOn = 0.2;    // when mouseover, other countries' opacity lows down
-var opacityOff = 1;     // when mouseover, THIS countries' opacity gets higher
-var opacityNormal = 0.5;  // when mouseout, all countries return to normal
+var opacityOff = 1;  
+var opacityOn = 0.5;  
 
 // get map dataset
-d3.json("dataset/countries-110m.json").then(function(data) {
-    mapData = data;
-
-    gen_bubble_map();
-    addZoom();
+d3.json("dataset/countries-110m.json").then(function(data1) {
+    d3.csv("dataset/artistV7.csv").then(function(data2) {
+        mapData = data1;
+        artists = data2;
+        gen_bubble_map();
+        addZoom();
+    })
 });
 
 // update map when clicking on barchart
 dispatchClickBar_Map.on("clickBar", function(artistSelected) {
     var id;
-    var jData = topojson.feature(mapData, mapData.objects.countries).features;
+    // var jData = topojson.feature(mapData, mapData.objects.countries).features;
     
     // update map: all countries grey
-    // svg.selectAll(".paths-map").style("fill", "#a9a9a9").style("stroke", "black");
-    svg.selectAll("path").attr("class", "paths-map").style("opacity", opacityNormal);
+    // svg.selectAll("path").attr("class", "paths-map").style("opacity", opacityNormal);
+    svg.selectAll(".circle-map").style("fill", "#000000");
 
     // loop to get the correspondent id 
-    for(var i = 0; i < jData.length; i++) {
-        if(jData[i].properties.name == artistSelected.country) {
-            id = jData[i].id;
+    for(var i = 0; i < countryList.length; i++) {
+        if(countryList[i].properties.name == artistSelected.country) {
+            id = countryList[i].id;
             break;
         }
     }
 
     // fill the selected country
-    // svg.select("#_" + id).attr("class", "paths-map").style("fill", "#333333").style("stroke", "white");
-    svg.select("#_" + id).attr("class", "paths-map").style("opacity", opacityOff);
+    svg.select("#_" + id).attr("class", "circle-map").style("fill", "#808080");
 });
 
 
@@ -69,41 +79,75 @@ function gen_bubble_map() {
     var path = d3.geoPath()
                  .projection(projection);
 
-    // create svg
+    // Create svg
     svg = d3.select("#bubblemap")  // call id in div
             .append("svg")          // append svg to the "id" div
             .attr("width", width)
             .attr("height", height);
 
-    svg.selectAll("path")
-       .attr("class", "paths-map")
-       .data(topojson.feature(mapData, mapData.objects.countries).features)
+    // Our data
+    geojson = topojson.feature(mapData, mapData.objects.countries).features;
+
+    // Compute the projected centroid to get the country center coordinates
+    geojson.forEach(function(d) {
+        d.centroid = projection(d3.geoCentroid(d));
+    });
+
+    // Create a group to join paths and bubbles to zoom function
+    group = svg.append("g");
+
+    // Create paths
+    group.selectAll(".paths-map")
+       .data(geojson)
        .enter()
        .append("path")
        .attr("class", "paths-map")
-       .attr("opacity", opacityNormal)
-       .attr("d", path)
+       .style("opacity", opacityOn)
+       .attr("d", path);
+
+    // Get all countries from topojson   
+    countries.forEach(function(country) {
+        var obj = getCountry(country);
+        countryList.push(obj);
+    })
+
+    // Create circles
+    group.selectAll(".circle-map")
+       .data(countryList)
+       .enter()
+       .append("circle")
+       .attr("class", "circle-map")
+       .attr("cx", function(d) { return d.centroid[0]; })
+       .attr("cy", function(d) { return d.centroid[1]; })
+       .attr("r", 10)
        .attr("id", function(d, i) { return ("_" + d.id); })
-       .on("mouseover", function(event) {
+       .on("mouseover", function(event, d) {
             // all countries on light grey...
-            d3.selectAll(".paths-map").style("opacity", opacityNormal);
-            //   .style("fill", "#a9a9a9")
-            //   .style("stroke", "#000000");
+            d3.selectAll(".circle-map").style("fill", opacityOff);
             // ...except the one selected
-            // d3.select(this).style("fill", "#444444").style("stroke", "#000000")
-            d3.select(this).attr("class", "paths-map").style("opacity", opacityOff);
+            d3.select(this).attr("class", "circle-map").style("fill", "#808080");
+            // tooltip
+            const[x, y] = d3.pointer(event);
+            toolTip.transition()
+                   .duration(200)
+                   .style("opacity", 0.9);
+            var text = "Number Of Artists in " + this.__data__.properties.name + ": " + getTotalArt(this.__data__.properties.name);
+            toolTip.html(text)
+                   .style("left", (x + width*2) + "px")
+                   .style("top", (y + 50) + "px");
         })
         .on("mouseout", function(event) {
-            //TODO: escolher se metemos ou não
-            d3.select(this).attr("class", "paths-map").style("opacity", opacityNormal);
+            d3.select(this).attr("class", "circle-map").style("fill", "#000000");
+            // tooltip off
+            toolTip.transition()
+                   .duration(500)
+                   .style("opacity", 0);
         })
         .on("click", function(event, d) {
             // clean entire map => all light grey
-            // svg.selectAll(".paths-map").style("fill", "#a9a9a9").style("stroke", "#000000");
-            d3.selectAll(".paths-map").style("opacity", opacityNormal);
+            d3.selectAll(".circle-map").style("opacity", opacityOff);
             // color selected country white
-            // d3.select(this).style("fill", "#333333").style("stroke", "#000000");
-            d3.select(this).attr("class", "paths-map").style("opacity", opacityOff);
+            d3.select(this).attr("class", "circle-map").style("fill", "#808080");
             
             dispatchClickMap_Bar.call("clickMap", this, d);
             dispatchClickMap_Line.call("clickMap", this, d);
@@ -112,7 +156,38 @@ function gen_bubble_map() {
 }
 
 
-// Adding zoom to the map
+/***************************************************************
+ * getTotalArt()
+ *  - Returns the total number of artists of a specific country
+ **************************************************************/
+function getTotalArt(location) {
+    var count = 0;
+    for(var i = 0; i < Object.keys(artists).length-1; i++) {
+        if(artists[i].country == location) {
+            count++;
+        }
+    }
+    return count;
+}
+
+
+/***************************************************************
+ * getCountry()
+ *  - Returns the country object of topojson
+ **************************************************************/
+function getCountry(location) {
+    for(var i = 0; i < Object.keys(geojson).length-1; i++) {
+        if(geojson[i].properties.name == location) {
+            return geojson[i];
+        }
+    }
+}
+
+
+/**************************
+ * addZoom()
+ *  - Adding zoom to the map
+ *************************/
 function addZoom() {
     svg.call(d3.zoom()
                .extent([
@@ -124,8 +199,12 @@ function addZoom() {
             );
 }
 
-// Applying the zoom
+
+/**************************
+ * zoomed()
+ *  - Apply zoom
+ *************************/
 function zoomed({ transform }) {
-    svg.selectAll("path")
+    svg.select("g")
        .attr("transform", transform);
 }

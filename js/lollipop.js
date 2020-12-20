@@ -75,7 +75,12 @@ dispatchClickBar_Lollipop.on("clickBar", function(artistSelected) {
          toolTip.html(text)
                .style("left", (x + width*2) + "px")
                .style("top", (y + 470) + "px");
-   });
+      })
+      .on("mouseout", function(event, d) {
+         toolTip.transition()
+                .duration(500)
+                .style("opacity", 0);
+      });
 
    svg.select("#_" + (idAux + 12))
       .on("mouseover", function(event, d) {
@@ -88,7 +93,12 @@ dispatchClickBar_Lollipop.on("clickBar", function(artistSelected) {
          toolTip.html(text)
                .style("left", (x + width*2) + "px")
                .style("top", (y + 470) + "px");
-   });
+      })
+      .on("mouseout", function(event, d) {
+         toolTip.transition()
+                .duration(500)
+                .style("opacity", 0);
+      });
 
 });
 
@@ -165,7 +175,12 @@ dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
          toolTip.html(text)
                 .style("left", (x + width*2) + "px")
                 .style("top", (y + 470) + "px");
-       });
+       })
+       .on("mouseout", function(event, d) {
+         toolTip.transition()
+                .duration(500)
+                .style("opacity", 0);
+      });
 
    // Circles
    svg.selectAll("mycircle")
@@ -187,7 +202,12 @@ dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
          toolTip.html(text)
                 .style("left", (x + width*2) + "px")
                 .style("top", (y + 470) + "px");
-       });
+       })
+       .on("mouseout", function(event, d) {
+         toolTip.transition()
+                .duration(500)
+                .style("opacity", 0);
+      });
 
    svg.selectAll(".lines-lollipop")
       .transition()
@@ -271,7 +291,12 @@ dispatchClickMap_Lollipop.on("clickMap", function(countrySelected) {
          toolTip.html(text)
                 .style("left", (x + width*2) + "px")
                 .style("top", (y + 470) + "px");
-       });
+       })
+       .on("mouseout", function(event, d) {
+         toolTip.transition()
+                .duration(500)
+                .style("opacity", 0);
+      });
 
    // Circles
    svg.selectAll("mycircle")
@@ -293,7 +318,12 @@ dispatchClickMap_Lollipop.on("clickMap", function(countrySelected) {
          toolTip.html(text)
                 .style("left", (x + width*2) + "px")
                 .style("top", (y + 470) + "px");
-       });
+       })
+       .on("mouseout", function(event, d) {
+         toolTip.transition()
+                .duration(500)
+                .style("opacity", 0);
+      });
 
    svg.selectAll(".lines-lollipop")
       .transition()
@@ -400,7 +430,12 @@ function gen_lollipop() {
          toolTip.html(text)
                 .style("left", (x + width*2) + "px")
                 .style("top", (y + 470) + "px");
-       });
+       })
+       .on("mouseout", function(event, d) {
+         toolTip.transition()
+                .duration(500)
+                .style("opacity", 0);
+      });
 
     // Circles
     svg.selectAll("mycircle")
@@ -423,6 +458,11 @@ function gen_lollipop() {
          toolTip.html(text)
                 .style("left", (x + width*2) + "px")
                 .style("top", (y + 470) + "px");
+       })
+       .on("mouseout", function(event, d) {
+          toolTip.transition()
+                 .duration(500)
+                 .style("opacity", 0);
        });
       
 
