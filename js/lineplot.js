@@ -30,7 +30,7 @@ var popularity; // dataset 3
 var xScale;     // x scale
 var yScale      // y scale
 var lines;      // lines of line chart
-// var toolTip;    // tooltip
+
 var svg;
 var xAxis;
 var yAxis;

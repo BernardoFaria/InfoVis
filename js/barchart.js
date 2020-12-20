@@ -90,14 +90,27 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
        .attr("width", xscale.bandwidth())
        .attr("x", function(d, i) { return xscale(filteredDataUpdate[i].displayName); })
        .attr("y", height - padding)  //setting y at the bottom for the transition effect
-       .on("mouseover", function(event) {
+       .on("mouseover", function(event, d) {
             // all bars on grey...
             d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
             // ...except the one selected
             d3.select(this).style("opacity", opacityOff);
+            // tooltip
+            const[x, y] = d3.pointer(event);
+            toolTip.transition()
+                   .duration(500)
+                   .style("opacity", 0.9);
+            var text = "Popularity: " + d.popularitySpotify;
+            toolTip.html(text)
+                   .style("left", (x + 1200) + "px")
+                   .style("top", (y + 60) + "px");
         })
         .on("mouseout", function(event) {
             d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
+            // tooltip off
+            toolTip.transition()
+                   .duration(500)
+                   .style("opacity", 0);
         })
         .on("click", function(event, d) {
             // clean all bars => all grey
@@ -175,14 +188,27 @@ dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
        .attr("width", xscale.bandwidth())
        .attr("x", function(d, i) { return xscale(filteredDataUpdate[i].displayName); })
        .attr("y", height - padding)  //setting y at the bottom for the transition effect
-       .on("mouseover", function(event) {
+       .on("mouseover", function(event, d) {
             // all bars on gray...
             d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
             // ...except the one selected
             d3.select(this).style("opacity", opacityOff);
+            // tooltip
+            const[x, y] = d3.pointer(event);
+            toolTip.transition()
+                    .duration(500)
+                    .style("opacity", 0.9);
+            var text = "Popularity: " + d.popularitySpotify;
+            toolTip.html(text)
+                    .style("left", (x + 1200) + "px")
+                    .style("top", (y + 60) + "px");
         })
         .on("mouseout", function(event) {
             d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
+            // tooltip off
+            toolTip.transition()
+                   .duration(500)
+                   .style("opacity", 0);
         })
         .on("click", function(event, d) {
             // clean all bars => all gray
@@ -289,14 +315,27 @@ function gen_bar_chart() {
        .attr("width", xScale.bandwidth())
        .attr("x", function(d,i) { return xScale(d.displayName); })
     //    .attr("y", function(d,i) { return yScale(d.popularitySpotify); })
-       .on("mouseover", function(event) {
+       .on("mouseover", function(event, d) {
             // all bars on gray...
             d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
             // ...except the one selected
             d3.select(this).style("opacity", opacityOff);
+            // tooltip
+            const[x, y] = d3.pointer(event);
+            toolTip.transition()
+                   .duration(500)
+                   .style("opacity", 0.9);
+            var text = "Popularity: " + d.popularitySpotify;
+            toolTip.html(text)
+                   .style("left", (x + 1200) + "px")
+                   .style("top", (y + 60) + "px");
         })
         .on("mouseout", function(event) {
             d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
+            // tooltip off
+            toolTip.transition()
+                   .duration(500)
+                   .style("opacity", 0);
         })
         .on("click", function(event, d) {
             // clean all bars => all light gray

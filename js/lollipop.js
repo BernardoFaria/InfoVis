@@ -5,6 +5,9 @@ import { dispatchClickBar_Lollipop } from "./main.js";
 import { dispatchClickLine_Lollipop } from "./main.js";
 import { dispatchClickMap_Lollipop } from "./main.js";
 
+// tooltip
+import { toolTip } from "./main.js";
+
 // global variables
 var width = 600;
 var height = 400;
@@ -16,9 +19,6 @@ var fullDataset;
 var svg;
 var yAxis;
 
-var opacityOn = 0.2;    // when mouseover, other lollipops' opacity lows down
-var opacityOff = 1;     // when mouseover, THIS lollipops' opacity gets higher
-var opacityNormal = 0.5;  // when mouseout, all lollipops return to normal
 
 // datasets variables
 var artists;
@@ -37,33 +37,31 @@ d3.csv("dataset/artistV7.csv").then(function(data) {
 // update lollipop when clicking on barchart
 dispatchClickBar_Lollipop.on("clickBar", function(artistSelected) {
 
-    var flagVec = [0,0,0,0,0,0,0,0,0,0,0,0];    // couldn't find a better way again
+   var flagVec = [0,0,0,0,0,0,0,0,0,0,0,0];    // couldn't find a better way again
     
-    if (artistSelected.creationDate > 1900 && artistSelected.creationDate <= 1910) { flagVec[0]++; }
-    if (artistSelected.creationDate > 1910 && artistSelected.creationDate <= 1920) { flagVec[1]++; }
-    if (artistSelected.creationDate > 1920 && artistSelected.creationDate <= 1930) { flagVec[2]++; }
-    if (artistSelected.creationDate > 1930 && artistSelected.creationDate <= 1940) { flagVec[3]++; }
-    if (artistSelected.creationDate > 1940 && artistSelected.creationDate <= 1950) { flagVec[4]++; }
-    if (artistSelected.creationDate > 1950 && artistSelected.creationDate <= 1960) { flagVec[5]++; }
-    if (artistSelected.creationDate > 1960 && artistSelected.creationDate <= 1970) { flagVec[6]++; }
-    if (artistSelected.creationDate > 1970 && artistSelected.creationDate <= 1980) { flagVec[7]++; }
-    if (artistSelected.creationDate > 1980 && artistSelected.creationDate <= 1990) { flagVec[8]++; }
-    if (artistSelected.creationDate > 1990 && artistSelected.creationDate <= 2000) { flagVec[9]++; }
-    if (artistSelected.creationDate > 2000 && artistSelected.creationDate <= 2010) { flagVec[10]++; }
-    if (artistSelected.creationDate > 2010 && artistSelected.creationDate <= 2020) { flagVec[11]++; }
+   if (artistSelected.creationDate > 1900 && artistSelected.creationDate <= 1910) { flagVec[0]++; }
+   if (artistSelected.creationDate > 1910 && artistSelected.creationDate <= 1920) { flagVec[1]++; }
+   if (artistSelected.creationDate > 1920 && artistSelected.creationDate <= 1930) { flagVec[2]++; }
+   if (artistSelected.creationDate > 1930 && artistSelected.creationDate <= 1940) { flagVec[3]++; }
+   if (artistSelected.creationDate > 1940 && artistSelected.creationDate <= 1950) { flagVec[4]++; }
+   if (artistSelected.creationDate > 1950 && artistSelected.creationDate <= 1960) { flagVec[5]++; }
+   if (artistSelected.creationDate > 1960 && artistSelected.creationDate <= 1970) { flagVec[6]++; }
+   if (artistSelected.creationDate > 1970 && artistSelected.creationDate <= 1980) { flagVec[7]++; }
+   if (artistSelected.creationDate > 1980 && artistSelected.creationDate <= 1990) { flagVec[8]++; }
+   if (artistSelected.creationDate > 1990 && artistSelected.creationDate <= 2000) { flagVec[9]++; }
+   if (artistSelected.creationDate > 2000 && artistSelected.creationDate <= 2010) { flagVec[10]++; }
+   if (artistSelected.creationDate > 2010 && artistSelected.creationDate <= 2020) { flagVec[11]++; }
 
+   var idAux = flagVec.indexOf(1)
 
-    var idAux = flagVec.indexOf(1)
-
-    // all lines black...
-   //  svg.selectAll("line").attr("class", "lines-lollipop").style("stroke", "#a9a9a9");
+   // all lines black...
    svg.selectAll("line").attr("class", "lines-lollipop").style("stroke", "#606060");
-    // ...except the one selected
-    svg.select("#_" + idAux).attr("class", "lines-lollipop").style("stroke", "#A0A0A0");  //.style("stroke", "#444444");
-    // all circles black...
-    svg.selectAll("circle").attr("class", "circle-lollipop").style("stroke", "#606060").style("fill", "#606060");  //.style("stroke", "#a9a9a9").style("fill", "#a9a9a9");
-    // ...except the one selected
-    svg.select("#_" + (idAux + 12)).attr("class", "circle-lollipop").style("stroke", "#A0A0A0").style("fill", "#A0A0A0");    //.style("stroke", "#444444").style("fill", "#444444");
+   // ...except the one selected
+   svg.select("#_" + idAux).attr("class", "lines-lollipop").style("stroke", "#A0A0A0");  //.style("stroke", "#444444");
+   // all circles black...
+   svg.selectAll("circle").attr("class", "circle-lollipop").style("stroke", "#606060").style("fill", "#606060");  //.style("stroke", "#a9a9a9").style("fill", "#a9a9a9");
+   // ...except the one selected
+   svg.select("#_" + (idAux + 12)).attr("class", "circle-lollipop").style("stroke", "#A0A0A0").style("fill", "#A0A0A0");    //.style("stroke", "#444444").style("fill", "#444444");
 
 });
 
@@ -129,7 +127,18 @@ dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
       .attr("x2", function(d) { return xScale(d.decade); })
       .attr("y1", yscale(0))
       .attr("y2", yscale(0))
-      .attr("id", function(d, i) { return "_" + id_line[i]; });
+      .attr("id", function(d, i) { return "_" + id_line[i]; })
+      .on("mouseover", function(event, d) {
+         // tooltip
+         const[x, y] = d3.pointer(event);
+         toolTip.transition()
+                .duration(500)
+                .style("opacity", 0.9);
+         var text = "Total Artists: " + d.total;
+         toolTip.html(text)
+                .style("left", (x) + "px")
+                .style("top", (y + 470) + "px");
+       });
 
    // Circles
    svg.selectAll("mycircle")
@@ -140,7 +149,18 @@ dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
       .attr("cx", function(d) { return xScale(d.decade); })
       .attr("cy", yscale(0))
       .attr("r", radius)
-      .attr("id", function(d, i) { return "_" + id_circle[i]; });
+      .attr("id", function(d, i) { return "_" + id_circle[i]; })
+      .on("mouseover", function(event, d) {
+         // tooltip
+         const[x, y] = d3.pointer(event);
+         toolTip.transition()
+                .duration(500)
+                .style("opacity", 0.9);
+         var text = "Total Artists: " + d.total;
+         toolTip.html(text)
+                .style("left", (x) + "px")
+                .style("top", (y + 470) + "px");
+       });
 
    svg.selectAll(".lines-lollipop")
       .transition()
@@ -213,7 +233,18 @@ dispatchClickMap_Lollipop.on("clickMap", function(countrySelected) {
       .attr("x2", function(d) { return xScale(d.decade); })
       .attr("y1", yscale(0))
       .attr("y2", yscale(0))
-      .attr("id", function(d, i) { return "_" + id_line[i]; });
+      .attr("id", function(d, i) { return "_" + id_line[i]; })
+      .on("mouseover", function(event, d) {
+         // tooltip
+         const[x, y] = d3.pointer(event);
+         toolTip.transition()
+                .duration(500)
+                .style("opacity", 0.9);
+         var text = "Total Artists: " + d.total;
+         toolTip.html(text)
+                .style("left", (x) + "px")
+                .style("top", (y + 470) + "px");
+       });
 
    // Circles
    svg.selectAll("mycircle")
@@ -224,7 +255,18 @@ dispatchClickMap_Lollipop.on("clickMap", function(countrySelected) {
       .attr("cx", function(d) { return xScale(d.decade); })
       .attr("cy", yscale(0))
       .attr("r", radius)
-      .attr("id", function(d, i) { return "_" + id_circle[i]; });
+      .attr("id", function(d, i) { return "_" + id_circle[i]; })
+      .on("mouseover", function(event, d) {
+         // tooltip
+         const[x, y] = d3.pointer(event);
+         toolTip.transition()
+                .duration(500)
+                .style("opacity", 0.9);
+         var text = "Total Artists: " + d.total;
+         toolTip.html(text)
+                .style("left", (x) + "px")
+                .style("top", (y + 470) + "px");
+       });
 
    svg.selectAll(".lines-lollipop")
       .transition()
@@ -247,9 +289,9 @@ function gen_lollipop() {
 
     // create lollipop
     svg = d3.select("#lollipop")
-                .append("svg")
-                .attr("width", width)
-                .attr("height", height);
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
 
     // get total artists per decade
     var getTotalArtists = [0,0,0,0,0,0,0,0,0,0,0,0];    // couldn't find a better way
@@ -291,8 +333,8 @@ function gen_lollipop() {
 
     // create Y scale
     yScale = d3.scaleLinear()
-                   .domain([0, 100])
-                   .range([height - padding, padding]);
+               .domain([0, d3.max(fullDataset, function(d) { return d.total; })])
+               .range([height - padding, padding]);
 
     // create Y axis
     yAxis = svg.append("g")
@@ -319,7 +361,18 @@ function gen_lollipop() {
        .attr("x2", function(d) { return xScale(d.decade); })
        .attr("y1", yScale(0))
        .attr("y2", yScale(0))
-       .attr("id", function(d, i) { return "_" + id_line[i]; });
+       .attr("id", function(d, i) { return "_" + id_line[i]; })
+       .on("mouseover", function(event, d) {
+         // tooltip
+         const[x, y] = d3.pointer(event);
+         toolTip.transition()
+                .duration(500)
+                .style("opacity", 0.9);
+         var text = "Total Artists: " + d.total;
+         toolTip.html(text)
+                .style("left", (x) + "px")
+                .style("top", (y + 470) + "px");
+       });
 
     // Circles
     svg.selectAll("mycircle")
@@ -330,8 +383,20 @@ function gen_lollipop() {
        .attr("cx", function(d) { return xScale(d.decade); })
        .attr("cy", yScale(0))
        .attr("r", radius)
-       .attr("id", function(d, i) { return "_" + id_circle[i]; });
+       .attr("id", function(d, i) { return "_" + id_circle[i]; })
+       .on("mouseover", function(event, d) {
+         // tooltip
+         const[x, y] = d3.pointer(event);
+         toolTip.transition()
+                .duration(500)
+                .style("opacity", 0.9);
+         var text = "Total Artists: " + d.total;
+         toolTip.html(text)
+                .style("left", (x) + "px")
+                .style("top", (y + 470) + "px");
+       });
       
+
    svg.selectAll(".lines-lollipop")
        .transition()
        .duration(2000)
