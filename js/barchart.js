@@ -18,26 +18,22 @@ var width = 600;
 var height = 400;
 var padding = 60;
 
-var decades;
 var xAxis;
 var yAxis;
-var artists;
 var svg;
-var dropdown;
 
-var opacityOn = 0.2;    // when mouseover, other bar's opacity lows down
-var opacityOff = 1;     // when mouseover, THIS bar's opacity gets higher
-var opacityNormal = 0.5;  // when mouseout, all bars return to normal
+// dataset
+var artists;
+
+var opacityOff = 1;         // when mouseover, THIS bar's opacity gets higher
+var opacityNormal = 0.5;    // when mouseout, all bars return to normal
 
 
 // get decade dataset
-d3.csv("dataset/decade.csv").then(function(data1) {
-    d3.csv("dataset/artistV7.csv").then(function(data2) {
-        decades = data1;
-        artists = data2;
-        gen_bar_chart();
-        // reset_button();
-    })
+d3.csv("dataset/artistV7.csv").then(function(data) {
+    artists = data;
+    gen_bar_chart();
+    // reset_button();
 });
 
 
@@ -314,8 +310,7 @@ function gen_bar_chart() {
        .attr("height", 0)            //setting height 0 for the transition effect
        .attr("width", xScale.bandwidth())
        .attr("x", function(d,i) { return xScale(d.displayName); })
-    //    .attr("y", function(d,i) { return yScale(d.popularitySpotify); })
-       .on("mouseover", function(event, d) {
+       .on("mouseover", function(event, d) {    
             // all bars on gray...
             d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
             // ...except the one selected
@@ -331,6 +326,7 @@ function gen_bar_chart() {
                    .style("top", (y + 60) + "px");
         })
         .on("mouseout", function(event) {
+            // all bars gray
             d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
             // tooltip off
             toolTip.transition()
@@ -340,13 +336,11 @@ function gen_bar_chart() {
         .on("click", function(event, d) {
             // clean all bars => all light gray
             if(d3.select(this) != null) {
-                // d3.select(this).style("fill", "#a9a9a9");
                 d3.select(this).style("opacity", opacityNormal);
             }
             // color selected bar
-            // d3.select(this).style("fill", "#333333");
             d3.select(this).style("opacity", opacityOff);
-            
+
             dispatchClickBar_Line.call("clickBar", this, d);
             dispatchClickBar_Map.call("clickBar", this, d)
             dispatchClickBar_Lollipop.call("clickBar", this, d);
