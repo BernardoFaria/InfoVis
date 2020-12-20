@@ -79,14 +79,16 @@
 
 /* Network link*/
 .network-link {
-    fill: none;
+    fill: steelblue;
     stroke-width: 2px;
     stroke:#aaa
 }
 
 /* Network node */
 .network-node {
-    fill: #69b3a2;
+    /* fill: steelblue; */
+    stroke:steelblue;
+    stroke-width:3px;
 }
 
 

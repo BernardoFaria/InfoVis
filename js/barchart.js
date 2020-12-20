@@ -271,7 +271,6 @@ function gen_bar_chart() {
                 .append("svg")          // append svg to the "id" div
                 .attr("width", width)
                 .attr("height", height);
-                // .attr("transform", "translate(" + 50 + ",0)");   // move svg to the right
 
     // x Axis
     xAxis = svg.append("g")
