@@ -19,6 +19,7 @@ var force;      //
 var R = 20;     // Radius of bigger node
 var r = 10;     // All other radius
 var svg;
+var net;
 
 // datasets
 var artists;
@@ -33,6 +34,7 @@ d3.json("dataset/newTagsV2.json").then(function(data1) {
         data = data1;
         artists = data2;
         gen_network();
+        addZoom();
     })
 });
 
@@ -126,12 +128,14 @@ function gen_network(){
         .force("link", d3.forceLink().id(function(d) { return d.artist; })                               
                                     .links(links))
         .force("charge", d3.forceManyBody().strength(-400))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
-        .force("center", d3.forceCenter(width/2, height/2))     // This force attracts nodes to the center of the svg area
+        .force("center", d3.forceCenter(width/2, height))     // This force attracts nodes to the center of the svg area
         .on("end", ticked);
 
+    // join links and nodes in one element
+    net = svg.append("g");
 
     // Initialize the links
-    link = svg.selectAll(".network-link")
+    link = net.selectAll(".network-link")
         .data(links)
         .enter()
         .append("line")
@@ -158,9 +162,9 @@ function gen_network(){
     //       .attr("fill",function(d) { return "url("+ d.picture +")" }  )
     //       .attr("r", 60);
        
-
+    // console.log(nodes[0].displayName);
     // Initialize the nodes
-    node = svg.selectAll(".network-node")
+    node = net.selectAll(".network-node")
         .data(nodes)
         .enter()
         .append("circle")
@@ -178,4 +182,22 @@ function ticked() {
 
     node.attr("cx", function (d) { return d.x+6; })
         .attr("cy", function(d) { return d.y-6; });
+}
+
+// Adding zoom to the network
+function addZoom() {
+  svg.call(d3.zoom()
+             .extent([
+                 [0,0], 
+                 [1000,1000],
+              ])
+              .scaleExtent([1,8])
+              .on("zoom", zoomed)
+          );
+}
+
+// Applying the zoom
+function zoomed({ transform }) {
+  svg.select("g")
+     .attr("transform", transform);
 }

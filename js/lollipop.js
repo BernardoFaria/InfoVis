@@ -73,7 +73,7 @@ dispatchClickBar_Lollipop.on("clickBar", function(artistSelected) {
                .style("opacity", 0.9);
          var text = artistSelected.displayName + " Creation Date: " + artistSelected.creationDate;
          toolTip.html(text)
-               .style("left", (x) + "px")
+               .style("left", (x + width*2) + "px")
                .style("top", (y + 470) + "px");
    });
 
@@ -86,7 +86,7 @@ dispatchClickBar_Lollipop.on("clickBar", function(artistSelected) {
                .style("opacity", 0.9);
          var text = artistSelected.displayName + " Creation Date: " + artistSelected.creationDate;
          toolTip.html(text)
-               .style("left", (x) + "px")
+               .style("left", (x + width*2) + "px")
                .style("top", (y + 470) + "px");
    });
 
@@ -163,7 +163,7 @@ dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
                 .style("opacity", 0.9);
          var text = "Total Artists: " + d.total;
          toolTip.html(text)
-                .style("left", (x) + "px")
+                .style("left", (x + width*2) + "px")
                 .style("top", (y + 470) + "px");
        });
 
@@ -185,7 +185,7 @@ dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
                 .style("opacity", 0.9);
          var text = "Total Artists: " + d.total;
          toolTip.html(text)
-                .style("left", (x) + "px")
+                .style("left", (x + width*2) + "px")
                 .style("top", (y + 470) + "px");
        });
 
@@ -269,7 +269,7 @@ dispatchClickMap_Lollipop.on("clickMap", function(countrySelected) {
                 .style("opacity", 0.9);
          var text = "Total Artists: " + d.total;
          toolTip.html(text)
-                .style("left", (x) + "px")
+                .style("left", (x + width*2) + "px")
                 .style("top", (y + 470) + "px");
        });
 
@@ -291,7 +291,7 @@ dispatchClickMap_Lollipop.on("clickMap", function(countrySelected) {
                 .style("opacity", 0.9);
          var text = "Total Artists: " + d.total;
          toolTip.html(text)
-                .style("left", (x) + "px")
+                .style("left", (x + width*2) + "px")
                 .style("top", (y + 470) + "px");
        });
 
@@ -398,7 +398,7 @@ function gen_lollipop() {
                 .style("opacity", 0.9);
          var text = "Total Artists: " + d.total;
          toolTip.html(text)
-                .style("left", (x) + "px")
+                .style("left", (x + width*2) + "px")
                 .style("top", (y + 470) + "px");
        });
 
@@ -421,7 +421,7 @@ function gen_lollipop() {
                 .style("opacity", 0.9);
          var text = "Total Artists: " + d.total;
          toolTip.html(text)
-                .style("left", (x) + "px")
+                .style("left", (x + width*2) + "px")
                 .style("top", (y + 470) + "px");
        });
       

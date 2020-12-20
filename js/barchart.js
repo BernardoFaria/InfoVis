@@ -98,8 +98,8 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
                    .style("opacity", 0.9);
             var text = "Popularity: " + d.popularitySpotify;
             toolTip.html(text)
-                   .style("left", (x + 1200) + "px")
-                   .style("top", (y + 60) + "px");
+                   .style("left", (x + width) + "px")
+                   .style("top", (y + height + 80) + "px");
         })
         .on("mouseout", function(event) {
             d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
@@ -196,8 +196,8 @@ dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
                     .style("opacity", 0.9);
             var text = "Popularity: " + d.popularitySpotify;
             toolTip.html(text)
-                    .style("left", (x + 1200) + "px")
-                    .style("top", (y + 60) + "px");
+                   .style("left", (x + width) + "px")
+                   .style("top", (y + height + 80) + "px");
         })
         .on("mouseout", function(event) {
             d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
@@ -321,8 +321,8 @@ function gen_bar_chart() {
                    .style("opacity", 0.9);
             var text = "Popularity: " + d.popularitySpotify;
             toolTip.html(text)
-                   .style("left", (x + 1200) + "px")
-                   .style("top", (y + 60) + "px");
+                   .style("left", (x + width) + "px")
+                   .style("top", (y + height + 80) + "px");
         })
         .on("mouseout", function(event) {
             // all bars gray

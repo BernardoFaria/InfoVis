@@ -156,7 +156,7 @@ dispatchClickBar_Line.on("clickBar", function(artistSelected) {
                                .style("opacity", 0.9);
                         var text = genre;
                         toolTip.html(text)
-                               .style("left", (x) + "px")
+                               .style("left", (x + width) + "px")
                                .style("top", (y + 40) + "px");
                     })
                     .on("mouseout", function(d) {
@@ -316,7 +316,7 @@ dispatchClickMap_Line.on("clickMap", function(countrySelected) {
                                .style("opacity", 0.9);
                                var text = genre;
                         toolTip.html(text)
-                               .style("left", (x) + "px")
+                               .style("left", (x + width) + "px")
                                .style("top", (y + 40) + "px");
                     })
                     .on("mouseout", function(d) {
@@ -474,7 +474,7 @@ function gen_line_chart() {
                                .style("opacity", 0.9);
                         var text = genre;
                         toolTip.html(text)
-                               .style("left", (x) + "px")
+                               .style("left", (x + width) + "px")
                                .style("top", (y + 40) + "px");
                     })
                     .on("mouseout", function(d) {
