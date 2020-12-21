@@ -85,7 +85,8 @@
 /* Network link*/
 .network-link {
     fill: steelblue;
-    stroke:#aaa
+    stroke:#aaa;
+    opacity:1;
 }
 
 /* Network node */

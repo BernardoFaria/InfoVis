@@ -43,6 +43,8 @@ d3.json("dataset/newTagsV2.json").then(function(data1) {
 
 
 function gen_subgraph(artist){
+  nodes = [];
+  links = [];
   // sorry whoever reads this, dont judge, no time for recursives
   //gets the links and nodes, depth of 2
 
@@ -61,7 +63,7 @@ function gen_subgraph(artist){
   for (var i = 0; i < data.nodes.length; i++){
     if (data.nodes[i].artist == artist){
       centralArtist = data.nodes[i];
-      centralArtist.radius = 25;
+      centralArtist.radius = 30;
       break;
     }
   }
@@ -76,44 +78,56 @@ function gen_subgraph(artist){
   }
 
 
-  var arts = [];
+  // primeiros vizinhos do central
+  var firstNeig = [];
   for (var i = 0; i < temp.length; i++){
-    if (!arts.includes(temp[i].source)){
-      arts.push(temp[i].source);
+    if (!firstNeig.includes(temp[i].source) && temp[i].source != artist){
+      firstNeig.push(temp[i].source);
     }
 
-    if (!arts.includes(temp[i].target)){
-      arts.push(temp[i].target);
+    if (!firstNeig.includes(temp[i].target) && temp[i].target != artist){
+      firstNeig.push(temp[i].target);
+    }
   }
+
+  // mete os objectos dos primeiros vizinhos no nodes
+  for (var i = 0; i < data.nodes.length; i++){
+    if (firstNeig.includes(data.nodes[i].artist)){
+      var n = data.nodes[i];
+      n.radius = 20;
+      nodes.push(n);
+    }
   }
 
 
-  for (var i = 0; i < arts.length; i++){
+
+  //links dos primeiros vizinhos tanto na source como no target
+  for (var i = 0; i < firstNeig.length; i++){
     for (var j = 0; j < data.links.length; j++){
       var link = data.links[j];
-      if ((link.source == arts[i] || link.target == arts[i]) && !isDuplicate(links, link)){
+      if ((link.source == firstNeig[i] || link.target == firstNeig[i]) && !isDuplicate(links, link)){
         links.push(link);
       }
     }
   }
 
-
-  arts = [];
+  var secondNeig = [];
   for (var i = 0; i < links.length; i++){
-    if (!arts.includes(links[i].source))
-      arts.push(links[i].source);
-    if (!arts.includes(links[i].target))
-      arts.push(links[i].target);
+    var s = links[i].source;
+    var t = links[i].target;
+    if (!secondNeig.includes(s) && !firstNeig.includes(s) && s != artist)
+      secondNeig.push(s);
+    if (!secondNeig.includes(t) && !firstNeig.includes(t) && t != artist)
+      secondNeig.push(t);
   }
-
 
   for (var i = 0; i < data.nodes.length; i++){
-    if (arts.includes(data.nodes[i].artist))
-      nodes.push(data.nodes[i])
+    var n = data.nodes[i];
+    if (secondNeig.includes(n.artist)){
+      n.radius = 10;
+      nodes.push(n);
+    }
   }
-
-
-
 
 }
 
@@ -135,7 +149,6 @@ function gen_network(){
 
   gen_subgraph(artist);
   //console.log(links)
-  console.log(nodes)
 
   svg = d3.select("#network")
     .append("svg")
@@ -146,7 +159,7 @@ function gen_network(){
   // Let's list the force we wanna apply on the network
   force = d3.forceSimulation(nodes)                 // Force algorithm is applied to data.nodes
     .force("link", d3.forceLink(links).id(function(d) { return d.artist; }))
-    .force("charge", d3.forceManyBody().strength(-400))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+    .force("charge", d3.forceManyBody().strength(-500))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
     .force("center", d3.forceCenter(width/2, height/2))     // This force attracts nodes to the center of the svg area
     .force("bounds", boxingForce)
     .on("tick", ticked);
@@ -160,29 +173,26 @@ function gen_network(){
     .enter()
     .append("line")
     .attr("stroke-width", d => Math.sqrt(d.weight))
-    .attr("class", "network-link");
+    .attr("class", "network-link")
+    .attr("stroke-dasharray", 2000)
+    .attr("stroke-dashoffset", 2000);
+
+  link.transition().attr("stroke-dashoffset", 0).duration(6000);
 
   // Initialize the nodes
   node = net.selectAll(".network-node")
     .data(nodes)
     .enter()
     .append("circle")
-    .attr("r", r)
+    .attr("class", "network-node")
+    .attr("r",0)
+    .attr("cx", width/2)
+    .attr("cy", height/2)
+    .style("stroke", "gray")
     .call(drag(force));
 
-  node
-    .on("mouseover", d => {
 
-    })
-    .on("mouseout", event => {
-    });
-
-  node.append("title")
-    .text(d => d.displayName);
-
-  link.append("title")
-    .text(d => d.tags);
-
+  node.transition().attr("r",  d => d.radius).duration(3000);
 
 }
 
@@ -212,6 +222,8 @@ function drag(simulation){
 
 // This function is run at each iteration of the force algorithm, updating the nodes position.
 function ticked() {
+  nodes[0].x = width/2;
+  nodes[0].y = height/2;
   link.attr("x1", function(d) { return d.source.x; })
     .attr("y1", function(d) { return d.source.y; })
     .attr("x2", function(d) { return d.target.x; })
