@@ -4,18 +4,18 @@
 } */
 
 .btn {
-    width: 100px;
+    background-color: #606060;
     font-family: 'Montserrat', sans-serif;
     font-weight: bold;
     padding: 10px;
-    /* border: solid 1px black; */
     color: white;
+    transform: translate(-1180px, -20px);
     border-radius: 5px;
 }
 
-#reset {
-    background-color: gray;
-}
+/* #reset {
+
+} */
 
 
 /* html title */

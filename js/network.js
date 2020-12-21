@@ -10,6 +10,8 @@ import { dispatchClickBar_Net } from "./main.js";
 import { dispatchClickMap_Net } from "./main.js";
 import { dispatchClickLine_Net } from "./main.js";
 
+import { dispatchReset_Network } from "./main.js";
+
 // import tooltip
 import { toolTip } from "./main.js";
 import { tooltipDuration } from "./main.js";
@@ -33,8 +35,6 @@ var R = 20;     // Radius of bigger node
 var r = 15;     // All other radius
 var svg;
 var net;
-var selectedIndex;
-// var artist;
 
 // datasets
 var artists;
@@ -45,9 +45,6 @@ d3.json("dataset/newTagsV2.json").then(function(data1) {
   d3.csv("dataset/artistV7.csv").then(function(data2) {
     data = data1;
     artists = data2;
-
-
-    console.log(data);
 
     gen_network();
     // addZoom();
@@ -266,8 +263,6 @@ dispatchClickMap_Net.on("clickMap", function(countrySelected) {
 // update network when clicking on lineplot
 dispatchClickLine_Net.on("clickLine", function(genreSelected) {
 
-  console.log(genreSelected.genre);
-
   svg.selectAll(".network-link").remove();
   svg.selectAll(".network-node").remove();
 
@@ -378,6 +373,118 @@ dispatchClickLine_Net.on("clickLine", function(genreSelected) {
 });
 
 
+// reset button
+dispatchReset_Network.on("reset", function() {
+
+  svg.selectAll(".network-link").remove();
+  svg.selectAll(".network-node").remove();
+
+  // filtering data
+  var filteredData = [];
+  // loop on artist dataset
+  for(var i = 0; i < Object.keys(artists).length-1; i++) {
+    filteredData.push(artists[i]);  // to get a copy of the dataset artists
+  }
+  // sort data by popularity => bigger to smaller
+  filteredData.sort(function(a, b) { return b.popularitySpotify - a.popularitySpotify; });
+  // first 5 elements
+  filteredData.splice(1, filteredData.length);
+  //most popular
+  var artist = filteredData[0].artist;
+
+
+  gen_subgraph(artist);
+
+  // Let's list the force we wanna apply on the network
+  force = d3.forceSimulation(nodes)                 // Force algorithm is applied to data.nodes
+  .force("link", d3.forceLink(links).id(function(d) { return d.artist; }))
+  .force("charge", d3.forceManyBody().strength(-500))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+  .force("center", d3.forceCenter(width/2, height/2))     // This force attracts nodes to the center of the svg area
+  .force("bounds", boxingForce)
+  .on("tick", ticked);
+
+  // join links and nodes in one element
+  net = svg.append("g");
+
+  // Initialize the links
+  link = net.selectAll(".network-link")
+  .data(links)
+  .enter()
+  .append("line")
+  .attr("stroke-width", d => Math.sqrt(d.weight))
+  .attr("class", "network-link")
+  .attr("stroke-dasharray", 2000)
+  .attr("stroke-dashoffset", 2000);
+
+  link.transition().attr("stroke-dashoffset", 0).duration(4000);
+
+  // Initialize the nodes
+  node = net.selectAll(".network-node")
+  .data(nodes)
+  .enter()
+  .append("circle")
+  .attr("class", "network-node")
+  .attr("r",0)
+  .attr("cx", width/2)
+  .attr("cy", height/2)
+  .style("stroke", "gray")
+  .call(drag(force));
+
+  node.transition().attr("r",  d => d.radius).duration(1500);
+
+  node.on("mouseover", function(event, d) {
+  //tooltip
+  const[x, y] = d3.pointer(event);
+          toolTip.transition()
+                .duration(tooltipDuration)
+                .style("opacity", 0.9)
+                .style("visibility", "visible");
+  var text = "Artist: " + d.displayName;
+  toolTip.html(text)
+    .style("left", (x) + "px")
+    .style("top", (y + 50) + "px");
+  })
+  .on("mouseout", function(event, d) {
+    // tooltip off
+          toolTip.transition()
+                .duration(tooltipDuration)
+                .style("opacity", 0)
+                .style("visibility", "hidden");
+  })
+  .on("click", function(event, d) {
+    dispatchClickNet_Line.call("clickNet", this, d);
+    dispatchClickNet_Bar.call("clickNet", this, d);
+    dispatchClickNet_Map.call("clickNet", this, d);
+    dispatchClickNet_Lollipop.call("clickNet", this, d);
+  });
+
+  // node.append("title")
+  //   .html(d => d.displayName);
+
+  link.on("mouseover", function(event, d) {
+  //tooltip
+  const[x, y] = d3.pointer(event);
+          toolTip.transition()
+                .duration(tooltipDuration)
+                .style("opacity", 0.9)
+                .style("visibility", "visible");
+  var text = "Common tags: " + d.tags.join(", ");
+  toolTip.html(text)
+    .style("left", (x) + "px")
+    .style("top", (y + 50) + "px");
+  })
+  .on("mouseout", function(event, d) {
+    // tooltip off
+          toolTip.transition()
+                .duration(tooltipDuration)
+                .style("opacity", 0)
+                .style("visibility", "hidden");
+  })
+
+});
+
+
+
 function gen_subgraph(artist){
   nodes = [];
   links = [];
@@ -473,7 +580,7 @@ function gen_subgraph(artist){
 
 
 function gen_network(){
-  //
+  
   // filtering data
   var filteredData = [];
   // loop on artist dataset
