@@ -24,14 +24,15 @@
 		<script src="js/bubblemap.js" type="module"></script>
 		<script src="js/lollipop.js" type="module"></script>
 		<script src="js/network.js" type="module"></script>
+		<script src="js/reset.js" type="module"></script>
 	</head>
 
 	<body style="background-color:#241f2c;">
+		<!-- Main title -->
 		<h1 class="title" style="text-align:center" >Music Evolution</h1>
-		<div>
-			<span class="btn" id="reset">Reset</span>
-		</div>
-		<!-- <section class="grid-container"> -->
+		<!-- Reset button -->
+		<button class="btn" id="reset"> Reset </button>
+		<!-- Idioms -->
 		<div id="network" class="grid-cell" style="max-width: 600; float: left;">
 			<p class="idiom-title"> Tags Network </p>
 		</div>
@@ -41,15 +42,14 @@
 		<div id="bubblemap" class="grid-cell" style="max-width: 600; float: left;">
 			<p class="idiom-title"> World Map Birthplaces / Locations </p>
 		</div>
-		<div id="timeline" class="grid-cell" style="max-width: 600; float: left;">
-			<!-- <p class="idiom-title"> Artist Timeline </p> -->
-		</div>
+		<!-- <div id="timeline" class="grid-cell" style="max-width: 600; float: left;">
+			<p class="idiom-title"> Artist Timeline </p>
+		</div> -->
 		<div id="barchart" class="grid-cell" style="max-width: 600; float: left;">
 			<p class="idiom-title" style="transform: translateY(40px);"> Most Popular Bands </p>
 		</div>
 		<div id="lollipop" class="grid-cell" style="max-width: 600; float: left;">
 			<p class="idiom-title" style="transform: translateY(40px);"> Birth Dates </p>
 		</div>
-		<!-- </section> -->
 	</body>
 </html>

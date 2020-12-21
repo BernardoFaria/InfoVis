@@ -9,6 +9,8 @@ import { dispatchClickMap_Net } from "./main.js";
 import { dispatchClickNet_Map } from "./main.js";
 import { dispatchClickBar_Map } from "./main.js";
 
+import { dispatchReset_Map } from "./main.js";
+
 // import countries
 import { countries } from "./main.js";
 
@@ -20,9 +22,6 @@ import { tooltipDuration } from "./main.js";
 // global variables
 var width = 600;
 var height = 400;
-var padding = 60;
-
-var r = 5;
 
 var mapData;
 var artists;
@@ -90,6 +89,17 @@ dispatchClickNet_Map.on("clickNet", function(artistSelected) {
     // fill the selected country
     svg.select("#_" + id).attr("class", "circle-map").style("fill", "#808080");
 });
+
+
+// reset button
+dispatchReset_Map.on("reset", function() {
+
+    // update map: all countries grey
+    svg.selectAll(".circle-map").style("fill", "#000000");
+
+});
+
+
 
 
 /**************************

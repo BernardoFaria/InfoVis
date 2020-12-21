@@ -7,7 +7,7 @@ import { genreColor } from "./main.js";
 import { toolTip } from "./main.js";
 
 // import reset button
-import { dispatchReset } from "./main.js";
+import { dispatchReset_Line } from "./main.js";
 
 // events
 import { dispatchClickLine_Bar } from "./main.js";
@@ -452,6 +452,131 @@ dispatchClickNet_Line.on("clickNet", function(artistSelected) {
   yAxis.transition()
     .duration(1000)
     .call(d3.axisLeft(yscale).ticks(5));
+});
+
+
+// reset button
+dispatchReset_Line.on("reset", function() {
+
+  svg.selectAll("path").attr("class", "line-lineplot").remove();
+  
+  // create X scale data
+  var xScaleData = decades.map((a) => a.decade);  // get all decades
+  xScaleDataFiltered = [];    // aux
+  xScaleData.forEach((c) => {     // forEach to remove duplicates, couldn't find another way
+    if (!xScaleDataFiltered.includes(c)) {
+      xScaleDataFiltered.push(c);
+    }
+  });
+  xScaleDataFiltered.sort();  // sort from old to new
+
+  // create X scale
+  xScale = d3.scaleBand()
+    .domain(xScaleDataFiltered)
+    .range([padding, width - padding])
+  xScale.paddingInner(0.5);   // separate elements
+
+  // create Y scale
+  yScale = d3.scaleLinear()
+    .domain([0, d3.max(popularity, function(d) { return d.popularity*100; })])
+    .range([height - padding, padding]);
+
+  // creating lines
+  lineAvant = lineBlues = lineCarib = lineComedy = lineCountry =
+    lineEasy = lineElec = lineFolk = lineHeavy = lineHip = lineHouse =
+    lineJazz = lineLatin = linePop = linePunk = lineRB = lineRock =
+    d3.line()
+    .x(d => xScale(d.decade))
+    .y(d => yScale(d.popularity*100));    // * 100 because we only have percentage
+
+  // for drawing all lines
+  lines = svg.append("g");
+  // for drawing animation
+  var path;
+
+  // adding lines
+  genres.forEach(function (genre){
+    var genreArray = [];
+    genreArray = getEvolution(genre);
+    path = lines.append("path")
+      .data(genreArray)
+      .attr("class", "line-lineplot")
+      .attr("transform", "translate(" + 18 + ",0)")   // move lines to the right
+      .attr("d", function(d) {
+        if(genre === "Avant-garde") { return lineAvant(genreArray); }
+        if(genre === "Blues") { return lineBlues(genreArray); }
+        if(genre === "Caribbean and Caribbean-influenced") { return lineCarib(genreArray); }
+        if(genre === "Comedy") { return lineComedy(genreArray); }
+        if(genre === "Country") { return lineCountry(genreArray); }
+        if(genre === "Easy listening") { return lineEasy(genreArray); }
+        if(genre === "Electronic") { return lineElec(genreArray); }
+        if(genre === "Folk") { return lineFolk(genreArray); }
+        if(genre === "Heavy metal") { return lineHeavy(genreArray); }
+        if(genre === "Hip hop") { return lineHip(genreArray); }
+        if(genre === "House") { return lineHouse(genreArray); }
+        if(genre === "Jazz") { return lineJazz(genreArray); }
+        if(genre === "Latin") { return lineLatin(genreArray); }
+        if(genre === "Pop") { return linePop(genreArray); }
+        if(genre === "Punk rock") { return linePunk(genreArray); }
+        if(genre === "R&B and soul") { return lineRB(genreArray); }
+        if(genre === "Rock") { return lineRock(genreArray); }
+      })
+      .style("stroke", genreColor[genre])
+      .style("opacity", 0.5)
+      .on("mouseover", function(event, d) {
+        // fade all lines...
+        d3.selectAll(".line-lineplot")
+          .style("opacity", opacityOn);
+        // ...except the current one
+        d3.select(this)
+          .style("opacity", opacityOff);
+        // tooltip
+        const[x, y] = d3.pointer(event);
+        toolTip.transition()
+          .duration(tooltipDuration)
+          .style("opacity", 0.9)
+          .style("visibility", "visible");
+        var text = genre;
+        toolTip.html(text)
+          .style("left", (x + width) + "px")
+          .style("top", (y + 40) + "px");
+      })
+      .on("mouseout", function(d) {
+        //return all bars' opacity to normal
+        d3.selectAll(".line-lineplot")
+          .style("opacity", opacityNormal);
+        // tooltip off
+        toolTip.transition()
+          .duration(tooltipDuration)
+          .style("opacity", 0)
+          .style("visibility", "hidden");
+      })
+      .on("click", function(event, d) {
+        d3.selectAll(".line-lineplot")
+          .style("opacity", opacityOn);
+        // ...except the current one
+        d3.select(this)
+          .style("opacity", opacityOff);
+        dispatchClickLine_Bar.call("clickLine", this, d);
+        dispatchClickLine_Lollipop.call("clickLine", this, d);
+        dispatchClickLine_Net.call("clickLine", this, d);
+      });
+    // animation
+    path.attr("stroke-dasharray", width + " " + width)
+      .attr("stroke-dashoffset", width)
+      .transition()
+      .duration(2000)
+      .attr("stroke-dashoffset", 0);
+  });
+
+  xAxis.transition()
+    .duration(1000)
+    .call(d3.axisBottom(xScale));
+
+  yAxis.transition()
+    .duration(1000)
+    .call(d3.axisLeft(yScale).ticks(5));
+
 });
 
 
