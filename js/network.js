@@ -12,6 +12,7 @@ import { dispatchClickLine_Net } from "./main.js";
 
 // import tooltip
 import { toolTip } from "./main.js";
+import { tooltipDuration } from "./main.js";
 
 // all genres; they never change
 const genres= ["Avant-garde", "Blues", "Caribbean and Caribbean-influenced", "Comedy",
@@ -102,9 +103,10 @@ dispatchClickBar_Net.on("clickBar", function(artistSelected) {
   node.on("mouseover", function(event, d) {
     //tooltip
     const[x, y] = d3.pointer(event);
-    toolTip.transition()
-      .duration(500)
-      .style("opacity", 0.9);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0.9)
+                   .style("visibility", "visible");
     var text = "Artist: " + d.displayName;
     toolTip.html(text)
       .style("left", (x) + "px")
@@ -112,9 +114,10 @@ dispatchClickBar_Net.on("clickBar", function(artistSelected) {
   })
     .on("mouseout", function(event, d) {
       // tooltip off
-      toolTip.transition()
-        .duration(500)
-        .style("opacity", 0);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0)
+                   .style("visibility", "hidden");
     })
     .on("click", function(event, d) {
       dispatchClickNet_Line.call("clickNet", this, d);
@@ -129,9 +132,10 @@ dispatchClickBar_Net.on("clickBar", function(artistSelected) {
   link.on("mouseover", function(event, d) {
     //tooltip
     const[x, y] = d3.pointer(event);
-    toolTip.transition()
-      .duration(500)
-      .style("opacity", 0.9);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0.9)
+                   .style("visibility", "visible");
     var text = "Common tags: " + d.tags.join(", ");
     toolTip.html(text)
       .style("left", (x) + "px")
@@ -139,9 +143,10 @@ dispatchClickBar_Net.on("clickBar", function(artistSelected) {
   })
     .on("mouseout", function(event, d) {
       // tooltip off
-      toolTip.transition()
-        .duration(500)
-        .style("opacity", 0);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0)
+                   .style("visibility", "hidden");
     })
 
 });
@@ -157,11 +162,11 @@ dispatchClickMap_Net.on("clickMap", function(countrySelected) {
   var filteredDataUpdate = [];
   var i,j;
   // loop on artist dataset
-  for(i = 0; i < Object.keys(artists).length-1; i++) {     
-      if(artists[i].country == countrySelected.properties.name) { 
-          filteredDataUpdate.push(artists[i]); 
-      } 
-  }   
+  for(i = 0; i < Object.keys(artists).length-1; i++) {
+      if(artists[i].country == countrySelected.properties.name) {
+          filteredDataUpdate.push(artists[i]);
+      }
+  }
   // sort data by popularity => bigger to smaller
   filteredDataUpdate.sort(function(a, b) { return b.popularitySpotify - a.popularitySpotify; });
   // get the first
@@ -209,9 +214,10 @@ dispatchClickMap_Net.on("clickMap", function(countrySelected) {
   node.on("mouseover", function(event, d) {
     //tooltip
     const[x, y] = d3.pointer(event);
-    toolTip.transition()
-      .duration(500)
-      .style("opacity", 0.9);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0.9)
+                   .style("visibility", "visible");
     var text = "Artist: " + d.displayName;
     toolTip.html(text)
       .style("left", (x) + "px")
@@ -219,9 +225,10 @@ dispatchClickMap_Net.on("clickMap", function(countrySelected) {
   })
     .on("mouseout", function(event, d) {
       // tooltip off
-      toolTip.transition()
-        .duration(500)
-        .style("opacity", 0);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0)
+                   .style("visibility", "hidden");
     })
     .on("click", function(event, d) {
       dispatchClickNet_Line.call("clickNet", this, d);
@@ -236,9 +243,10 @@ dispatchClickMap_Net.on("clickMap", function(countrySelected) {
   link.on("mouseover", function(event, d) {
     //tooltip
     const[x, y] = d3.pointer(event);
-    toolTip.transition()
-      .duration(500)
-      .style("opacity", 0.9);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0.9)
+                   .style("visibility", "visible");
     var text = "Common tags: " + d.tags.join(", ");
     toolTip.html(text)
       .style("left", (x) + "px")
@@ -246,9 +254,10 @@ dispatchClickMap_Net.on("clickMap", function(countrySelected) {
   })
     .on("mouseout", function(event, d) {
       // tooltip off
-      toolTip.transition()
-        .duration(500)
-        .style("opacity", 0);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0)
+                   .style("visibility", "hidden");
     })
 
 });
@@ -265,14 +274,14 @@ dispatchClickLine_Net.on("clickLine", function(genreSelected) {
   var filteredDataUpdate = [];
   var i,j;
   // loop on artist dataset
-  for(i = 0; i < Object.keys(artists).length-1; i++) {    
+  for(i = 0; i < Object.keys(artists).length-1; i++) {
       var string = artists[i].genre;  // get genre string
       var res = string.split(",");    // split it by commas
       for(j = 0; j < res.length; j ++) {  // loop the splitted string
-          if(res[j] == genreSelected.genre) { 
-              filteredDataUpdate.push(artists[i]); }  // add to array 
+          if(res[j] == genreSelected.genre) {
+              filteredDataUpdate.push(artists[i]); }  // add to array
           }
-  }   
+  }
   // sort data by popularity => bigger to smaller
   filteredDataUpdate.sort(function(a, b) { return b.popularitySpotify - a.popularitySpotify; });
   // most popular artist
@@ -320,9 +329,10 @@ dispatchClickLine_Net.on("clickLine", function(genreSelected) {
   node.on("mouseover", function(event, d) {
     //tooltip
     const[x, y] = d3.pointer(event);
-    toolTip.transition()
-      .duration(500)
-      .style("opacity", 0.9);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0.9)
+                   .style("visibility", "visible");
     var text = "Artist: " + d.displayName;
     toolTip.html(text)
       .style("left", (x) + "px")
@@ -330,9 +340,10 @@ dispatchClickLine_Net.on("clickLine", function(genreSelected) {
   })
     .on("mouseout", function(event, d) {
       // tooltip off
-      toolTip.transition()
-        .duration(500)
-        .style("opacity", 0);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0)
+                   .style("visibility", "hidden");
     })
     .on("click", function(event, d) {
       dispatchClickNet_Line.call("clickNet", this, d);
@@ -347,9 +358,10 @@ dispatchClickLine_Net.on("clickLine", function(genreSelected) {
   link.on("mouseover", function(event, d) {
     //tooltip
     const[x, y] = d3.pointer(event);
-    toolTip.transition()
-      .duration(500)
-      .style("opacity", 0.9);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0.9)
+                   .style("visibility", "visible");
     var text = "Common tags: " + d.tags.join(", ");
     toolTip.html(text)
       .style("left", (x) + "px")
@@ -357,9 +369,10 @@ dispatchClickLine_Net.on("clickLine", function(genreSelected) {
   })
     .on("mouseout", function(event, d) {
       // tooltip off
-      toolTip.transition()
-        .duration(500)
-        .style("opacity", 0);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0)
+                   .style("visibility", "hidden");
     })
 
 });
@@ -523,9 +536,10 @@ function gen_network(){
   node.on("mouseover", function(event, d) {
     //tooltip
     const[x, y] = d3.pointer(event);
-    toolTip.transition()
-      .duration(500)
-      .style("opacity", 0.9);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0.9)
+                   .style("visibility", "visible");
     var text = "Artist: " + d.displayName;
     toolTip.html(text)
       .style("left", (x) + "px")
@@ -533,9 +547,10 @@ function gen_network(){
   })
     .on("mouseout", function(event, d) {
       // tooltip off
-      toolTip.transition()
-        .duration(500)
-        .style("opacity", 0);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0)
+                   .style("visibility", "hidden");
     })
     .on("click", function(event, d) {
       dispatchClickNet_Line.call("clickNet", this, d);
@@ -550,9 +565,10 @@ function gen_network(){
   link.on("mouseover", function(event, d) {
     //tooltip
     const[x, y] = d3.pointer(event);
-    toolTip.transition()
-      .duration(500)
-      .style("opacity", 0.9);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0.9)
+                   .style("visibility", "visible");
     var text = "Common tags: " + d.tags.join(", ");
     toolTip.html(text)
       .style("left", (x) + "px")
@@ -560,9 +576,10 @@ function gen_network(){
   })
     .on("mouseout", function(event, d) {
       // tooltip off
-      toolTip.transition()
-        .duration(500)
-        .style("opacity", 0);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0)
+                   .style("visibility", "hidden");
     })
 
 }

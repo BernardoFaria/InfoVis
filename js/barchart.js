@@ -15,6 +15,7 @@ import { dispatchClickBar_Net } from "./main.js";
 import { dispatchClickMap_Bar } from "./main.js";
 import { dispatchClickLine_Bar } from "./main.js";
 import { dispatchClickNet_Bar } from "./main.js";
+import { tooltipDuration } from "./main.js";
 
 // global variables
 var width = 600;
@@ -48,14 +49,14 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
     var filteredDataUpdate = [];
     var i,j;
     // loop on artist dataset
-    for(i = 0; i < Object.keys(artists).length-1; i++) {    
-        var string = artists[i].country; 
+    for(i = 0; i < Object.keys(artists).length-1; i++) {
+        var string = artists[i].country;
         var res = string.split(",");    // split it by commas
         for(j = 0; j < res.length; j ++) {  // loop the splitted string
-            if(res[j] == countrySelected.properties.name) { 
-                filteredDataUpdate.push(artists[i]); }  // add to array 
+            if(res[j] == countrySelected.properties.name) {
+                filteredDataUpdate.push(artists[i]); }  // add to array
             }
-    }   
+    }
     // sort data by popularity => bigger to smaller
     filteredDataUpdate.sort(function(a, b) { return b.popularitySpotify - a.popularitySpotify; });
     // first 5 elements
@@ -74,8 +75,8 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
 
     // create Y scale   => popularity
     var yscale = d3.scaleLinear()
-            .domain([0, d3.max(filteredDataUpdate, function(d) { return +d.popularitySpotify; })]) 
-            .range([height - padding, padding]); 
+            .domain([0, d3.max(filteredDataUpdate, function(d) { return +d.popularitySpotify; })])
+            .range([height - padding, padding]);
 
 
     svg.selectAll("rect")
@@ -96,8 +97,9 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
             // tooltip
             const[x, y] = d3.pointer(event);
             toolTip.transition()
-                   .duration(500)
-                   .style("opacity", 0.9);
+                   .duration(tooltipDuration)
+                   .style("opacity", 0.9)
+                   .style("visibility", "visible");
             var text = "Popularity: " + d.popularitySpotify;
             toolTip.html(text)
                    .style("left", (x + width) + "px")
@@ -107,8 +109,9 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
             d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
             // tooltip off
             toolTip.transition()
-                   .duration(500)
-                   .style("opacity", 0);
+                   .duration(tooltipDuration)
+                   .style("opacity", 0)
+                   .style("visibility", "hidden");
         })
         .on("click", function(event, d) {
             // clean all bars => all grey
@@ -117,7 +120,7 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
             }
             // color selected bar
             d3.select(this).attr("opacity", opacityOff);
-            
+
             dispatchClickBar_Map.call("clickBar", this, d);
             dispatchClickBar_Line.call("clickBar", this, d);
             dispatchClickBar_Lollipop.call("clickBar", this, d);
@@ -128,15 +131,15 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
         // .attr("height", function(d, i) { return (height - padding - yscale(filteredDataUpdate[i].popularitySpotify)); });
         .attr("height", function(d,i) { return height - padding - yscale(filteredDataUpdate[i].popularitySpotify); })
         .attr("y", function(d,i) { return yscale(filteredDataUpdate[i].popularitySpotify); });
-        
+
     xAxis.transition()
          .duration(1000)
          .call(d3.axisBottom(xscale));
-    
+
     yAxis.transition()
          .duration(1000)
          .call(d3.axisLeft(yscale));
-        
+
 });
 
 // uptade barchart when clicking on linechart
@@ -147,14 +150,14 @@ dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
     var filteredDataUpdate = [];
     var i,j;
     // loop on artist dataset
-    for(i = 0; i < Object.keys(artists).length-1; i++) {    
+    for(i = 0; i < Object.keys(artists).length-1; i++) {
         var string = artists[i].genre;  // get genre string
         var res = string.split(",");    // split it by commas
         for(j = 0; j < res.length; j ++) {  // loop the splitted string
-            if(res[j] == genreSelected.genre) { 
-                filteredDataUpdate.push(artists[i]); }  // add to array 
+            if(res[j] == genreSelected.genre) {
+                filteredDataUpdate.push(artists[i]); }  // add to array
             }
-    }   
+    }
     // sort data by popularity => bigger to smaller
     filteredDataUpdate.sort(function(a, b) { return b.popularitySpotify - a.popularitySpotify; });
     // first 5 elements
@@ -173,8 +176,8 @@ dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
 
     // create Y scale   => popularity
     var yscale = d3.scaleLinear()
-            .domain([0, d3.max(filteredDataUpdate, function(d) { return +d.popularitySpotify; })]) 
-            .range([height - padding, padding]); 
+            .domain([0, d3.max(filteredDataUpdate, function(d) { return +d.popularitySpotify; })])
+            .range([height - padding, padding]);
 
 
     svg.selectAll("rect")
@@ -195,8 +198,9 @@ dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
             // tooltip
             const[x, y] = d3.pointer(event);
             toolTip.transition()
-                    .duration(500)
-                    .style("opacity", 0.9);
+                   .duration(tooltipDuration)
+                   .style("opacity", 0.9)
+                   .style("visibility", "visible");
             var text = "Popularity: " + d.popularitySpotify;
             toolTip.html(text)
                    .style("left", (x + width) + "px")
@@ -206,8 +210,9 @@ dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
             d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
             // tooltip off
             toolTip.transition()
-                   .duration(500)
-                   .style("opacity", 0);
+                   .duration(tooltipDuration)
+                   .style("opacity", 0)
+                   .style("visibility", "hidden");
         })
         .on("click", function(event, d) {
             // clean all bars => all gray
@@ -216,7 +221,7 @@ dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
             }
             // color selected bar
             d3.select(this).style("opacity", opacityOff);
-            
+
             dispatchClickBar_Map.call("clickBar", this, d);
             dispatchClickBar_Line.call("clickBar", this, d);
             dispatchClickBar_Lollipop.call("clickBar", this, d);
@@ -227,8 +232,8 @@ dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
         // .attr("height", function(d, i) { return (height - padding - yscale(filteredDataUpdate[i].popularitySpotify)); });
         .attr("height", function(d,i) { return height - padding - yscale(filteredDataUpdate[i].popularitySpotify); })
         .attr("y", function(d,i) { return yscale(filteredDataUpdate[i].popularitySpotify); });
-        
-        
+
+
     xAxis.transition()
          .duration(1000)
          .call(d3.axisBottom(xscale));
@@ -279,8 +284,9 @@ dispatchClickNet_Bar.on("clickNet", function(artistSelected) {
             // tooltip
             const[x, y] = d3.pointer(event);
             toolTip.transition()
-                    .duration(500)
-                    .style("opacity", 0.9);
+                   .duration(tooltipDuration)
+                   .style("opacity", 0.9)
+                   .style("visibility", "visible");
             var text = "Popularity: " + d.popularitySpotify;
             toolTip.html(text)
                     .style("left", (x + width) + "px")
@@ -290,8 +296,9 @@ dispatchClickNet_Bar.on("clickNet", function(artistSelected) {
             d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
             // tooltip off
             toolTip.transition()
-                    .duration(500)
-                    .style("opacity", 0);
+                   .duration(tooltipDuration)
+                   .style("opacity", 0)
+                   .style("visibility", "hidden");
         })
         .on("click", function(event, d) {
             // clean all bars => all grey
@@ -300,7 +307,7 @@ dispatchClickNet_Bar.on("clickNet", function(artistSelected) {
             }
             // color selected bar
             d3.select(this).attr("opacity", opacityOff);
-            
+
             dispatchClickBar_Map.call("clickBar", this, d);
             dispatchClickBar_Line.call("clickBar", this, d);
             dispatchClickBar_Lollipop.call("clickBar", this, d);
@@ -310,15 +317,15 @@ dispatchClickNet_Bar.on("clickNet", function(artistSelected) {
         .duration(1000)
         .attr("height", function(d) { return height - padding - yscale(artist[0].popularitySpotify); })
         .attr("y", yscale(artist[0].popularitySpotify));
-        
+
     xAxis.transition()
             .duration(1000)
             .call(d3.axisBottom(xscale));
-    
+
     yAxis.transition()
             .duration(1000)
             .call(d3.axisLeft(yscale));
-        
+
 });
 
 
@@ -331,7 +338,7 @@ function gen_bar_chart() {
     // filtering data
     var filteredData = [];
     // loop on artist dataset
-    for(var i = 0; i < Object.keys(artists).length-1; i++) {    
+    for(var i = 0; i < Object.keys(artists).length-1; i++) {
         filteredData.push(artists[i]);  // to get a copy of the dataset artists
     }
     // sort data by popularity => bigger to smaller
@@ -348,8 +355,8 @@ function gen_bar_chart() {
 
     // create Y scale   => popularity
     var yScale = d3.scaleLinear()
-              .domain([0, d3.max(filteredData, function(d) { return +d.popularitySpotify; })]) 
-              .range([height - padding, padding]); 
+              .domain([0, d3.max(filteredData, function(d) { return +d.popularitySpotify; })])
+              .range([height - padding, padding]);
 
 
     // create svg
@@ -369,7 +376,7 @@ function gen_bar_chart() {
        .attr("transform", "translate(" + width/2.2 + "," + (height - padding / 5) + ")")
        .text("Top Artists");
 
-    
+
     // y Axis
     yAxis = svg.append("g")
                .attr("class", "axisSubtitle")
@@ -395,7 +402,7 @@ function gen_bar_chart() {
        .attr("height", 0)            //setting height 0 for the transition effect
        .attr("width", xScale.bandwidth())
        .attr("x", function(d,i) { return xScale(d.displayName); })
-       .on("mouseover", function(event, d) {    
+       .on("mouseover", function(event, d) {
             // all bars on gray...
             d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
             // ...except the one selected
@@ -403,8 +410,9 @@ function gen_bar_chart() {
             // tooltip
             const[x, y] = d3.pointer(event);
             toolTip.transition()
-                   .duration(500)
-                   .style("opacity", 0.9);
+                   .duration(tooltipDuration)
+                   .style("opacity", 0.9)
+                   .style("visibility", "visible");
             var text = "Popularity: " + d.popularitySpotify;
             toolTip.html(text)
                    .style("left", (x + width) + "px")
@@ -415,8 +423,9 @@ function gen_bar_chart() {
             d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
             // tooltip off
             toolTip.transition()
-                   .duration(500)
-                   .style("opacity", 0);
+                   .duration(tooltipDuration)
+                   .style("opacity", 0)
+                   .style("visibility", "hidden");
         })
         .on("click", function(event, d) {
             // clean all bars => all light gray
@@ -445,11 +454,11 @@ function gen_bar_chart() {
 // function reset_button() {
 
 //     d3.select("#reset").on("click", function() {
-        
+
 //         // filtering data
 //         var filteredData = [];
 //         // loop on artist dataset
-//         for(var i = 0; i < Object.keys(artists).length-1; i++) {    
+//         for(var i = 0; i < Object.keys(artists).length-1; i++) {
 //             filteredData.push(artists[i]);  // to get a copy of the dataset artists
 //         }
 //         // sort data by popularity => bigger to smaller
@@ -466,8 +475,8 @@ function gen_bar_chart() {
 
 //         // create Y scale   => popularity
 //         var yScale = d3.scaleLinear()
-//                 .domain([0, d3.max(filteredData, function(d) { return +d.popularitySpotify; })]) 
-//                 .range([height - padding, padding]); 
+//                 .domain([0, d3.max(filteredData, function(d) { return +d.popularitySpotify; })])
+//                 .range([height - padding, padding]);
 
 //         svg.selectAll("rect")
 //            .data(filteredData)
@@ -494,14 +503,14 @@ function gen_bar_chart() {
 //                 }
 //                 // color selected bar
 //                 d3.select(this).attr("fill", "red");
-                
+
 //                 dispatchClickBar_Map.call("clickBar", this, d);
 //                 dispatchClickBar_Line.call("clickBar", this, d);
 //                 dispatchClickBar_Lollipop.call("clickBar", this, d);
 //            })
 //            .transition()
 //            .duration(2000);
-            
+
 //     xAxis.transition()
 //          .duration(2000)
 //          .call(d3.axisBottom(xScale));

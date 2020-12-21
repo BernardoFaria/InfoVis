@@ -14,6 +14,7 @@ import { countries } from "./main.js";
 
 // import tooltip
 import { toolTip } from "./main.js";
+import { tooltipDuration } from "./main.js";
 
 
 // global variables
@@ -23,15 +24,15 @@ var padding = 60;
 
 var r = 5;
 
-var mapData; 
+var mapData;
 var artists;
 var svg;
 var group;
 var geojson;
 var countryList = [];
 
-var opacityOff = 1;  
-var opacityOn = 0.5;  
+var opacityOff = 1;
+var opacityOn = 0.5;
 
 // get map dataset
 d3.json("dataset/countries-110m.json").then(function(data1) {
@@ -46,11 +47,11 @@ d3.json("dataset/countries-110m.json").then(function(data1) {
 // update map when clicking on barchart
 dispatchClickBar_Map.on("clickBar", function(artistSelected) {
     var id;
-    
+
     // update map: all countries grey
     svg.selectAll(".circle-map").style("fill", "#000000");
 
-    // loop to get the correspondent id 
+    // loop to get the correspondent id
     for(var i = 0; i < countryList.length; i++) {
         if(countryList[i].properties.name == artistSelected.country) {
             id = countryList[i].id;
@@ -77,7 +78,7 @@ dispatchClickNet_Map.on("clickNet", function(artistSelected) {
         }
     }
 
-    // loop to get the correspondent id 
+    // loop to get the correspondent id
     var id;
     for(var i = 0; i < countryList.length; i++) {
         if(countryList[i].properties.name == artist[0].country) {
@@ -133,7 +134,7 @@ function gen_bubble_map() {
        .style("opacity", opacityOn)
        .attr("d", path);
 
-    // Get all countries from topojson   
+    // Get all countries from topojson
     countries.forEach(function(country) {
         var obj = getCountry(country);
         countryList.push(obj);
@@ -157,8 +158,9 @@ function gen_bubble_map() {
             // tooltip
             const[x, y] = d3.pointer(event);
             toolTip.transition()
-                   .duration(200)
-                   .style("opacity", 0.9);
+                   .duration(tooltipDuration)
+                   .style("opacity", 0.9)
+                   .style("visibility", "visible");
             var text = "Number Of Artists in " + this.__data__.properties.name + ": " + getTotalArt(this.__data__.properties.name);
             toolTip.html(text)
                    .style("left", (x + width*2) + "px")
@@ -168,15 +170,16 @@ function gen_bubble_map() {
             d3.select(this).attr("class", "circle-map").style("fill", "#000000");
             // tooltip off
             toolTip.transition()
-                   .duration(500)
-                   .style("opacity", 0);
+                   .duration(tooltipDuration)
+                   .style("opacity", 0)
+                   .style("visibility", "hidden");
         })
         .on("click", function(event, d) {
             // clean entire map => all light grey
             d3.selectAll(".circle-map").style("opacity", opacityOff);
             // color selected country white
             d3.select(this).attr("class", "circle-map").style("fill", "#808080");
-            
+
             dispatchClickMap_Bar.call("clickMap", this, d);
             dispatchClickMap_Line.call("clickMap", this, d);
             dispatchClickMap_Lollipop.call("clickMap", this, d);
@@ -220,7 +223,7 @@ function getCountry(location) {
 function addZoom() {
     svg.call(d3.zoom()
                .extent([
-                   [0,0], 
+                   [0,0],
                    [1000,1000],
                 ])
                 .scaleExtent([1,8])

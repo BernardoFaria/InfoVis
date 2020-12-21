@@ -27,12 +27,13 @@ export var dispatchClickNet_Bar = d3.dispatch("clickNet");
 export var dispatchClickNet_Map = d3.dispatch("clickNet");
 export var dispatchClickNet_Lollipop = d3.dispatch("clickNet");
 
-
+export var tooltipDuration = 150;
 // Helps to select the div for the tooltip
 export const toolTip = d3.select("body")
                          .append("div")
                          .attr("class", "tooltip")
-                         .style("opacity", 0);
+                         .style("opacity", 0)
+                          .style("visibility", "hidden");
 
 
 // color scheme for each genre
@@ -59,7 +60,7 @@ export const genreColor = {
     "Pop": "#9a0093",   // dark purple
 
     "Punk rock": "#ff009b", // bright magenta
-    "R&B and soul": "#830050",  // dark magenta 
+    "R&B and soul": "#830050",  // dark magenta
 
     "Rock": "#ffffff",  // white
 };
