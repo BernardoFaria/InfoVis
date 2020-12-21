@@ -6,6 +6,9 @@ import { genreColor } from "./main.js";
 // import tooltip
 import { toolTip } from "./main.js";
 
+// import reset button
+import { dispatchReset_Bar } from "./main.js";
+
 // events
 import { dispatchClickBar_Line } from "./main.js";
 import { dispatchClickBar_Map } from "./main.js";
@@ -37,7 +40,6 @@ var opacityNormal = 0.5;    // when mouseout, all bars return to normal
 d3.csv("dataset/artistV7.csv").then(function(data) {
     artists = data;
     gen_bar_chart();
-    // reset_button();
 });
 
 
@@ -328,6 +330,94 @@ dispatchClickNet_Bar.on("clickNet", function(artistSelected) {
 
 });
 
+// reset button
+dispatchReset_Bar.on("reset", function() {
+    svg.selectAll("rect").attr("class", "bars-style").remove();
+
+    // filtering data
+    var filteredData = [];
+    // loop on artist dataset
+    for(var i = 0; i < Object.keys(artists).length-1; i++) {
+        filteredData.push(artists[i]);  // to get a copy of the dataset artists
+    }
+    // sort data by popularity => bigger to smaller
+    filteredData.sort(function(a, b) { return b.popularitySpotify - a.popularitySpotify; });
+    // first 5 elements
+    filteredData.splice(5, filteredData.length);
+
+    // create X scale   => artists
+    var xScale = d3.scaleBand()
+                    .domain(filteredData.map(d => d.displayName))
+                    .range([padding, width - padding]);
+    xScale.paddingInner(0.5);
+
+    // create Y scale   => popularity
+    var yScale = d3.scaleLinear()
+              .domain([0, d3.max(filteredData, function(d) { return +d.popularitySpotify; })])
+              .range([height - padding, padding]);
+
+    // create bars
+    svg.selectAll("rect")
+       .attr("class", "bars-style")
+       .data(filteredData)
+       .join("rect")
+       .attr("class", "bars-style")
+       .attr("opacity", opacityNormal)
+       .attr("y", height - padding)  //setting y at the bottom for the transition effect
+       .attr("height", 0)            //setting height 0 for the transition effect
+       .attr("width", xScale.bandwidth())
+       .attr("x", function(d,i) { return xScale(d.displayName); })
+       .on("mouseover", function(event, d) {
+            // all bars on gray...
+            d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
+            // ...except the one selected
+            d3.select(this).style("opacity", opacityOff);
+            // tooltip
+            const[x, y] = d3.pointer(event);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0.9)
+                   .style("visibility", "visible");
+            var text = "Popularity: " + d.popularitySpotify;
+            toolTip.html(text)
+                   .style("left", (x + width) + "px")
+                   .style("top", (y + height + 80) + "px");
+        })
+        .on("mouseout", function(event) {
+            // all bars gray
+            d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
+            // tooltip off
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0)
+                   .style("visibility", "hidden");
+        })
+        .on("click", function(event, d) {
+            // clean all bars => all light gray
+            if(d3.select(this) != null) {
+                d3.select(this).style("opacity", opacityNormal);
+            }
+            // color selected bar
+            d3.select(this).style("opacity", opacityOff);
+
+            dispatchClickBar_Line.call("clickBar", this, d);
+            dispatchClickBar_Map.call("clickBar", this, d)
+            dispatchClickBar_Lollipop.call("clickBar", this, d);
+            dispatchClickBar_Net.call("clickBar", this, d);
+        })
+        .transition()
+        .duration(2000)
+        .attr("height", function(d,i) { return height - padding- yScale(d.popularitySpotify); })
+        .attr("y", function(d,i) { return yScale(d.popularitySpotify); });
+
+    xAxis.transition()
+        .duration(1000)
+        .call(d3.axisBottom(xScale));
+
+   yAxis.transition()
+        .duration(1000)
+        .call(d3.axisLeft(yScale));
+});
 
 /**************************
  * gen_bar_chart()
@@ -478,41 +568,68 @@ function gen_bar_chart() {
 //                 .domain([0, d3.max(filteredData, function(d) { return +d.popularitySpotify; })])
 //                 .range([height - padding, padding]);
 
+//         // create bars
 //         svg.selectAll("rect")
-//            .data(filteredData)
-//            .join("rect")
-//            .attr("width", xScale.bandwidth())
-//            .attr("height", function(d, i) { return (height - padding - yScale(filteredData[i].popularitySpotify)); })
-//            .attr("fill", "steelblue")
-//            .attr("x", function(d, i) { return xScale(filteredData[i].displayName); })
-//            .attr("y", function(d, i) { return yScale(filteredData[i].popularitySpotify); })
-//            .on("mouseover", function(event) {
-//                 // if(d3.select(this) == null) console.log("entrei");
-//                 // all bars on blue...
-//                 d3.selectAll("rect").attr("fill", "steelblue");
+//         .attr("class", "bars-style")
+//         .data(filteredData)
+//         .join("rect")
+//         .attr("class", "bars-style")
+//         .attr("opacity", opacityNormal)
+//         .attr("y", height - padding)  //setting y at the bottom for the transition effect
+//         .attr("height", 0)            //setting height 0 for the transition effect
+//         .attr("width", xScale.bandwidth())
+//         .attr("x", function(d,i) { return xScale(d.displayName); })
+//         .on("mouseover", function(event, d) {
+//                 // all bars on gray...
+//                 d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
 //                 // ...except the one selected
-//                 d3.select(this).attr("fill", "green");
-//            })
-//            .on("mouseout", function(event) {
-//            //     d3.selectAll("rect").attr("fill", "steelblue");
-//            })
-//            .on("click", function(event, d) {
-//                 // clean all bars => all blue
+//                 d3.select(this).style("opacity", opacityOff);
+//                 // tooltip
+//                 const[x, y] = d3.pointer(event);
+//                 toolTip.transition()
+//                     .duration(tooltipDuration)
+//                     .style("opacity", 0.9)
+//                     .style("visibility", "visible");
+//                 var text = "Popularity: " + d.popularitySpotify;
+//                 toolTip.html(text)
+//                     .style("left", (x + width) + "px")
+//                     .style("top", (y + height + 80) + "px");
+//             })
+//             .on("mouseout", function(event) {
+//                 // all bars gray
+//                 d3.selectAll("rect").attr("class", "bars-style").style("opacity", opacityNormal);
+//                 // tooltip off
+//                 toolTip.transition()
+//                     .duration(tooltipDuration)
+//                     .style("opacity", 0)
+//                     .style("visibility", "hidden");
+//             })
+//             .on("click", function(event, d) {
+//                 // clean all bars => all light gray
 //                 if(d3.select(this) != null) {
-//                     d3.select(this).attr("fill", "steelblue");
+//                     d3.select(this).style("opacity", opacityNormal);
 //                 }
 //                 // color selected bar
-//                 d3.select(this).attr("fill", "red");
+//                 d3.select(this).style("opacity", opacityOff);
 
-//                 dispatchClickBar_Map.call("clickBar", this, d);
 //                 dispatchClickBar_Line.call("clickBar", this, d);
+//                 dispatchClickBar_Map.call("clickBar", this, d)
 //                 dispatchClickBar_Lollipop.call("clickBar", this, d);
-//            })
-//            .transition()
-//            .duration(2000);
+//                 dispatchClickBar_Net.call("clickBar", this, d);
+//             })
+//             .transition()
+//             .duration(2000)
+//             .attr("height", function(d,i) { return height - padding- yScale(d.popularitySpotify); })
+//             .attr("y", function(d,i) { return yScale(d.popularitySpotify); });
 
-//     xAxis.transition()
-//          .duration(2000)
-//          .call(d3.axisBottom(xScale));
+//         xAxis.transition()
+//             .duration(2000)
+//             .call(d3.axisBottom(xScale));
+        
+//         yAxis.transition()
+//             .duration(1000)
+//             .call(d3.axisLeft(yScale));
+    
+//     dispatchReset.call("reset");
 //     })
 // };

@@ -5,6 +5,7 @@ import { dispatchClickBar_Lollipop } from "./main.js";
 import { dispatchClickLine_Lollipop } from "./main.js";
 import { dispatchClickMap_Lollipop } from "./main.js";
 import { dispatchClickNet_Lollipop } from "./main.js";
+import { dispatchReset_Lollipop } from "./main.js";
 
 // tooltip
 import { toolTip } from "./main.js";
@@ -430,6 +431,119 @@ dispatchClickNet_Lollipop.on("clickNet", function(artistSelected) {
     });
 
 });
+
+
+// reset button
+dispatchReset_Lollipop.on("reset", function() {
+
+  svg.selectAll("line").attr("class", "lines-lollipop").remove();
+  svg.selectAll("circle").attr("class", "circle-lollipop").remove();
+
+  // get total artists per decade
+  var getTotalArtists = [0,0,0,0,0,0,0,0,0,0,0,0];    // couldn't find a better way
+  for(var i = 0; i < Object.keys(artists).length-1; i++) {
+    if (artists[i].creationDate >= 1900 && artists[i].creationDate < 1910) { getTotalArtists[0]++; }
+    if (artists[i].creationDate >= 1910 && artists[i].creationDate < 1920) { getTotalArtists[1]++; }
+    if (artists[i].creationDate >= 1920 && artists[i].creationDate < 1930) { getTotalArtists[2]++; }
+    if (artists[i].creationDate >= 1930 && artists[i].creationDate < 1940) { getTotalArtists[3]++; }
+    if (artists[i].creationDate >= 1940 && artists[i].creationDate < 1950) { getTotalArtists[4]++; }
+    if (artists[i].creationDate >= 1950 && artists[i].creationDate < 1960) { getTotalArtists[5]++; }
+    if (artists[i].creationDate >= 1960 && artists[i].creationDate < 1970) { getTotalArtists[6]++; }
+    if (artists[i].creationDate >= 1970 && artists[i].creationDate < 1980) { getTotalArtists[7]++; }
+    if (artists[i].creationDate >= 1980 && artists[i].creationDate < 1990) { getTotalArtists[8]++; }
+    if (artists[i].creationDate >= 1990 && artists[i].creationDate < 2000) { getTotalArtists[9]++; }
+    if (artists[i].creationDate >= 2000 && artists[i].creationDate < 2010) { getTotalArtists[10]++; }
+    if (artists[i].creationDate >= 2010 && artists[i].creationDate < 2020) { getTotalArtists[11]++; }
+  }
+  // join [decade, totalArtists]
+  fullDataset = getTotalArtists.map(function(d, i) {
+    return { 'decade' : auxDec[i], 'total' : getTotalArtists[i] };
+  });
+
+  // create X scale
+  xScale = d3.scaleBand()
+    .domain(auxDec)
+    .range([padding, width - padding])
+    .padding(1);
+
+  // create Y scale
+  yScale = d3.scaleLinear()
+    .domain([0, d3.max(fullDataset, function(d) { return d.total; })])
+    .range([height - padding, padding]);
+
+  // Lines
+  svg.selectAll("mylollipop")
+    .data(fullDataset)
+    .enter()
+    .append("line")
+    .attr("class", "lines-lollipop")
+    .attr("x1", function(d) { return xScale(d.decade); })
+    .attr("x2", function(d) { return xScale(d.decade); })
+    .attr("y1", yScale(0))
+    .attr("y2", yScale(0))
+    .attr("id", function(d, i) { return "_" + id_line[i]; })
+    .on("mouseover", function(event, d) {
+      // tooltip
+      const[x, y] = d3.pointer(event);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0.9)
+                   .style("visibility", "visible");
+      var text = "Total Artists: " + d.total;
+      toolTip.html(text)
+        .style("left", (x + width*2) + "px")
+        .style("top", (y + 470) + "px");
+    })
+    .on("mouseout", function(event, d) {
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0)
+                   .style("visibility", "hidden");
+    });
+
+  // Circles
+  svg.selectAll("mycircle")
+    .data(fullDataset)
+    .enter()
+    .append("circle")
+    .attr("class", "circle-lollipop")
+  //  .attr("transform", "translate(" + (-26) + ",0)")
+    .attr("cx", function(d) { return xScale(d.decade); })
+    .attr("cy", yScale(0))
+    .attr("r", radius)
+    .attr("id", function(d, i) { return "_" + id_circle[i]; })
+    .on("mouseover", function(event, d) {
+      // tooltip
+      const[x, y] = d3.pointer(event);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0.9)
+                   .style("visibility", "visible");
+      var text = "Total Artists: " + d.total;
+      toolTip.html(text)
+        .style("left", (x + width*2) + "px")
+        .style("top", (y + 470) + "px");
+    })
+    .on("mouseout", function(event, d) {
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0)
+                   .style("visibility", "hidden");
+    });
+
+
+  svg.selectAll(".lines-lollipop")
+    .transition()
+    .duration(2000)
+    .attr("y1", function(d) { return yScale(d.total); });
+
+  svg.selectAll(".circle-lollipop")
+    .transition()
+    .duration(2000)
+    .attr("cy", function(d) { return yScale(d.total); });
+});
+
+
 
 
 /**************************
