@@ -65,7 +65,6 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
     else{
         filteredDataUpdate.splice(filteredDataUpdate.length, filteredDataUpdate.length)
     }
-    console.log(filteredDataUpdate);
 
     // create X scale   => artists
     var xscale = d3.scaleBand()

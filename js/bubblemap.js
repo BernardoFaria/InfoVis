@@ -1,11 +1,13 @@
 // Theme: Music Evolution Through Decades
 
 // events
-import { dispatchClickBar_Map } from "./main.js";
 import { dispatchClickMap_Bar } from "./main.js";
 import { dispatchClickMap_Line } from "./main.js";
 import { dispatchClickMap_Lollipop } from "./main.js";
+import { dispatchClickMap_Net } from "./main.js";
+
 import { dispatchClickNet_Map } from "./main.js";
+import { dispatchClickBar_Map } from "./main.js";
 
 // import countries
 import { countries } from "./main.js";
@@ -178,6 +180,7 @@ function gen_bubble_map() {
             dispatchClickMap_Bar.call("clickMap", this, d);
             dispatchClickMap_Line.call("clickMap", this, d);
             dispatchClickMap_Lollipop.call("clickMap", this, d);
+            dispatchClickMap_Net.call("clickMap", this, d);
         });
 }
 
