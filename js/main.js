@@ -18,6 +18,12 @@ export var dispatchClickMap_Lollipop = d3.dispatch("clickMap");
 export var dispatchClickLine_Bar = d3.dispatch("clickLine");
 export var dispatchClickLine_Lollipop = d3.dispatch("clickLine");
 
+// events when clicking network
+export var dispatchClickNet_Line = d3.dispatch("clickNet");
+export var dispatchClickNet_Bar = d3.dispatch("clickNet");
+export var dispatchClickNet_Map = d3.dispatch("clickNet");
+export var dispatchClickNet_Lollipop = d3.dispatch("clickNet");
+
 
 // Helps to select the div for the tooltip
 export const toolTip = d3.select("body")

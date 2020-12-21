@@ -4,6 +4,7 @@
 import { dispatchClickBar_Lollipop } from "./main.js";
 import { dispatchClickLine_Lollipop } from "./main.js";
 import { dispatchClickMap_Lollipop } from "./main.js";
+import { dispatchClickNet_Lollipop } from "./main.js";
 
 // tooltip
 import { toolTip } from "./main.js";
@@ -336,6 +337,83 @@ dispatchClickMap_Lollipop.on("clickMap", function(countrySelected) {
       .attr("cy", function(d) { return yscale(d.total); });
 })
 
+
+// update lollipop when clicking on network
+dispatchClickNet_Lollipop.on("clickNet", function(artistSelected) {
+
+   // get artist from artists dataset
+   var artist = [];
+   for(var i = 0; i < Object.keys(artists).length-1; i++) {
+      if(artists[i].artist == artistSelected.artist) {
+         artist.push(artists[i]);
+         break;
+      }
+   }
+
+   var flagVec = [0,0,0,0,0,0,0,0,0,0,0,0];    // couldn't find a better way again
+    
+   if (artist[0].creationDate >= 1900 && artist[0].creationDate < 1910) { flagVec[0]++; }
+   if (artist[0].creationDate >= 1910 && artist[0].creationDate < 1920) { flagVec[1]++; }
+   if (artist[0].creationDate >= 1920 && artist[0].creationDate < 1930) { flagVec[2]++; }
+   if (artist[0].creationDate >= 1930 && artist[0].creationDate < 1940) { flagVec[3]++; }
+   if (artist[0].creationDate >= 1940 && artist[0].creationDate < 1950) { flagVec[4]++; }
+   if (artist[0].creationDate >= 1950 && artist[0].creationDate < 1960) { flagVec[5]++; }
+   if (artist[0].creationDate >= 1960 && artist[0].creationDate < 1970) { flagVec[6]++; }
+   if (artist[0].creationDate >= 1970 && artist[0].creationDate < 1980) { flagVec[7]++; }
+   if (artist[0].creationDate >= 1980 && artist[0].creationDate < 1990) { flagVec[8]++; }
+   if (artist[0].creationDate >= 1990 && artist[0].creationDate < 2000) { flagVec[9]++; }
+   if (artist[0].creationDate >= 2000 && artist[0].creationDate < 2010) { flagVec[10]++; }
+   if (artist[0].creationDate >= 2010 && artist[0].creationDate < 2020) { flagVec[11]++; }
+
+   var idAux = flagVec.indexOf(1)
+
+   // all lines black...
+   svg.selectAll("line").attr("class", "lines-lollipop").style("stroke", "#606060");
+   // ...except the one selected
+   svg.select("#_" + idAux).attr("class", "lines-lollipop").style("stroke", "#A0A0A0");  //.style("stroke", "#444444");
+   // all circles black...
+   svg.selectAll("circle").attr("class", "circle-lollipop").style("stroke", "#606060").style("fill", "#606060");  //.style("stroke", "#a9a9a9").style("fill", "#a9a9a9");
+   // ...except the one selected
+   svg.select("#_" + (idAux + 12)).attr("class", "circle-lollipop").style("stroke", "#A0A0A0").style("fill", "#A0A0A0");    //.style("stroke", "#444444").style("fill", "#444444");
+
+   // tooltip
+   svg.select("#_" + idAux)
+      .on("mouseover", function(event, d) {
+         // tooltip
+         const[x, y] = d3.pointer(event);
+         toolTip.transition()
+               .duration(500)
+               .style("opacity", 0.9);
+         var text = artist[0].displayName + " Creation Date: " + artist[0].creationDate;
+         toolTip.html(text)
+               .style("left", (x + width*2) + "px")
+               .style("top", (y + 470) + "px");
+      })
+      .on("mouseout", function(event, d) {
+         toolTip.transition()
+                .duration(500)
+                .style("opacity", 0);
+      });
+
+   svg.select("#_" + (idAux + 12))
+      .on("mouseover", function(event, d) {
+         // tooltip
+         const[x, y] = d3.pointer(event);
+         toolTip.transition()
+               .duration(500)
+               .style("opacity", 0.9);
+         var text = artist[0].displayName + " Creation Date: " + artist[0].creationDate;
+         toolTip.html(text)
+               .style("left", (x + width*2) + "px")
+               .style("top", (y + 470) + "px");
+      })
+      .on("mouseout", function(event, d) {
+         toolTip.transition()
+                .duration(500)
+                .style("opacity", 0);
+      });
+
+});
 
 
 /**************************

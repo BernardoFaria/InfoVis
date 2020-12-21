@@ -1,5 +1,13 @@
 // Theme: Music Evolution Through Decades
 
+// import events
+import { dispatchClickNet_Line } from "./main.js";
+import { dispatchClickNet_Bar } from "./main.js";
+import { dispatchClickNet_Map } from "./main.js";
+import { dispatchClickNet_Lollipop } from "./main.js";
+
+// import tooltip
+import { toolTip } from "./main.js";
 
 // all genres; they never change
 const genres= ["Avant-garde", "Blues", "Caribbean and Caribbean-influenced", "Comedy",
@@ -28,15 +36,13 @@ var artists;
 var data;
 
 
-// var toolTip;    // tooltip
-
 // get datasets
 d3.json("dataset/newTagsV2.json").then(function(data1) {
   d3.csv("dataset/artistV7.csv").then(function(data2) {
     data = data1;
     artists = data2;
     gen_network();
-    addZoom();
+    // addZoom();
   })
 });
 
@@ -134,8 +140,6 @@ function gen_network(){
   var artist = filteredData[0].artist;
 
   gen_subgraph(artist);
-  //console.log(links)
-  console.log(nodes)
 
   svg = d3.select("#network")
     .append("svg")
@@ -170,21 +174,40 @@ function gen_network(){
     .attr("r", r)
     .call(drag(force));
 
-  node
-    .on("mouseover", d => {
-
+  node.on("mouseover", function(event, d) {
+        //tooltip
+        const[x, y] = d3.pointer(event);
+        toolTip.transition()
+              .duration(500)
+              .style("opacity", 0.9);
+        var text = "Artist: " + d.displayName;
+        toolTip.html(text)
+              .style("left", (x) + "px")
+              .style("top", (y + 50) + "px");
+      })
+      .on("mouseout", function(event, d) {             
+        // tooltip off
+        toolTip.transition()
+               .duration(500)
+               .style("opacity", 0);
     })
-    .on("mouseout", event => {
-    });
+      .on("click", function(event, d) {
+        dispatchClickNet_Line.call("clickNet", this, d);
+        dispatchClickNet_Bar.call("clickNet", this, d);
+        dispatchClickNet_Map.call("clickNet", this, d);
+        dispatchClickNet_Lollipop.call("clickNet", this, d);
+      });
 
-  node.append("title")
-    .text(d => d.displayName);
+  // node.append("title")
+  //   .html(d => d.displayName);
 
   link.append("title")
-    .text(d => d.tags);
+    .html(d => d.tags)
+    .attr("class", "tooltip");
 
 
 }
+
 
 function drag(simulation){
   function dragstarted(event) {
@@ -232,42 +255,20 @@ function boxingForce() {
   }
 }
 
-// Adding zoom to the network
-function addZoom() {
-  svg.call(d3.zoom()
-    .extent([
-      [0,0],
-      [1000,1000],
-    ])
-    .scaleExtent([1,8])
-    .on("zoom", zoomed)
-  );
-}
+// // Adding zoom to the network
+// function addZoom() {
+//   svg.call(d3.zoom()
+//     .extent([
+//       [0,0],
+//       [1000,1000],
+//     ])
+//     .scaleExtent([1,8])
+//     .on("zoom", zoomed)
+//   );
+// }
 
-// Applying the zoom
-function zoomed({ transform }) {
-  svg.select("g")
-    .attr("transform", transform);
-}
-// FIXME
-// node = svg.selectAll(".network-node").data(nodes, function(d) { return d.artist; });
-// var nodeEnter = node.enter().append("g");
-
-// var defs = nodeEnter.append("defs");
-
-// defs.append('pattern')
-//       .attr("id", function(d) { return "image"+ d.artist;}  )
-//       .attr("width", 1)
-//       .attr("height", 1)
-//       .append("image")
-//       .attr("xlink:href", function(d) { return d.picture;})
-//       .attr("width", 100)
-//       .attr("height", 150);
-
-//       nodeEnter.append("circle")
-//       .attr("cx", 50)
-//       .attr("cy", 50)
-//       .attr("fill",function(d) { return "url("+ d.picture +")" }  )
-//       .attr("r", 60);
-
-// console.log(nodes[0].displayName);
+// // Applying the zoom
+// function zoomed({ transform }) {
+//   svg.select("g")
+//     .attr("transform", transform);
+// }

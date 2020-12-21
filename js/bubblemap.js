@@ -5,6 +5,7 @@ import { dispatchClickBar_Map } from "./main.js";
 import { dispatchClickMap_Bar } from "./main.js";
 import { dispatchClickMap_Line } from "./main.js";
 import { dispatchClickMap_Lollipop } from "./main.js";
+import { dispatchClickNet_Map } from "./main.js";
 
 // import countries
 import { countries } from "./main.js";
@@ -43,10 +44,8 @@ d3.json("dataset/countries-110m.json").then(function(data1) {
 // update map when clicking on barchart
 dispatchClickBar_Map.on("clickBar", function(artistSelected) {
     var id;
-    // var jData = topojson.feature(mapData, mapData.objects.countries).features;
     
     // update map: all countries grey
-    // svg.selectAll("path").attr("class", "paths-map").style("opacity", opacityNormal);
     svg.selectAll(".circle-map").style("fill", "#000000");
 
     // loop to get the correspondent id 
@@ -61,6 +60,33 @@ dispatchClickBar_Map.on("clickBar", function(artistSelected) {
     svg.select("#_" + id).attr("class", "circle-map").style("fill", "#808080");
 });
 
+
+// update map when clicking on network
+dispatchClickNet_Map.on("clickNet", function(artistSelected) {
+
+    // update map: all countries grey
+    svg.selectAll(".circle-map").style("fill", "#000000");
+
+    // get the artist from the artists dataset
+    var artist = [];
+    for(var i = 0; i < Object.keys(artists).length-1; i++) {
+        if(artists[i].artist == artistSelected.artist) {
+            artist.push(artists[i]);
+        }
+    }
+
+    // loop to get the correspondent id 
+    var id;
+    for(var i = 0; i < countryList.length; i++) {
+        if(countryList[i].properties.name == artist[0].country) {
+            id = countryList[i].id;
+            break;
+        }
+    }
+
+    // fill the selected country
+    svg.select("#_" + id).attr("class", "circle-map").style("fill", "#808080");
+});
 
 
 /**************************
