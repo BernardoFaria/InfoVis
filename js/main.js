@@ -8,6 +8,7 @@ export var dispatchReset = d3.dispatch("reset");
 export var dispatchClickBar_Map = d3.dispatch("clickBar");
 export var dispatchClickBar_Line = d3.dispatch("clickBar");
 export var dispatchClickBar_Lollipop = d3.dispatch("clickBar");
+export var dispatchClickBar_Net = d3.dispatch("clickBar");
 
 // events when clicking map
 export var dispatchClickMap_Bar = d3.dispatch("clickMap");

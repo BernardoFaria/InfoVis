@@ -6,6 +6,8 @@ import { dispatchClickNet_Bar } from "./main.js";
 import { dispatchClickNet_Map } from "./main.js";
 import { dispatchClickNet_Lollipop } from "./main.js";
 
+import { dispatchClickBar_Net } from "./main.js";
+
 // import tooltip
 import { toolTip } from "./main.js";
 
@@ -29,7 +31,7 @@ var r = 15;     // All other radius
 var svg;
 var net;
 var selectedIndex;
-var artist;
+// var artist;
 
 // datasets
 var artists;
@@ -47,6 +49,98 @@ d3.json("dataset/newTagsV2.json").then(function(data1) {
 });
 
 
+// update network when clicking on barchart
+dispatchClickBar_Net.on("clickBar", function(artistSelected) {
+
+  svg.selectAll(".network-link").remove();
+  svg.selectAll(".network-node").remove();
+
+  gen_subgraph(artistSelected.artist);
+  console.log(data.nodes);
+
+  // Let's list the force we wanna apply on the network
+  force = d3.forceSimulation(nodes)                 // Force algorithm is applied to data.nodes
+    .force("link", d3.forceLink(links).id(function(d) { return d.artist; }))
+    .force("charge", d3.forceManyBody().strength(-500))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+    .force("center", d3.forceCenter(width/2, height/2))     // This force attracts nodes to the center of the svg area
+    .force("bounds", boxingForce)
+    .on("tick", ticked);
+
+  // join links and nodes in one element
+  net = svg.append("g");
+
+  // Initialize the links
+  link = net.selectAll(".network-link")
+    .data(links)
+    .enter()
+    .append("line")
+    .attr("stroke-width", d => Math.sqrt(d.weight))
+    .attr("class", "network-link")
+    .attr("stroke-dasharray", 2000)
+    .attr("stroke-dashoffset", 2000);
+
+  link.transition().attr("stroke-dashoffset", 0).duration(4000);
+
+  // Initialize the nodes
+  node = net.selectAll(".network-node")
+    .data(nodes)
+    .enter()
+    .append("circle")
+    .attr("class", "network-node")
+    .attr("r",0)
+    .attr("cx", width/2)
+    .attr("cy", height/2)
+    .style("stroke", "gray")
+    .call(drag(force));
+
+  node.transition().attr("r",  d => d.radius).duration(1500);
+
+  node.on("mouseover", function(event, d) {
+    //tooltip
+    const[x, y] = d3.pointer(event);
+    toolTip.transition()
+      .duration(500)
+      .style("opacity", 0.9);
+    var text = "Artist: " + d.displayName;
+    toolTip.html(text)
+      .style("left", (x) + "px")
+      .style("top", (y + 50) + "px");
+  })
+    .on("mouseout", function(event, d) {
+      // tooltip off
+      toolTip.transition()
+        .duration(500)
+        .style("opacity", 0);
+    })
+    .on("click", function(event, d) {
+      dispatchClickNet_Line.call("clickNet", this, d);
+      dispatchClickNet_Bar.call("clickNet", this, d);
+      dispatchClickNet_Map.call("clickNet", this, d);
+      dispatchClickNet_Lollipop.call("clickNet", this, d);
+    });
+
+  // node.append("title")
+  //   .html(d => d.displayName);
+
+  link.on("mouseover", function(event, d) {
+    //tooltip
+    const[x, y] = d3.pointer(event);
+    toolTip.transition()
+      .duration(500)
+      .style("opacity", 0.9);
+    var text = "Common tags: " + d.tags.join(", ");
+    toolTip.html(text)
+      .style("left", (x) + "px")
+      .style("top", (y + 50) + "px");
+  })
+    .on("mouseout", function(event, d) {
+      // tooltip off
+      toolTip.transition()
+        .duration(500)
+        .style("opacity", 0);
+    })
+
+});
 
 function gen_subgraph(artist){
   nodes = [];
@@ -55,7 +149,7 @@ function gen_subgraph(artist){
   //gets the links and nodes, depth of 2
 
   //aux to find duplicate link
-  artist = artist;
+  // artist = artist;
   function isDuplicate(links, link){
     for (var i = 0; i < links.length; i++){
       var entry = links[i];

@@ -10,6 +10,8 @@ import { toolTip } from "./main.js";
 import { dispatchClickBar_Line } from "./main.js";
 import { dispatchClickBar_Map } from "./main.js";
 import { dispatchClickBar_Lollipop } from "./main.js";
+import { dispatchClickBar_Net } from "./main.js";
+
 import { dispatchClickMap_Bar } from "./main.js";
 import { dispatchClickLine_Bar } from "./main.js";
 import { dispatchClickNet_Bar } from "./main.js";
@@ -120,6 +122,7 @@ dispatchClickMap_Bar.on("clickMap", function(countrySelected) {
             dispatchClickBar_Map.call("clickBar", this, d);
             dispatchClickBar_Line.call("clickBar", this, d);
             dispatchClickBar_Lollipop.call("clickBar", this, d);
+            dispatchClickBar_Net.call("clickBar", this, d);
         })
         .transition()
         .duration(1000)
@@ -218,6 +221,7 @@ dispatchClickLine_Bar.on("clickLine", function(genreSelected) {
             dispatchClickBar_Map.call("clickBar", this, d);
             dispatchClickBar_Line.call("clickBar", this, d);
             dispatchClickBar_Lollipop.call("clickBar", this, d);
+            dispatchClickBar_Net.call("clickBar", this, d);
         })
         .transition()
         .duration(1000)
@@ -301,6 +305,7 @@ dispatchClickNet_Bar.on("clickNet", function(artistSelected) {
             dispatchClickBar_Map.call("clickBar", this, d);
             dispatchClickBar_Line.call("clickBar", this, d);
             dispatchClickBar_Lollipop.call("clickBar", this, d);
+            dispatchClickBar_Net.call("clickBar", this, d);
         })
         .transition()
         .duration(1000)
@@ -425,6 +430,7 @@ function gen_bar_chart() {
             dispatchClickBar_Line.call("clickBar", this, d);
             dispatchClickBar_Map.call("clickBar", this, d)
             dispatchClickBar_Lollipop.call("clickBar", this, d);
+            dispatchClickBar_Net.call("clickBar", this, d);
         })
         .transition()
         .duration(2000)
