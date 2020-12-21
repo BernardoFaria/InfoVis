@@ -236,7 +236,6 @@ dispatchClickMap_Lollipop.on("clickMap", function(countrySelected) {
          filteredDataUpdate.push(artists[i]);  // add to array 
       }
    } 
-   console.log(filteredDataUpdate[0].creationDate);
 
    // 2 - buscar as datas de inicio
    // get total artists per decade

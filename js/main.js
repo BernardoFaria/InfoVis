@@ -14,10 +14,12 @@ export var dispatchClickBar_Net = d3.dispatch("clickBar");
 export var dispatchClickMap_Bar = d3.dispatch("clickMap");
 export var dispatchClickMap_Line = d3.dispatch("clickMap");
 export var dispatchClickMap_Lollipop = d3.dispatch("clickMap");
+export var dispatchClickMap_Net = d3.dispatch("clickMap");
 
 // events when clicking linechart
 export var dispatchClickLine_Bar = d3.dispatch("clickLine");
 export var dispatchClickLine_Lollipop = d3.dispatch("clickLine");
+export var dispatchClickLine_Net = d3.dispatch("clickLine");
 
 // events when clicking network
 export var dispatchClickNet_Line = d3.dispatch("clickNet");
