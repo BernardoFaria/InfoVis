@@ -37,12 +37,15 @@ var selectedIndex;
 var artists;
 var data;
 
-
 // get datasets
 d3.json("dataset/newTagsV2.json").then(function(data1) {
   d3.csv("dataset/artistV7.csv").then(function(data2) {
     data = data1;
     artists = data2;
+
+
+    console.log(data);
+
     gen_network();
     // addZoom();
   })
@@ -56,7 +59,6 @@ dispatchClickBar_Net.on("clickBar", function(artistSelected) {
   svg.selectAll(".network-node").remove();
 
   gen_subgraph(artistSelected.artist);
-  console.log(data.nodes);
 
   // Let's list the force we wanna apply on the network
   force = d3.forceSimulation(nodes)                 // Force algorithm is applied to data.nodes
@@ -147,32 +149,35 @@ function gen_subgraph(artist){
   links = [];
   // sorry whoever reads this, dont judge, no time for recursives
   //gets the links and nodes, depth of 2
+  var copy = JSON.parse(JSON.stringify(data));
 
   //aux to find duplicate link
   // artist = artist;
   function isDuplicate(links, link){
     for (var i = 0; i < links.length; i++){
       var entry = links[i];
-      if (link.source == entry.target && link.target == entry.source){
+      if (link.source === entry.target && link.target === entry.source){
         return true;
       }
     }
   }
 
-  var centralArtist;
-  for (var i = 0; i < data.nodes.length; i++){
-    if (data.nodes[i].artist == artist){
-      centralArtist = data.nodes[i];
+  var centralArtist = null;
+  for (var i = 0; i < copy.nodes.length; i++){
+    if (copy.nodes[i].artist === artist){
+      centralArtist = copy.nodes[i];
       centralArtist.radius = 30;
       break;
     }
   }
   nodes.push(centralArtist);
 
+
+  // vai busvar todos os links que tem o central como edge
   var temp = [];
-  for (var i = 0; i < data.links.length; i++){
-    var link = data.links[i];
-    if ((link.source == artist || link.target == artist) && !isDuplicate(links, link)){
+  for (var i = 0; i < copy.links.length; i++){
+    var link = copy.links[i];
+    if ((link.source === artist || link.target === artist) && !isDuplicate(links, link)){
       temp.push(link);
     }
   }
@@ -181,19 +186,19 @@ function gen_subgraph(artist){
   // primeiros vizinhos do central
   var firstNeig = [];
   for (var i = 0; i < temp.length; i++){
-    if (!firstNeig.includes(temp[i].source) && temp[i].source != artist){
+    if (!firstNeig.includes(temp[i].source) && temp[i].source !== artist){
       firstNeig.push(temp[i].source);
     }
 
-    if (!firstNeig.includes(temp[i].target) && temp[i].target != artist){
+    if (!firstNeig.includes(temp[i].target) && temp[i].target !== artist){
       firstNeig.push(temp[i].target);
     }
   }
 
   // mete os objectos dos primeiros vizinhos no nodes
-  for (var i = 0; i < data.nodes.length; i++){
-    if (firstNeig.includes(data.nodes[i].artist)){
-      var n = data.nodes[i];
+  for (var i = 0; i < copy.nodes.length; i++){
+    if (firstNeig.includes(copy.nodes[i].artist)){
+      var n = copy.nodes[i];
       n.radius = 20;
       nodes.push(n);
     }
@@ -203,9 +208,9 @@ function gen_subgraph(artist){
 
   //links dos primeiros vizinhos tanto na source como no target
   for (var i = 0; i < firstNeig.length; i++){
-    for (var j = 0; j < data.links.length; j++){
-      var link = data.links[j];
-      if ((link.source == firstNeig[i] || link.target == firstNeig[i]) && !isDuplicate(links, link)){
+    for (var j = 0; j < copy.links.length; j++){
+      var link = copy.links[j];
+      if ((link.source === firstNeig[i] || link.target === firstNeig[i]) && !isDuplicate(links, link)){
         links.push(link);
       }
     }
@@ -221,8 +226,8 @@ function gen_subgraph(artist){
       secondNeig.push(t);
   }
 
-  for (var i = 0; i < data.nodes.length; i++){
-    var n = data.nodes[i];
+  for (var i = 0; i < copy.nodes.length; i++){
+    var n = copy.nodes[i];
     if (secondNeig.includes(n.artist)){
       n.radius = 10;
       nodes.push(n);
@@ -234,6 +239,7 @@ function gen_subgraph(artist){
 
 
 function gen_network(){
+  //
   // filtering data
   var filteredData = [];
   // loop on artist dataset
@@ -246,6 +252,7 @@ function gen_network(){
   filteredData.splice(1, filteredData.length);
   //most popular
   var artist = filteredData[0].artist;
+
 
   gen_subgraph(artist);
 
