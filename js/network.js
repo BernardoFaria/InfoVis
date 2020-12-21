@@ -66,7 +66,7 @@ dispatchClickBar_Net.on("clickBar", function(artistSelected) {
   // Let's list the force we wanna apply on the network
   force = d3.forceSimulation(nodes)                 // Force algorithm is applied to data.nodes
     .force("link", d3.forceLink(links).id(function(d) { return d.artist; }))
-    .force("charge", d3.forceManyBody().strength(-500))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+    .force("charge", d3.forceManyBody().strength(-400))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
     .force("center", d3.forceCenter(width/2, height/2))     // This force attracts nodes to the center of the svg area
     .force("bounds", boxingForce)
     .on("tick", ticked);
@@ -292,7 +292,7 @@ dispatchClickLine_Net.on("clickLine", function(genreSelected) {
   // Let's list the force we wanna apply on the network
   force = d3.forceSimulation(nodes)                 // Force algorithm is applied to data.nodes
     .force("link", d3.forceLink(links).id(function(d) { return d.artist; }))
-    .force("charge", d3.forceManyBody().strength(-500))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+    .force("charge", d3.forceManyBody().strength(-400))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
     .force("center", d3.forceCenter(width/2, height/2))     // This force attracts nodes to the center of the svg area
     .force("bounds", boxingForce)
     .on("tick", ticked);
