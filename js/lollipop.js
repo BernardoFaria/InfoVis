@@ -372,6 +372,133 @@ dispatchClickMap_Lollipop.on("clickMap", function(countrySelected) {
 // update lollipop when clicking on network
 dispatchClickNet_Lollipop.on("clickNet", function(artistSelected) {
 
+  var countrySelected = artistSelected;
+  for(var i = 0; i < Object.keys(artists).length-1; i++) {
+    if(artists[i].artist == artistSelected.artist) {   // get country
+      countrySelected = artists[i].country;
+    }
+  }
+
+
+  svg.selectAll("line").attr("class", "lines-lollipop").remove();
+  svg.selectAll("circle").attr("class", "circle-lollipop").remove();
+
+  var filteredDataUpdate = [];
+  // loop on artist dataset
+  for(var i = 0; i < Object.keys(artists).length-1; i++) {
+    if(artists[i].country == countrySelected) {   // get country
+      filteredDataUpdate.push(artists[i]);  // add to array
+    }
+  }
+
+  // 2 - buscar as datas de inicio
+  // get total artists per decade
+  var getTotalArtists = [0,0,0,0,0,0,0,0,0,0,0,0];    // couldn't find a better way
+  for(var i = 0; i < Object.keys(filteredDataUpdate).length; i++) {
+    if (filteredDataUpdate[i].creationDate >= 1900 && filteredDataUpdate[i].creationDate < 1910) { getTotalArtists[0]++; }
+    if (filteredDataUpdate[i].creationDate >= 1910 && filteredDataUpdate[i].creationDate < 1920) { getTotalArtists[1]++; }
+    if (filteredDataUpdate[i].creationDate >= 1920 && filteredDataUpdate[i].creationDate < 1930) { getTotalArtists[2]++; }
+    if (filteredDataUpdate[i].creationDate >= 1930 && filteredDataUpdate[i].creationDate < 1940) { getTotalArtists[3]++; }
+    if (filteredDataUpdate[i].creationDate >= 1940 && filteredDataUpdate[i].creationDate < 1950) { getTotalArtists[4]++; }
+    if (filteredDataUpdate[i].creationDate >= 1950 && filteredDataUpdate[i].creationDate < 1960) { getTotalArtists[5]++; }
+    if (filteredDataUpdate[i].creationDate >= 1960 && filteredDataUpdate[i].creationDate < 1970) { getTotalArtists[6]++; }
+    if (filteredDataUpdate[i].creationDate >= 1970 && filteredDataUpdate[i].creationDate < 1980) { getTotalArtists[7]++; }
+    if (filteredDataUpdate[i].creationDate >= 1980 && filteredDataUpdate[i].creationDate < 1990) { getTotalArtists[8]++; }
+    if (filteredDataUpdate[i].creationDate >= 1990 && filteredDataUpdate[i].creationDate < 2000) { getTotalArtists[9]++; }
+    if (filteredDataUpdate[i].creationDate >= 2000 && filteredDataUpdate[i].creationDate < 2010) { getTotalArtists[10]++; }
+    if (filteredDataUpdate[i].creationDate >= 2010 && filteredDataUpdate[i].creationDate < 2020) { getTotalArtists[11]++; }
+  }
+  // join [decade, totalArtists]
+  fullDataset = getTotalArtists.map(function(d, i) {
+    return { 'decade' : auxDec[i], 'total' : getTotalArtists[i] };
+  })
+
+  // 3 - construir lollipop
+  // create Y scale
+  var yscale = d3.scaleLinear()
+    .domain([0, d3.max(fullDataset, function(d) { return d.total; })])
+    .range([height - padding, padding]);
+
+
+  yAxis.transition()
+    .duration(1000)
+    .call(d3.axisLeft(yscale));
+
+  // Lines
+  svg.selectAll("mylollipop")
+    .data(fullDataset)
+    .enter()
+    .append("line")
+    .attr("class", "lines-lollipop")
+    .attr("x1", function(d) { return xScale(d.decade); })
+    .attr("x2", function(d) { return xScale(d.decade); })
+    .attr("y1", yscale(0))
+    .attr("y2", yscale(0))
+    .attr("id", function(d, i) { return "_" + id_line[i]; })
+    .on("mouseover", function(event, d) {
+      // tooltip
+      const[x, y] = d3.pointer(event);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0.9)
+                   .style("visibility", "visible");
+      var text = "Total Artists: " + d.total;
+      toolTip.html(text)
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY - 35) + "px");
+    })
+    .on("mousemove", function(event, d){
+      return toolTip.style("top", (event.pageY-35)+"px")
+        .style("left",(event.pageX)+"px");})
+    .on("mouseout", function(event, d) {
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0)
+                   .style("visibility", "hidden");
+    });
+
+  // Circles
+  svg.selectAll("mycircle")
+    .data(fullDataset)
+    .enter()
+    .append("circle")
+    .attr("class", "circle-lollipop")
+    .attr("cx", function(d) { return xScale(d.decade); })
+    .attr("cy", yscale(0))
+    .attr("r", radius)
+    .attr("id", function(d, i) { return "_" + id_circle[i]; })
+    .on("mouseover", function(event, d) {
+      // tooltip
+      const[x, y] = d3.pointer(event);
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0.9)
+                   .style("visibility", "visible");
+      var text = "Total Artists: " + d.total;
+      toolTip.html(text)
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY - 35) + "px");
+    })
+    .on("mousemove", function(event, d){
+      return toolTip.style("top", (event.pageY-35)+"px")
+        .style("left",(event.pageX)+"px");})
+    .on("mouseout", function(event, d) {
+            toolTip.transition()
+                   .duration(tooltipDuration)
+                   .style("opacity", 0)
+                   .style("visibility", "hidden");
+    });
+
+  svg.selectAll(".lines-lollipop")
+    .transition()
+    .duration(1000)
+    .attr("y1", function(d) { return yscale(d.total); });
+
+  svg.selectAll(".circle-lollipop")
+    .transition()
+    .duration(1000)
+    .attr("cy", function(d) { return yscale(d.total); });
+
   // get artist from artists dataset
   var artist = [];
   for(var i = 0; i < Object.keys(artists).length-1; i++) {
