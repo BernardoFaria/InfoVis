@@ -23,6 +23,9 @@ import { tooltipDuration } from "./main.js";
 var width = 600;
 var height = 400;
 
+// flag to know if a country is clicked
+var isClicked = 0;
+
 var mapData;
 var artists;
 var svg;
@@ -57,9 +60,10 @@ dispatchClickBar_Map.on("clickBar", function(artistSelected) {
       break;
     }
   }
-
+  
   // fill the selected country
   svg.select("#_" + id).attr("class", "circle-map").style("fill", "#808080");
+
 });
 
 
@@ -187,6 +191,10 @@ function gen_bubble_map() {
       d3.selectAll(".circle-map").style("fill", opacityOff);
       // ...except the one selected
       d3.select(this).attr("class", "circle-map").style("fill", "#808080");
+      // and the country clicked, if any
+      if(isClicked != 0) {
+        d3.select("#" + isClicked).style("fill", "#808080");
+      }
       // tooltip
       const[x, y] = d3.pointer(event);
       toolTip.transition()
@@ -202,7 +210,12 @@ function gen_bubble_map() {
       return toolTip.style("top", (event.pageY-35)+"px")
         .style("left",(event.pageX)+"px");})
     .on("mouseout", function(event) {
-      d3.select(this).attr("class", "circle-map").style("fill", "#000000");
+      // color all countries back again
+      d3.selectAll(".circle-map").style("fill", "#000000");
+      // if any country clicked, keep clicked
+      if(isClicked != 0) {
+        d3.select("#" + isClicked).style("fill", "#808080");
+      }
       // tooltip off
       toolTip.transition()
         .duration(tooltipDuration)
@@ -211,9 +224,11 @@ function gen_bubble_map() {
     })
     .on("click", function(event, d) {
       // clean entire map => all light grey
-      //d3.selectAll(".circle-map").style("opacity", opacityOff);
+      d3.selectAll(".circle-map").style("fill", opacityOff);
       // color selected country white
       d3.select(this).attr("class", "circle-map").style("fill", "#808080");
+      // keep the ID of the selected country
+      isClicked = this.id;
 
       dispatchClickMap_Bar.call("clickMap", this, d);
       dispatchClickMap_Line.call("clickMap", this, d);

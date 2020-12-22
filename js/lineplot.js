@@ -705,7 +705,7 @@ function gen_line_chart() {
           .style("opacity", opacityOn);
         // ...except the current one
         d3.select(this)
-          .style("opacity", opacityOff);
+          .style("opacity", opacityOff); 
         // tooltip
         const[x, y] = d3.pointer(event);
         toolTip.transition()
@@ -723,7 +723,7 @@ function gen_line_chart() {
       .on("mouseout", function(d) {
         //return all bars' opacity to normal
         d3.selectAll(".line-lineplot")
-          .style("opacity", opacityNormal);
+          .style("opacity", opacityNormal); 
         // tooltip off
         toolTip.transition()
           .duration(tooltipDuration)
@@ -734,8 +734,8 @@ function gen_line_chart() {
         d3.selectAll(".line-lineplot")
           .style("opacity", opacityOn);
         // ...except the current one
-        d3.select(this)
-          .style("opacity", opacityOff);
+        d3.select(this).style("opacity", opacityOff);
+
         dispatchClickLine_Bar.call("clickLine", this, d);
         dispatchClickLine_Lollipop.call("clickLine", this, d);
         dispatchClickLine_Net.call("clickLine", this, d);
@@ -763,131 +763,3 @@ function getEvolution(genreName) {
   }
   return popArray;
 }
-
-
-
-// function reset_button() {
-// dispatchReset.on("reset", function() {
-
-//     d3.select("#reset").on("click", function() {
-
-//         svg.selectAll("path").attr("class", "line-lineplot").remove();
-
-//         // create X scale data
-//         var xScaleData = decades.map((a) => a.decade);  // get all decades
-//         var xScaleDataFiltered = [];    // aux
-//         xScaleData.forEach((c) => {     // forEach to remove duplicates, couldn't find another way
-//             if (!xScaleDataFiltered.includes(c)) {
-//                 xScaleDataFiltered.push(c);
-//             }
-//         });
-//         xScaleDataFiltered.sort();  // sort from old to new
-
-//         // create X scale
-//         xScale = d3.scaleBand()
-//                         .domain(xScaleDataFiltered)
-//                         .range([padding, width - padding])
-//                         // .padding(1);
-//         xScale.paddingInner(0.5);   // separate elements
-
-
-//         // create X axis
-//         xAxis = svg.append("g")
-//             .attr("class", "axisSubtitle")
-//             .style("font-size", "13px")
-//             .attr("transform", "translate(0," + (height - padding) + ")")
-//             .call(d3.axisBottom(xScale));
-
-
-//         // create Y scale
-//         yScale = d3.scaleLinear()
-//                    .domain([0, 30])
-//                    .range([height - padding, padding]);
-
-//         // create Y axis
-//         yAxis = svg.append("g")
-//                    .attr("class", "axisSubtitle")
-//                    .style("font-size", "13px")
-//                    .attr("transform", "translate(" + padding + ",0)")
-//                    .call(d3.axisLeft(yScale).ticks(5));
-
-
-
-//         // creating lines
-//         lineAvant = lineBlues = lineCarib = lineComedy = lineCountry =
-//         lineEasy = lineElec = lineFolk = lineHeavy = lineHip = lineHouse =
-//         lineJazz = lineLatin = linePop = linePunk = lineRB = lineRock =
-//             d3.line()
-//             .x(d => xScale(d.decade))
-//             .y(d => yScale(d.popularity*100));    // * 100 because we only have percentage
-
-//             // Tooltip
-//         // const toolTip = svg.append("g")
-//         //                   .attr("class", "tooltip")
-//         //                   .style("opacity", 0);
-
-//         lines = svg.append("g");
-
-//         // adding lines
-//         genres.forEach(function (genre){
-//             var genreArray = [];
-//             genreArray = getEvolution(genre);
-//             lines.append("path")
-//                     .data(genreArray)
-//                     .attr("class", "line-lineplot")
-//                     .attr("d", function(d) {
-//                         if(genre === "Avant-garde") { return lineAvant(genreArray); }
-//                         if(genre === "Blues") { return lineBlues(genreArray); }
-//                         if(genre === "Caribbean and Caribbean-influenced") { return lineCarib(genreArray); }
-//                         if(genre === "Comedy") { return lineComedy(genreArray); }
-//                         if(genre === "Country") { return lineCountry(genreArray); }
-//                         if(genre === "Easy listening") { return lineEasy(genreArray); }
-//                         if(genre === "Electronic") { return lineElec(genreArray); }
-//                         if(genre === "Folk") { return lineFolk(genreArray); }
-//                         if(genre === "Heavy metal") { return lineHeavy(genreArray); }
-//                         if(genre === "Hip hop") { return lineHip(genreArray); }
-//                         if(genre === "House") { return lineHouse(genreArray); }
-//                         if(genre === "Jazz") { return lineJazz(genreArray); }
-//                         if(genre === "Latin") { return lineLatin(genreArray); }
-//                         if(genre === "Pop") { return linePop(genreArray); }
-//                         if(genre === "Punk rock") { return linePunk(genreArray); }
-//                         if(genre === "R&B and soul") { return lineRB(genreArray); }
-//                         if(genre === "Rock") { return lineRock(genreArray); }
-//                     })
-//                     .style("stroke", genreColor[genre])
-//                     .on("mouseover", function(d) {
-//                         // fade all lines...
-//                         d3.selectAll(".line-lineplot")
-//                         .style("opacity", opacityOn);
-//                         // ...except the current one
-//                         d3.select(this)
-//                         .style("opacity", opacityOff);
-  //                         // tooltip
-//                         // toolTip.transition()
-//                         //        .style("opacity", 0.9);
-//                         //        var text = "Genre: " + genre;
-//                         // toolTip.html(text);
-//                             //    .style("left", (event.pageX) + "px")
-//                             //    .style("top", (event.pageY - 28) + "px");
-  //                     })
-//                     .on("mouseout", function(d) {
-//                         //return all bars' opacity to normal
-//                         d3.selectAll(".line-lineplot")
-  //                         .style("opacity", opacityNormal);
-//                         // tooltip off
-//                         // toolTip.transition()
-//                         //        .duration(tooltipDuration)
-//                         //        .style("opacity", 0);
-//                     })
-//                     .on("click", function(event, d) {
-  //                         d3.selectAll(".line-lineplot")
-//                         .style("opacity", opacityOn);
-//                         // ...except the current one
-//                         d3.select(this)
-  //                         .style("opacity", opacityOff);
-//                         dispatchClickLine_Bar.call("clickLine", this, d);
-//                         dispatchClickLine_Lollipop.call("clickLine", this, d);
-//                     });
-//         });
-//     });
-// });
