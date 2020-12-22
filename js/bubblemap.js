@@ -205,7 +205,6 @@ function gen_bubble_map() {
     obj.properties.count = getTotalArt(obj.properties.name);
     countryList.push(obj);
   })
-  console.log(countryList);
 
   function sort(array) {
     let swapped = true;

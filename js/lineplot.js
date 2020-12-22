@@ -38,6 +38,9 @@ var yScale      // y scale
 var lines;      // lines of line chart
 var xScaleDataFiltered;
 
+// flag 
+var isClicked = 0;
+
 var svg;
 var xAxis;
 var yAxis;
@@ -67,6 +70,8 @@ d3.csv("dataset/decade.csv").then(function(data1) {
 dispatchClickBar_Line.on("clickBar", function(artistSelected) {
 
   svg.selectAll("path").attr("class", "line-lineplot").remove();
+
+  isClicked = 0;
 
   // get artist genres
   var artist;
@@ -115,6 +120,7 @@ dispatchClickBar_Line.on("clickBar", function(artistSelected) {
     path = lines.append("path")
       .data(genreArray)
       .attr("class", "line-lineplot")
+      .attr("id", fixID(genre))
       .attr("transform", "translate(" + 18 + ",0)")   // move lines to the right
       .attr("d", function(d) {
         if(genre === "Avant-garde") { return lineAvant(genreArray); }
@@ -144,6 +150,9 @@ dispatchClickBar_Line.on("clickBar", function(artistSelected) {
         // ...except the current one
         d3.select(this)
           .style("opacity", opacityOff);
+        if(isClicked != 0) {
+          d3.select("#" + isClicked).style("opacity", opacityOff);
+        }
         // tooltip
         const[x, y] = d3.pointer(event);
         toolTip.transition()
@@ -162,6 +171,15 @@ dispatchClickBar_Line.on("clickBar", function(artistSelected) {
         //return all bars' opacity to normal
         d3.selectAll(".line-lineplot")
           .style("opacity", opacityNormal);
+        if(isClicked == 0) {
+          d3.selectAll(".line-lineplot")
+            .style("opacity", opacityNormal);
+        }
+        else {
+          d3.selectAll(".line-lineplot")
+            .style("opacity", opacityOn); 
+          d3.select("#" + isClicked).style("opacity", opacityOff);
+        }
         // tooltip off
         toolTip.transition()
           .duration(tooltipDuration)
@@ -174,6 +192,9 @@ dispatchClickBar_Line.on("clickBar", function(artistSelected) {
         // ...except the current one
         d3.select(this)
           .style("opacity", opacityOff);
+
+        isClicked = this.id;
+
         dispatchClickLine_Bar.call("clickLine", this, d);
         dispatchClickLine_Lollipop.call("clickLine", this, d);
         dispatchClickLine_Net.call("clickLine", this, d);
@@ -200,6 +221,8 @@ dispatchClickBar_Line.on("clickBar", function(artistSelected) {
 dispatchClickMap_Line.on("clickMap", function(countrySelected) {
 
   svg.selectAll("path").attr("class", "line-lineplot").remove();
+
+  isClicked = 0;
 
   // 1 - get all artists from countrySelected.properties.name
   var filteredDataUpdate = [];
@@ -259,6 +282,7 @@ dispatchClickMap_Line.on("clickMap", function(countrySelected) {
     path = lines.append("path")
       .data(genreArray)
       .attr("class", "line-lineplot")
+      .attr("id", fixID(genre))
       .attr("transform", "translate(" + 18 + ",0)")   // move lines to the right
       .attr("d", function(d) {
         if(genre === "Avant-garde") { return lineAvant(genreArray); }
@@ -288,6 +312,9 @@ dispatchClickMap_Line.on("clickMap", function(countrySelected) {
         // ...except the current one
         d3.select(this)
           .style("opacity", opacityOff);
+        if(isClicked != 0) {
+          d3.select("#" + isClicked).style("opacity", opacityOff);
+        }
         // tooltip
         const[x, y] = d3.pointer(event);
         toolTip.transition()
@@ -306,6 +333,15 @@ dispatchClickMap_Line.on("clickMap", function(countrySelected) {
         //return all bars' opacity to normal
         d3.selectAll(".line-lineplot")
           .style("opacity", opacityNormal);
+        if(isClicked == 0) {
+          d3.selectAll(".line-lineplot")
+            .style("opacity", opacityNormal);
+        }
+        else {
+          d3.selectAll(".line-lineplot")
+            .style("opacity", opacityOn); 
+          d3.select("#" + isClicked).style("opacity", opacityOff);
+        }
         // tooltip off
         toolTip.transition()
           .duration(tooltipDuration)
@@ -318,6 +354,8 @@ dispatchClickMap_Line.on("clickMap", function(countrySelected) {
         // ...except the current one
         d3.select(this)
           .style("opacity", opacityOff);
+          
+        isClicked = this.id;
         dispatchClickLine_Bar.call("clickLine", this, d);
         dispatchClickLine_Lollipop.call("clickLine", this, d);
         dispatchClickLine_Net.call("clickLine", this, d);
@@ -346,6 +384,8 @@ dispatchClickMap_Line.on("clickMap", function(countrySelected) {
 dispatchClickNet_Line.on("clickNet", function(artistSelected) {
 
   svg.selectAll("path").attr("class", "line-lineplot").remove();
+
+  isClicked = 0;
 
   // get artists genres
   var artist;
@@ -391,6 +431,7 @@ dispatchClickNet_Line.on("clickNet", function(artistSelected) {
     path = lines.append("path")
       .data(genreArray)
       .attr("class", "line-lineplot")
+      .attr("id", genre)
       .attr("transform", "translate(" + 18 + ",0)")   // move lines to the right
       .attr("d", function(d) {
         if(genre === "Avant-garde") { return lineAvant(genreArray); }
@@ -420,6 +461,9 @@ dispatchClickNet_Line.on("clickNet", function(artistSelected) {
         // ...except the current one
         d3.select(this)
           .style("opacity", opacityOff);
+        if(isClicked != 0) {
+          d3.select("#" + isClicked).style("opacity", opacityOff);
+        }
         // tooltip
         const[x, y] = d3.pointer(event);
         toolTip.transition()
@@ -436,8 +480,15 @@ dispatchClickNet_Line.on("clickNet", function(artistSelected) {
           .style("left",(event.pageX)+"px");})
       .on("mouseout", function(d) {
         //return all bars' opacity to normal
-        d3.selectAll(".line-lineplot")
-          .style("opacity", opacityNormal);
+        if(isClicked == 0) {
+          d3.selectAll(".line-lineplot")
+            .style("opacity", opacityNormal);
+        }
+        else {
+          d3.selectAll(".line-lineplot")
+            .style("opacity", opacityOn); 
+          d3.select("#" + isClicked).style("opacity", opacityOff);
+        }
         // tooltip off
         toolTip.transition()
           .duration(tooltipDuration)
@@ -450,6 +501,9 @@ dispatchClickNet_Line.on("clickNet", function(artistSelected) {
         // ...except the current one
         d3.select(this)
           .style("opacity", opacityOff);
+
+        isClicked = this.id;
+
         dispatchClickLine_Bar.call("clickLine", this, d);
         dispatchClickLine_Lollipop.call("clickLine", this, d);
         dispatchClickLine_Net.call("clickLine", this, d);
@@ -477,6 +531,8 @@ dispatchClickNet_Line.on("clickNet", function(artistSelected) {
 dispatchReset_Line.on("reset", function() {
 
   svg.selectAll("path").attr("class", "line-lineplot").remove();
+
+  isClicked = 0;
 
   // create X scale data
   var xScaleData = decades.map((a) => a.decade);  // get all decades
@@ -520,6 +576,7 @@ dispatchReset_Line.on("reset", function() {
     path = lines.append("path")
       .data(genreArray)
       .attr("class", "line-lineplot")
+      .attr("id", genre)
       .attr("transform", "translate(" + 18 + ",0)")   // move lines to the right
       .attr("d", function(d) {
         if(genre === "Avant-garde") { return lineAvant(genreArray); }
@@ -547,8 +604,10 @@ dispatchReset_Line.on("reset", function() {
         d3.selectAll(".line-lineplot")
           .style("opacity", opacityOn);
         // ...except the current one
-        d3.select(this)
-          .style("opacity", opacityOff);
+        d3.select(this).style("opacity", opacityOff); 
+        if(isClicked != 0) {
+          d3.select("#" + isClicked).style("opacity", opacityOff);
+        }
         // tooltip
         const[x, y] = d3.pointer(event);
         toolTip.transition()
@@ -565,8 +624,15 @@ dispatchReset_Line.on("reset", function() {
           .style("left",(event.pageX)+"px");})
       .on("mouseout", function(d) {
         //return all bars' opacity to normal
-        d3.selectAll(".line-lineplot")
-          .style("opacity", opacityNormal);
+        if(isClicked == 0) {
+          d3.selectAll(".line-lineplot")
+            .style("opacity", opacityNormal);
+        }
+        else {
+          d3.selectAll(".line-lineplot")
+            .style("opacity", opacityOn); 
+          d3.select("#" + isClicked).style("opacity", opacityOff);
+        }
         // tooltip off
         toolTip.transition()
           .duration(tooltipDuration)
@@ -579,6 +645,9 @@ dispatchReset_Line.on("reset", function() {
         // ...except the current one
         d3.select(this)
           .style("opacity", opacityOff);
+
+        isClicked = this.id;
+        
         dispatchClickLine_Bar.call("clickLine", this, d);
         dispatchClickLine_Lollipop.call("clickLine", this, d);
         dispatchClickLine_Net.call("clickLine", this, d);
@@ -685,6 +754,7 @@ function gen_line_chart() {
     path = lines.append("path")
       .data(genreArray)
       .attr("class", "line-lineplot")
+      .attr("id", fixID(genre))
       .attr("transform", "translate(" + 18 + ",0)")   // move lines to the right
       .attr("d", function(d) {
         if(genre === "Avant-garde") { return lineAvant(genreArray); }
@@ -712,9 +782,11 @@ function gen_line_chart() {
         d3.selectAll(".line-lineplot")
           .style("opacity", opacityOn);
         // ...except the current one
-        d3.select(this)
-          .style("opacity", opacityOff); 
-        // tooltip
+        d3.select(this).style("opacity", opacityOff); 
+        if(isClicked != 0) {
+          d3.select("#" + isClicked).style("opacity", opacityOff);
+        }
+          // tooltip
         const[x, y] = d3.pointer(event);
         toolTip.transition()
           .duration(tooltipDuration)
@@ -730,8 +802,15 @@ function gen_line_chart() {
           .style("left",(event.pageX)+"px");})
       .on("mouseout", function(d) {
         //return all bars' opacity to normal
-        d3.selectAll(".line-lineplot")
-          .style("opacity", opacityNormal); 
+        if(isClicked == 0) {
+          d3.selectAll(".line-lineplot")
+            .style("opacity", opacityNormal);
+        }
+        else {
+          d3.selectAll(".line-lineplot")
+            .style("opacity", opacityOn); 
+          d3.select("#" + isClicked).style("opacity", opacityOff);
+        }
         // tooltip off
         toolTip.transition()
           .duration(tooltipDuration)
@@ -739,10 +818,11 @@ function gen_line_chart() {
           .style("visibility", "hidden");
       })
       .on("click", function(event, d) {
-        d3.selectAll(".line-lineplot")
-          .style("opacity", opacityOn);
+        d3.selectAll(".line-lineplot").style("opacity", opacityOn);
         // ...except the current one
         d3.select(this).style("opacity", opacityOff);
+
+        isClicked = this.id;
 
         dispatchClickLine_Bar.call("clickLine", this, d);
         dispatchClickLine_Lollipop.call("clickLine", this, d);
@@ -757,6 +837,12 @@ function gen_line_chart() {
       .duration(2000)
       .attr("stroke-dashoffset", 0);
   });
+}
+
+
+function fixID(genre) {
+  var s = genre.replaceAll("&", "");
+  return s.replaceAll(" ", "");
 }
 
 
