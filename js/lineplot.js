@@ -150,9 +150,12 @@ dispatchClickBar_Line.on("clickBar", function(artistSelected) {
           .style("visibility", "visible");
         var text = genre;
         toolTip.html(text)
-          .style("left", (x + width) + "px")
-          .style("top", (y + 40) + "px");
+          .style("left", (event.pageX) + "px")
+          .style("top", (event.pageY - 35) + "px");
       })
+      .on("mousemove", function(event, d){
+        return toolTip.style("top", (event.pageY-35)+"px")
+          .style("left",(event.pageX)+"px");})
       .on("mouseout", function(d) {
         //return all bars' opacity to normal
         d3.selectAll(".line-lineplot")
@@ -289,9 +292,12 @@ dispatchClickMap_Line.on("clickMap", function(countrySelected) {
           .style("visibility", "visible");
         var text = genre;
         toolTip.html(text)
-          .style("left", (x + width) + "px")
-          .style("top", (y + 40) + "px");
+          .style("left", (event.pageX) + "px")
+          .style("top", (event.pageY - 35) + "px");
       })
+      .on("mousemove", function(event, d){
+        return toolTip.style("top", (event.pageY-35)+"px")
+          .style("left",(event.pageX)+"px");})
       .on("mouseout", function(d) {
         //return all bars' opacity to normal
         d3.selectAll(".line-lineplot")
@@ -415,9 +421,12 @@ dispatchClickNet_Line.on("clickNet", function(artistSelected) {
           .style("visibility", "visible");
         var text = genre;
         toolTip.html(text)
-          .style("left", (x + width) + "px")
-          .style("top", (y + 40) + "px");
+          .style("left", (event.pageX) + "px")
+          .style("top", (event.pageY - 35) + "px");
       })
+      .on("mousemove", function(event, d){
+        return toolTip.style("top", (event.pageY-35)+"px")
+          .style("left",(event.pageX)+"px");})
       .on("mouseout", function(d) {
         //return all bars' opacity to normal
         d3.selectAll(".line-lineplot")
@@ -459,7 +468,7 @@ dispatchClickNet_Line.on("clickNet", function(artistSelected) {
 dispatchReset_Line.on("reset", function() {
 
   svg.selectAll("path").attr("class", "line-lineplot").remove();
-  
+
   // create X scale data
   var xScaleData = decades.map((a) => a.decade);  // get all decades
   xScaleDataFiltered = [];    // aux
@@ -538,9 +547,12 @@ dispatchReset_Line.on("reset", function() {
           .style("visibility", "visible");
         var text = genre;
         toolTip.html(text)
-          .style("left", (x + width) + "px")
-          .style("top", (y + 40) + "px");
+          .style("left", (event.pageX) + "px")
+          .style("top", (event.pageY - 35) + "px");
       })
+      .on("mousemove", function(event, d){
+        return toolTip.style("top", (event.pageY-35)+"px")
+          .style("left",(event.pageX)+"px");})
       .on("mouseout", function(d) {
         //return all bars' opacity to normal
         d3.selectAll(".line-lineplot")
@@ -697,9 +709,12 @@ function gen_line_chart() {
           .style("visibility", "visible");
         var text = genre;
         toolTip.html(text)
-          .style("left", (x + width) + "px")
-          .style("top", (y + 40) + "px");
+          .style("left", (event.pageX) + "px")
+          .style("top", (event.pageY - 35) + "px");
       })
+      .on("mousemove", function(event, d){
+        return toolTip.style("top", (event.pageY-35)+"px")
+          .style("left",(event.pageX)+"px");})
       .on("mouseout", function(d) {
         //return all bars' opacity to normal
         d3.selectAll(".line-lineplot")

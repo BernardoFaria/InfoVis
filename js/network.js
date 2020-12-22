@@ -298,15 +298,14 @@ function gen_network(artist){
 
   node.on("mouseover", function(event, d) {
     //tooltip
-    const[x, y] = d3.pointer(event);
     toolTip.transition()
       .duration(tooltipDuration)
       .style("opacity", 0.9)
       .style("visibility", "visible");
     var text = "Artist: " + d.displayName;
     toolTip.html(text)
-      .style("left", (x) + "px")
-      .style("top", (y + 50) + "px");
+      .style("left", (event.pageX) + "px")
+      .style("top", (event.pageY - 35) + "px");
   })
     .on("mouseout", function(event, d) {
       // tooltip off
@@ -315,6 +314,7 @@ function gen_network(artist){
         .style("opacity", 0)
         .style("visibility", "hidden");
     })
+    .on("mousemove", function(event, d){return toolTip.style("top", (event.pageY-35)+"px").style("left",(event.pageX)+"px");})
     .on("click", function(event, d) {
       dispatchClickNet_Line.call("clickNet", this, d);
       dispatchClickNet_Bar.call("clickNet", this, d);
@@ -325,16 +325,18 @@ function gen_network(artist){
 
   link.on("mouseover", function(event, d) {
     //tooltip
-    const[x, y] = d3.pointer(event);
     toolTip.transition()
       .duration(tooltipDuration)
       .style("opacity", 0.9)
       .style("visibility", "visible");
     var text = "Common tags: " + d.tags.join(", ");
     toolTip.html(text)
-      .style("left", (x) + "px")
-      .style("top", (y + 50) + "px");
+      .style("left", (event.pageX) + "px")
+      .style("top", (event.pageY - 35) + "px");
   })
+    .on("mousemove", function(event, d){
+      return toolTip.style("top", (event.pageY-35)+"px")
+        .style("left",(event.pageX)+"px");})
     .on("mouseout", function(event, d) {
       // tooltip off
       toolTip.transition()
@@ -343,7 +345,7 @@ function gen_network(artist){
         .style("visibility", "hidden");
     })
 
-    addZoom();
+  addZoom();
 }
 
 

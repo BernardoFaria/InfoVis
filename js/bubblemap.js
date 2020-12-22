@@ -195,9 +195,12 @@ function gen_bubble_map() {
         .style("visibility", "visible");
       var text = "Number Of Artists in " + this.__data__.properties.name + ": " + this.__data__.properties.count;
       toolTip.html(text)
-        .style("left", (x + width*2) + "px")
-        .style("top", (y + 50) + "px");
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY - 35) + "px");
     })
+    .on("mousemove", function(event, d){
+      return toolTip.style("top", (event.pageY-35)+"px")
+        .style("left",(event.pageX)+"px");})
     .on("mouseout", function(event) {
       d3.select(this).attr("class", "circle-map").style("fill", "#000000");
       // tooltip off

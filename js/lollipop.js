@@ -77,9 +77,12 @@ dispatchClickBar_Lollipop.on("clickBar", function(artistSelected) {
                    .style("visibility", "visible");
       var text = artistSelected.displayName + " Creation Date: " + artistSelected.creationDate;
       toolTip.html(text)
-        .style("left", (x + width*2) + "px")
-        .style("top", (y + 470) + "px");
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY - 35) + "px");
     })
+    .on("mousemove", function(event, d){
+      return toolTip.style("top", (event.pageY-35)+"px")
+        .style("left",(event.pageX)+"px");})
     .on("mouseout", function(event, d) {
             toolTip.transition()
                    .duration(tooltipDuration)
@@ -97,9 +100,12 @@ dispatchClickBar_Lollipop.on("clickBar", function(artistSelected) {
                    .style("visibility", "visible");
       var text = artistSelected.displayName + " Creation Date: " + artistSelected.creationDate;
       toolTip.html(text)
-        .style("left", (x + width*2) + "px")
-        .style("top", (y + 470) + "px");
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY - 35) + "px");
     })
+    .on("mousemove", function(event, d){
+      return toolTip.style("top", (event.pageY-35)+"px")
+        .style("left",(event.pageX)+"px");})
     .on("mouseout", function(event, d) {
             toolTip.transition()
                    .duration(tooltipDuration)
@@ -181,9 +187,12 @@ dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
                    .style("visibility", "visible");
       var text = "Total Artists: " + d.total;
       toolTip.html(text)
-        .style("left", (x + width*2) + "px")
-        .style("top", (y + 470) + "px");
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY - 35) + "px");
     })
+    .on("mousemove", function(event, d){
+      return toolTip.style("top", (event.pageY-35)+"px")
+        .style("left",(event.pageX)+"px");})
     .on("mouseout", function(event, d) {
             toolTip.transition()
                    .duration(tooltipDuration)
@@ -210,9 +219,12 @@ dispatchClickLine_Lollipop.on("clickLine", function(genreSelected) {
                    .style("visibility", "visible");
       var text = "Total Artists: " + d.total;
       toolTip.html(text)
-        .style("left", (x + width*2) + "px")
-        .style("top", (y + 470) + "px");
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY - 35) + "px");
     })
+    .on("mousemove", function(event, d){
+      return toolTip.style("top", (event.pageY-35)+"px")
+        .style("left",(event.pageX)+"px");})
     .on("mouseout", function(event, d) {
             toolTip.transition()
                    .duration(tooltipDuration)
@@ -300,9 +312,12 @@ dispatchClickMap_Lollipop.on("clickMap", function(countrySelected) {
                    .style("visibility", "visible");
       var text = "Total Artists: " + d.total;
       toolTip.html(text)
-        .style("left", (x + width*2) + "px")
-        .style("top", (y + 470) + "px");
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY - 35) + "px");
     })
+    .on("mousemove", function(event, d){
+      return toolTip.style("top", (event.pageY-35)+"px")
+        .style("left",(event.pageX)+"px");})
     .on("mouseout", function(event, d) {
             toolTip.transition()
                    .duration(tooltipDuration)
@@ -329,9 +344,12 @@ dispatchClickMap_Lollipop.on("clickMap", function(countrySelected) {
                    .style("visibility", "visible");
       var text = "Total Artists: " + d.total;
       toolTip.html(text)
-        .style("left", (x + width*2) + "px")
-        .style("top", (y + 470) + "px");
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY - 35) + "px");
     })
+    .on("mousemove", function(event, d){
+      return toolTip.style("top", (event.pageY-35)+"px")
+        .style("left",(event.pageX)+"px");})
     .on("mouseout", function(event, d) {
             toolTip.transition()
                    .duration(tooltipDuration)
@@ -400,9 +418,12 @@ dispatchClickNet_Lollipop.on("clickNet", function(artistSelected) {
                    .style("visibility", "visible");
       var text = artist[0].displayName + " Creation Date: " + artist[0].creationDate;
       toolTip.html(text)
-        .style("left", (x + width*2) + "px")
-        .style("top", (y + 470) + "px");
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY - 35) + "px");
     })
+    .on("mousemove", function(event, d){
+      return toolTip.style("top", (event.pageY-35)+"px")
+        .style("left",(event.pageX)+"px");})
     .on("mouseout", function(event, d) {
             toolTip.transition()
                    .duration(tooltipDuration)
@@ -420,9 +441,12 @@ dispatchClickNet_Lollipop.on("clickNet", function(artistSelected) {
                    .style("visibility", "visible");
       var text = artist[0].displayName + " Creation Date: " + artist[0].creationDate;
       toolTip.html(text)
-        .style("left", (x + width*2) + "px")
-        .style("top", (y + 470) + "px");
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY - 35) + "px");
     })
+    .on("mousemove", function(event, d){
+      return toolTip.style("top", (event.pageY-35)+"px")
+        .style("left",(event.pageX)+"px");})
     .on("mouseout", function(event, d) {
             toolTip.transition()
                    .duration(tooltipDuration)
@@ -491,9 +515,12 @@ dispatchReset_Lollipop.on("reset", function() {
                    .style("visibility", "visible");
       var text = "Total Artists: " + d.total;
       toolTip.html(text)
-        .style("left", (x + width*2) + "px")
-        .style("top", (y + 470) + "px");
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY - 35) + "px");
     })
+    .on("mousemove", function(event, d){
+      return toolTip.style("top", (event.pageY-35)+"px")
+        .style("left",(event.pageX)+"px");})
     .on("mouseout", function(event, d) {
             toolTip.transition()
                    .duration(tooltipDuration)
@@ -521,9 +548,12 @@ dispatchReset_Lollipop.on("reset", function() {
                    .style("visibility", "visible");
       var text = "Total Artists: " + d.total;
       toolTip.html(text)
-        .style("left", (x + width*2) + "px")
-        .style("top", (y + 470) + "px");
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY - 35) + "px");
     })
+    .on("mousemove", function(event, d){
+      return toolTip.style("top", (event.pageY-35)+"px")
+        .style("left",(event.pageX)+"px");})
     .on("mouseout", function(event, d) {
             toolTip.transition()
                    .duration(tooltipDuration)
@@ -637,9 +667,12 @@ function gen_lollipop() {
                    .style("visibility", "visible");
       var text = "Total Artists: " + d.total;
       toolTip.html(text)
-        .style("left", (x + width*2) + "px")
-        .style("top", (y + 470) + "px");
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY - 35) + "px");
     })
+    .on("mousemove", function(event, d){
+      return toolTip.style("top", (event.pageY-35)+"px")
+        .style("left",(event.pageX)+"px");})
     .on("mouseout", function(event, d) {
             toolTip.transition()
                    .duration(tooltipDuration)
@@ -667,9 +700,12 @@ function gen_lollipop() {
                    .style("visibility", "visible");
       var text = "Total Artists: " + d.total;
       toolTip.html(text)
-        .style("left", (x + width*2) + "px")
-        .style("top", (y + 470) + "px");
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY - 35) + "px");
     })
+    .on("mousemove", function(event, d){
+      return toolTip.style("top", (event.pageY-35)+"px")
+        .style("left",(event.pageX)+"px");})
     .on("mouseout", function(event, d) {
             toolTip.transition()
                    .duration(tooltipDuration)
