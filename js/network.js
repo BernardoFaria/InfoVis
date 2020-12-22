@@ -261,10 +261,10 @@ function gen_network(artist){
     .append("line")
     .attr("stroke-width", d => Math.sqrt(d.weight))
     .attr("class", "network-link")
-    .attr("stroke-dasharray", 2000)
-    .attr("stroke-dashoffset", 2000);
+    .attr("stroke-dasharray", 30000)
+    .attr("stroke-dashoffset", 30000);
 
-  link.transition().attr("stroke-dashoffset", 0).duration(4000);
+  link.transition().attr("stroke-dashoffset", 0).duration(8000);
 
   // Initialize the nodes
   node = net.selectAll(".network-node")
@@ -294,7 +294,7 @@ function gen_network(artist){
     .attr("cy", height/2)
     .style("stroke", "gray");
 
-  node.transition().attr("r",  d => d.radius).duration(1500);
+  node.transition().attr("r",  d => d.radius).duration(2000);
 
   node.on("mouseover", function(event, d) {
     //tooltip
