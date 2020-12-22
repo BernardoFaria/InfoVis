@@ -169,8 +169,8 @@ dispatchClickBar_Line.on("clickBar", function(artistSelected) {
           .style("left",(event.pageX)+"px");})
       .on("mouseout", function(d) {
         //return all bars' opacity to normal
-        d3.selectAll(".line-lineplot")
-          .style("opacity", opacityNormal);
+        // d3.selectAll(".line-lineplot")
+        //   .style("opacity", opacityNormal);
         if(isClicked == 0) {
           d3.selectAll(".line-lineplot")
             .style("opacity", opacityNormal);
@@ -331,8 +331,8 @@ dispatchClickMap_Line.on("clickMap", function(countrySelected) {
           .style("left",(event.pageX)+"px");})
       .on("mouseout", function(d) {
         //return all bars' opacity to normal
-        d3.selectAll(".line-lineplot")
-          .style("opacity", opacityNormal);
+        // d3.selectAll(".line-lineplot")
+        //   .style("opacity", opacityNormal);
         if(isClicked == 0) {
           d3.selectAll(".line-lineplot")
             .style("opacity", opacityNormal);

@@ -52,7 +52,7 @@ d3.json("dataset/countries-110m.json").then(function(data1) {
 // update map when clicking on linechart
 dispatchClickLine_Map.on("clickLine", function(genreSelected) {
 
-    // update map: all countries grey
+  // update map: all countries gray
   svg.selectAll(".circle-map").style("fill", "#000000");
 
   var filteredDataUpdate = [];
@@ -84,11 +84,14 @@ dispatchClickLine_Map.on("clickLine", function(genreSelected) {
     }
   })
 
+  isClicked = [];
+
   for(var i = 0; i < aux2.length; i++) {
+    isClicked.push("_" + aux2[i]);
     svg.select("#_" + aux2[i]).attr("class", "circle-map").style("fill", "#808080");
   }
   
-  isClicked = [];
+  
 });
 
 // update map when clicking on barchart
@@ -239,16 +242,27 @@ function gen_bubble_map() {
     .attr("id", function(d, i) { return ("_" + d.id); })
     .on("mouseover", function(event, d) {
       // all countries on light grey...
-      d3.selectAll(".circle-map").style("fill", opacityOff);
-      // ...except the one selected
-      d3.select(this).attr("class", "circle-map").style("fill", "#808080");
-      // and the country clicked, if any
-      if(isClicked.length != 0) {
-      // if(isClicked != 0) {
+      // d3.selectAll(".circle-map").style("fill", opacityOff);
+      // // ...except the one selected
+      // d3.select(this).attr("class", "circle-map").style("fill", "#808080");
+      // // and the country clicked, if any
+      // if(isClicked.length != 0) {
+      //   for(var i = 0; i < isClicked.length; i++) {
+      //     d3.select("#" + isClicked[i]).style("fill", "#808080");
+      //   }
+      // }
+      console.log(isClicked.length);
+      if(isClicked.length == 0) {
+        // d3.select("#" + isClicked).style("fill", "#808080");
+        d3.selectAll(".circle-map").style("fill", opacityOff);
+      }
+      else {
+        d3.selectAll(".circle-map").style("fill", opacityOff);
         for(var i = 0; i < isClicked.length; i++) {
           d3.select("#" + isClicked[i]).style("fill", "#808080");
         }
       }
+      d3.select(this).attr("class", "circle-map").style("fill", "#808080");
       // tooltip
       const[x, y] = d3.pointer(event);
       toolTip.transition()
@@ -265,17 +279,18 @@ function gen_bubble_map() {
         .style("left",(event.pageX)+"px");})
     .on("mouseout", function(event) {
       // color all countries back again
-      d3.selectAll(".circle-map").style("fill", "#000000");
+      // d3.selectAll(".circle-map").style("fill", "#000000");
       // if any country clicked, keep clicked
-      // if(isClicked != 0) {
-      //   d3.select("#" + isClicked).style("fill", "#808080");
-      // }
-      if(isClicked.length != 0) {
-        // if(isClicked != 0) {
-          for(var i = 0; i < isClicked.length; i++) {
-            d3.select("#" + isClicked[i]).style("fill", "#808080");
-          }
+      if(isClicked.length == 0) {
+        // d3.select("#" + isClicked).style("fill", "#808080");
+        d3.selectAll(".circle-map").style("fill", "#000000");
+      }
+      else {
+        d3.selectAll(".circle-map").style("fill", "#000000");
+        for(var i = 0; i < isClicked.length; i++) {
+          d3.select("#" + isClicked[i]).style("fill", "#808080");
         }
+      }
       // tooltip off
       toolTip.transition()
         .duration(tooltipDuration)
