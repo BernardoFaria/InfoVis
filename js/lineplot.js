@@ -100,7 +100,8 @@ dispatchClickBar_Line.on("clickBar", function(artistSelected) {
     lineJazz = lineLatin = linePop = linePunk = lineRB = lineRock =
     d3.line()
     .x(d => xScale(d.decade))
-    .y(d => yscale(d.popularity*100));
+    .y(d => yscale(d.popularity*100))
+    .curve(d3.curveMonotoneX);
 
   // to draw the lines
   lines = svg.append("g");
@@ -242,7 +243,8 @@ dispatchClickMap_Line.on("clickMap", function(countrySelected) {
     lineJazz = lineLatin = linePop = linePunk = lineRB = lineRock =
     d3.line()
     .x(d => xScale(d.decade))
-    .y(d => yscale(d.popularity*100));
+    .y(d => yscale(d.popularity*100))
+    .curve(d3.curveMonotoneX);
 
   // to draw all lines
   lines = svg.append("g");
@@ -371,7 +373,8 @@ dispatchClickNet_Line.on("clickNet", function(artistSelected) {
     lineJazz = lineLatin = linePop = linePunk = lineRB = lineRock =
     d3.line()
     .x(d => xScale(d.decade))
-    .y(d => yscale(d.popularity*100));
+    .y(d => yscale(d.popularity*100))
+    .curve(d3.curveMonotoneX);
 
   // to draw the lines
   lines = svg.append("g");
@@ -496,7 +499,8 @@ dispatchReset_Line.on("reset", function() {
     lineJazz = lineLatin = linePop = linePunk = lineRB = lineRock =
     d3.line()
     .x(d => xScale(d.decade))
-    .y(d => yScale(d.popularity*100));    // * 100 because we only have percentage
+    .y(d => yScale(d.popularity*100))    // * 100 because we only have percentage
+    .curve(d3.curveMonotoneX);
 
   // for drawing all lines
   lines = svg.append("g");
@@ -658,7 +662,8 @@ function gen_line_chart() {
     lineJazz = lineLatin = linePop = linePunk = lineRB = lineRock =
     d3.line()
     .x(d => xScale(d.decade))
-    .y(d => yScale(d.popularity*100));    // * 100 because we only have percentage
+    .y(d => yScale(d.popularity*100))    // * 100 because we only have percentage
+    .curve(d3.curveMonotoneX);
 
   // for drawing all lines
   lines = svg.append("g");
