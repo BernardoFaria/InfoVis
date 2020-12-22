@@ -6,6 +6,7 @@ import { dispatchClickMap_Line } from "./main.js";
 import { dispatchClickMap_Lollipop } from "./main.js";
 import { dispatchClickMap_Net } from "./main.js";
 
+import { dispatchClickLine_Map } from "./main.js";
 import { dispatchClickNet_Map } from "./main.js";
 import { dispatchClickBar_Map } from "./main.js";
 
@@ -24,7 +25,8 @@ var width = 600;
 var height = 400;
 
 // flag to know if a country is clicked
-var isClicked = 0;
+// var isClicked = 0;
+var isClicked = [];
 
 var mapData;
 var artists;
@@ -46,6 +48,49 @@ d3.json("dataset/countries-110m.json").then(function(data1) {
   })
 });
 
+
+// update map when clicking on linechart
+dispatchClickLine_Map.on("clickLine", function(genreSelected) {
+
+    // update map: all countries grey
+  svg.selectAll(".circle-map").style("fill", "#000000");
+
+  var filteredDataUpdate = [];
+  var i, j;
+  // loop on artist dataset
+  for(i = 0; i < Object.keys(artists).length-1; i++) {
+    var string = artists[i].genre;  // get genre string
+    var res = string.split(",");    // split it by commas
+    for(j = 0; j < res.length; j ++) {  // loop the splitted string
+      if(res[j] == genreSelected.genre) {
+        filteredDataUpdate.push(artists[i]); }  // add to array
+    }
+  }
+
+  var aux = [];
+  for(var i = 0; i < filteredDataUpdate.length; i++){
+    if(!aux.includes(filteredDataUpdate[i].country)) {
+      aux.push(filteredDataUpdate[i].country);
+    }
+  }
+
+  var aux2 = [];
+  // loop to get the correspondent id
+  aux.forEach(function(c) {
+    for(var i = 0; i < countryList.length; i++) {
+      if(countryList[i].properties.name == c) {
+        aux2.push(countryList[i].id);
+      }
+    }
+  })
+
+  for(var i = 0; i < aux2.length; i++) {
+    svg.select("#_" + aux2[i]).attr("class", "circle-map").style("fill", "#808080");
+  }
+  
+  isClicked = [];
+});
+
 // update map when clicking on barchart
 dispatchClickBar_Map.on("clickBar", function(artistSelected) {
   var id;
@@ -61,6 +106,9 @@ dispatchClickBar_Map.on("clickBar", function(artistSelected) {
     }
   }
   
+  isClicked = [];
+  isClicked.push("_" + id);
+
   // fill the selected country
   svg.select("#_" + id).attr("class", "circle-map").style("fill", "#808080");
 
@@ -89,6 +137,9 @@ dispatchClickNet_Map.on("clickNet", function(artistSelected) {
       break;
     }
   }
+
+  isClicked = [];
+  isClicked.push("_" + id);
 
   // fill the selected country
   svg.select("#_" + id).attr("class", "circle-map").style("fill", "#808080");
@@ -154,6 +205,7 @@ function gen_bubble_map() {
     obj.properties.count = getTotalArt(obj.properties.name);
     countryList.push(obj);
   })
+  console.log(countryList);
 
   function sort(array) {
     let swapped = true;
@@ -192,8 +244,11 @@ function gen_bubble_map() {
       // ...except the one selected
       d3.select(this).attr("class", "circle-map").style("fill", "#808080");
       // and the country clicked, if any
-      if(isClicked != 0) {
-        d3.select("#" + isClicked).style("fill", "#808080");
+      if(isClicked.length != 0) {
+      // if(isClicked != 0) {
+        for(var i = 0; i < isClicked.length; i++) {
+          d3.select("#" + isClicked[i]).style("fill", "#808080");
+        }
       }
       // tooltip
       const[x, y] = d3.pointer(event);
@@ -213,9 +268,15 @@ function gen_bubble_map() {
       // color all countries back again
       d3.selectAll(".circle-map").style("fill", "#000000");
       // if any country clicked, keep clicked
-      if(isClicked != 0) {
-        d3.select("#" + isClicked).style("fill", "#808080");
-      }
+      // if(isClicked != 0) {
+      //   d3.select("#" + isClicked).style("fill", "#808080");
+      // }
+      if(isClicked.length != 0) {
+        // if(isClicked != 0) {
+          for(var i = 0; i < isClicked.length; i++) {
+            d3.select("#" + isClicked[i]).style("fill", "#808080");
+          }
+        }
       // tooltip off
       toolTip.transition()
         .duration(tooltipDuration)
@@ -224,11 +285,12 @@ function gen_bubble_map() {
     })
     .on("click", function(event, d) {
       // clean entire map => all light grey
+      isClicked = [];
       d3.selectAll(".circle-map").style("fill", opacityOff);
       // color selected country white
       d3.select(this).attr("class", "circle-map").style("fill", "#808080");
       // keep the ID of the selected country
-      isClicked = this.id;
+      isClicked.push(this.id);
 
       dispatchClickMap_Bar.call("clickMap", this, d);
       dispatchClickMap_Line.call("clickMap", this, d);

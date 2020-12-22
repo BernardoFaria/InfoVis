@@ -13,6 +13,7 @@ import { dispatchReset_Line } from "./main.js";
 import { dispatchClickLine_Bar } from "./main.js";
 import { dispatchClickLine_Lollipop } from "./main.js";
 import { dispatchClickLine_Net } from "./main.js";
+import { dispatchClickLine_Map } from "./main.js";
 
 import { dispatchClickMap_Line } from "./main.js";
 import { dispatchClickNet_Line } from "./main.js";
@@ -176,6 +177,7 @@ dispatchClickBar_Line.on("clickBar", function(artistSelected) {
         dispatchClickLine_Bar.call("clickLine", this, d);
         dispatchClickLine_Lollipop.call("clickLine", this, d);
         dispatchClickLine_Net.call("clickLine", this, d);
+        dispatchClickLine_Map.call("clickLine", this, d);
       });
     // animation
     path.attr("stroke-dasharray", width + " " + width)
@@ -319,6 +321,8 @@ dispatchClickMap_Line.on("clickMap", function(countrySelected) {
         dispatchClickLine_Bar.call("clickLine", this, d);
         dispatchClickLine_Lollipop.call("clickLine", this, d);
         dispatchClickLine_Net.call("clickLine", this, d);
+        dispatchClickLine_Map.call("clickLine", this, d);
+
       });
     // animation
     path.attr("stroke-dasharray", width + " " + width)
@@ -449,6 +453,8 @@ dispatchClickNet_Line.on("clickNet", function(artistSelected) {
         dispatchClickLine_Bar.call("clickLine", this, d);
         dispatchClickLine_Lollipop.call("clickLine", this, d);
         dispatchClickLine_Net.call("clickLine", this, d);
+        dispatchClickLine_Map.call("clickLine", this, d);
+
       });
     // animation
     path.attr("stroke-dasharray", width + " " + width)
@@ -576,6 +582,8 @@ dispatchReset_Line.on("reset", function() {
         dispatchClickLine_Bar.call("clickLine", this, d);
         dispatchClickLine_Lollipop.call("clickLine", this, d);
         dispatchClickLine_Net.call("clickLine", this, d);
+        dispatchClickLine_Map.call("clickLine", this, d);
+
       });
     // animation
     path.attr("stroke-dasharray", width + " " + width)
@@ -739,6 +747,8 @@ function gen_line_chart() {
         dispatchClickLine_Bar.call("clickLine", this, d);
         dispatchClickLine_Lollipop.call("clickLine", this, d);
         dispatchClickLine_Net.call("clickLine", this, d);
+        dispatchClickLine_Map.call("clickLine", this, d);
+
       });
     // animation
     path.attr("stroke-dasharray", width + " " + width)
