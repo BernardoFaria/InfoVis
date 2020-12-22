@@ -208,7 +208,7 @@ function gen_bubble_map() {
     })
     .on("click", function(event, d) {
       // clean entire map => all light grey
-      d3.selectAll(".circle-map").style("opacity", opacityOff);
+      //d3.selectAll(".circle-map").style("opacity", opacityOff);
       // color selected country white
       d3.select(this).attr("class", "circle-map").style("fill", "#808080");
 

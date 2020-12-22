@@ -15,7 +15,7 @@ import { tooltipDuration } from "./main.js";
 var width = 600;
 var height = 400;
 var padding = 60;
-var radius = 6;
+var radius = 10;
 var xScale;
 var yScale;
 var fullDataset;
